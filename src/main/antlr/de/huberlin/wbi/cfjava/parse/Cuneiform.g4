@@ -15,7 +15,7 @@
  * limitations under the License.
  */
  
-grammar cuneiform ;
+grammar Cuneiform ;
 
 // parser rules
 
