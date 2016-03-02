@@ -1,11 +1,12 @@
 package de.huberlin.wbi.cfjava.asyntax;
 
-public class Var implements LamSurrogate {
+public class Var extends SrcLocated implements LamSurrogate, Expr {
 	
 	private String target;
-	private int line;
 
 	public Var( int line, String target ) {
+		
+		super( line );
 		
 		if( target == null )
 			throw new IllegalArgumentException( "Target string must not be null." );
@@ -13,20 +14,10 @@ public class Var implements LamSurrogate {
 		if( target.isEmpty() )
 			throw new IllegalArgumentException( "Target must not be empty." );
 		
-		if( line <= 0 )
-			throw new IllegalArgumentException( "Line number must be positive." );
-		
 		this.target = target;
-		this.line = line;
 	}
 
 	public String getTarget() {
 		return target;
-	}
-
-	public int getLine() {
-		return line;
-	}
-
-	
+	}	
 }

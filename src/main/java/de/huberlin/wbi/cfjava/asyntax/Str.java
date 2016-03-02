@@ -1,6 +1,6 @@
 package de.huberlin.wbi.cfjava.asyntax;
 
-public class Str {
+public class Str implements Expr {
 	
 	private String content;
 
