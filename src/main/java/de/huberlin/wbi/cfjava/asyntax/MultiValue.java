@@ -1,6 +1,6 @@
 package de.huberlin.wbi.cfjava.asyntax;
 
-public class MultiValue extends SrcLocated {
+public abstract class MultiValue extends SrcLocated {
 
 	private final int channel;
 

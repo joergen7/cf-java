@@ -2,13 +2,14 @@ package de.huberlin.wbi.cfjava.asyntax;
 
 import de.huberlin.wbi.cfjava.data.Amap;
 
-public class Fut implements LamNameHolder {
+public class Fut extends IdHolder implements LamNameHolder {
 	
 	private final String lamName;
-	private final int id;
 	private final Amap<String, Boolean> fileMap;
 
 	public Fut( final String lamName, final int id, final Amap<String, Boolean> fileMap ) {
+		
+		super( id );
 		
 		if( lamName == null )
 			throw new IllegalArgumentException( "Lambda name must not be null." );
@@ -23,7 +24,6 @@ public class Fut implements LamNameHolder {
 			throw new IllegalArgumentException( "File map must not be null." );
 		
 		this.lamName = lamName;
-		this.id = id;
 		this.fileMap = fileMap;
 	}
 
@@ -32,9 +32,6 @@ public class Fut implements LamNameHolder {
 		return lamName;
 	}
 
-	public int getId() {
-		return id;
-	}
 
 	public Amap<String, Boolean> getFileMap() {
 		return fileMap;
