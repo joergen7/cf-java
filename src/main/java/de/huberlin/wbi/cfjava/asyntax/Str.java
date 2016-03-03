@@ -1,19 +1,9 @@
 package de.huberlin.wbi.cfjava.asyntax;
 
-public class Str implements Expr {
+public class Str extends ContentHolder implements Expr {
 	
-	private final String content;
-
 	public Str( final String content ) {
-		
-		if( content == null )
-			throw new IllegalArgumentException( "Content string must not be null." );
-		
-		this.content = content;
+		super( content );
 	}
-
-	public String getContent() {
-		return content;
-	}
-
+		
 }

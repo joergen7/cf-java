@@ -1,6 +1,6 @@
 package de.huberlin.wbi.cfjava.asyntax;
 
-public class Param {
+public class Param implements InParam {
 
 	private Name name;
 	private boolean isLst;
