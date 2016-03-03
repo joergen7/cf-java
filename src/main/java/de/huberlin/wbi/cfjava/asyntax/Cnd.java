@@ -4,11 +4,11 @@ import de.huberlin.wbi.cfjava.data.Alist;
 
 public class Cnd extends SrcLocated implements Expr {
 
-	private Alist<Expr> condLst;
-	private Alist<Expr> thenLst;
-	private Alist<Expr> elseLst;
+	private final Alist<Expr> condLst;
+	private final Alist<Expr> thenLst;
+	private final Alist<Expr> elseLst;
 	
-	public Cnd( int line, Alist<Expr> condLst, Alist<Expr> thenLst, Alist<Expr> elseLst ) {
+	public Cnd( final int line, final Alist<Expr> condLst, final Alist<Expr> thenLst, final Alist<Expr> elseLst ) {
 		
 		super( line );
 		

@@ -2,9 +2,9 @@ package de.huberlin.wbi.cfjava.asyntax;
 
 public abstract class SrcLocated {
 
-	private int line;
+	private final int line;
 	
-	public SrcLocated( int line ) {
+	public SrcLocated( final int line ) {
 		
 		if( line <= 0 )
 			throw new IllegalArgumentException( "Line number must be positive." );

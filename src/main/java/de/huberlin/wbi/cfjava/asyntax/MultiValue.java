@@ -2,9 +2,9 @@ package de.huberlin.wbi.cfjava.asyntax;
 
 public class MultiValue extends SrcLocated {
 
-	private int channel;
+	private final int channel;
 
-	public MultiValue( int line, int channel ) {
+	public MultiValue( final int line, final int channel ) {
 		
 		super( line );
 		

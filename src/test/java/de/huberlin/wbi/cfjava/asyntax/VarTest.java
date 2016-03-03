@@ -14,12 +14,12 @@ public class VarTest {
 		
 		v = new Var( 12, "bla" );
 		assertEquals( 12, v.getLine() );
-		assertEquals( "bla", v.getTarget() );
+		assertEquals( "bla", v.getLabel() );
 	}
 	
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test( expected=IllegalArgumentException.class )
-	public void constructorShouldThrowIaeOnNullArgTest() {
+	public void constructorShouldThrowIaeOnNullLabelTest() {
 		
 		Var v;
 		
@@ -28,7 +28,7 @@ public class VarTest {
 	
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test( expected=IllegalArgumentException.class )
-	public void constructorShouldThrowIaeOnEmptyArgTest() {
+	public void constructorShouldThrowIaeOnEmptyLabelTest() {
 		
 		Var v;
 		

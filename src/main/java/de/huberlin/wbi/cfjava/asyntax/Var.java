@@ -1,23 +1,24 @@
 package de.huberlin.wbi.cfjava.asyntax;
 
-public class Var extends SrcLocated implements LamSurrogate, Expr {
+public class Var extends SrcLocated implements LamSurrogate, Expr, LabelHolder {
 	
-	private String target;
+	private final String label;
 
-	public Var( int line, String target ) {
+	public Var( final int line, final String label ) {
 		
 		super( line );
 		
-		if( target == null )
-			throw new IllegalArgumentException( "Target string must not be null." );
+		if( label == null )
+			throw new IllegalArgumentException( "Label string must not be null." );
 		
-		if( target.isEmpty() )
-			throw new IllegalArgumentException( "Target must not be empty." );
+		if( label.isEmpty() )
+			throw new IllegalArgumentException( "Label string must not be empty." );
 		
-		this.target = target;
+		this.label = label;
 	}
 
-	public String getTarget() {
-		return target;
+	@Override
+	public String getLabel() {
+		return label;
 	}	
 }

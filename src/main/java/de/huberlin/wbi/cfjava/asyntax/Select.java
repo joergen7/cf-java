@@ -2,9 +2,9 @@ package de.huberlin.wbi.cfjava.asyntax;
 
 public class Select extends MultiValue implements Expr {
 
-	private Fut fut;
+	private final Fut fut;
 	
-	public Select( int line, int channel, Fut fut ) {
+	public Select( final int line, final int channel, final Fut fut ) {
 		
 		super( line, channel );
 		

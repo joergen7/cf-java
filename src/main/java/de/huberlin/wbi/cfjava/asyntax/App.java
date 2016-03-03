@@ -5,10 +5,10 @@ import de.huberlin.wbi.cfjava.data.Amap;
 
 public class App extends MultiValue implements Expr {
 	
-	private LamSurrogate lamSurrogate;
-	private Amap<String, Alist<Expr>> bindMap;
+	private final LamSurrogate lamSurrogate;
+	private final Amap<String, Alist<Expr>> bindMap;
 	
-	public App( int line, int channel, LamSurrogate lamSurrogate, Amap<String, Alist<Expr>> bindMap ) {
+	public App( final int line, final int channel, final LamSurrogate lamSurrogate, final Amap<String, Alist<Expr>> bindMap ) {
 		
 		super( line, channel );
 

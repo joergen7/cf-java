@@ -2,9 +2,9 @@ package de.huberlin.wbi.cfjava.asyntax;
 
 public class Str implements Expr {
 	
-	private String content;
+	private final String content;
 
-	public Str( String content ) {
+	public Str( final String content ) {
 		
 		if( content == null )
 			throw new IllegalArgumentException( "Content string must not be null." );
@@ -12,7 +12,7 @@ public class Str implements Expr {
 		this.content = content;
 	}
 
-	public Object getContent() {
+	public String getContent() {
 		return content;
 	}
 
