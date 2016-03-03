@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Alist<T> implements Iterable<T> {
 
@@ -42,6 +43,15 @@ public class Alist<T> implements Iterable<T> {
 
 			this.hd = hd;
 			this.tl = tl;
+		}
+		
+		@Override
+		public boolean all( Predicate<T> pred ) {
+			
+			if( pred.test( hd ) )
+				return tl.all( pred );
+			
+			return false;
 		}
 
 		@Override
@@ -143,11 +153,16 @@ public class Alist<T> implements Iterable<T> {
 
 			return buf.toString();
 		}
-
+		
 	}
 
 	public Alist<T> add( T hd ) {
 		return new Cons( hd, this );
+	}
+
+	@SuppressWarnings("unused")
+	public boolean all( Predicate<T> pred ) {
+		return true;
 	}
 
 	public Alist<T> append( Alist<T> l2 ) {
@@ -260,5 +275,4 @@ public class Alist<T> implements Iterable<T> {
 
 		return result;
 	}
-
 }

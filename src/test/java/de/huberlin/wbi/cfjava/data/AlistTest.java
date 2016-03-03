@@ -2,6 +2,8 @@ package de.huberlin.wbi.cfjava.data;
 
 import static org.junit.Assert.*;
 
+import java.util.function.Predicate;
+
 import org.junit.Test;
 
 public class AlistTest {
@@ -274,5 +276,72 @@ public class AlistTest {
 		sum = l.foldl( ( Integer elem, Integer s ) -> s+elem, 0 );
 		
 		assertEquals( 10, sum );
+	}
+	
+	@Test
+	public void allOnEmptyListAlwaysReturnsTrueTest() {
+		assertTrue( new Alist<Integer>().all( new AlwaysFalse() ) );
+	}
+	
+	@Test
+	public void allOnSingleElementListReturnsResultTest() {
+		
+		Predicate<Integer> pred;
+		Alist<Integer> list;
+		
+		pred = new AlwaysFalse();
+		list = new Alist<Integer>().add( 5 );
+		
+		assertFalse( list.all( pred ) );
+	}
+	
+	@Test
+	public void allOnMultiElementListReturnsTrueWhenAllTrueTest() {
+		
+		Predicate<Integer> pred;
+		Alist<Integer> list;
+		
+		pred = new TrueOnFive();
+		list = new Alist<Integer>().add( 5 ).add( 5 );
+		
+		assertTrue( list.all( pred ) );
+	}
+	
+	@Test
+	public void allOnMultiElementListReturnsFalseWhenFirstIsFalseTest() {
+		
+		Predicate<Integer> pred;
+		Alist<Integer> list;
+		
+		pred = new TrueOnFive();
+		list = new Alist<Integer>().add( 5 ).add( 4 );
+		
+		assertFalse( list.all( pred ) );
+	}
+	
+	@Test
+	public void allOnMultiElementListReturnsFalseWhenLastIsFalseTest() {
+		
+		Predicate<Integer> pred;
+		Alist<Integer> list;
+		
+		pred = new TrueOnFive();
+		list = new Alist<Integer>().add( 4 ).add( 5 );
+		
+		assertFalse( list.all( pred ) );
+	}
+	
+	
+	
+	public class AlwaysFalse implements Predicate<Integer> {
+		
+		@Override
+		public boolean test( Integer i ) { return false; }
+	}
+	
+	public class TrueOnFive implements Predicate<Integer> {
+		
+		@Override
+		public boolean test( Integer i ) { return i == 5; }
 	}
 }
