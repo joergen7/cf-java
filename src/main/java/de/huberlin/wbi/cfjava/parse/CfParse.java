@@ -1,5 +1,7 @@
 package de.huberlin.wbi.cfjava.parse;
 
-public class CfParse extends CuneiformBaseVisitor<CfCtx> {
+import de.huberlin.wbi.cfjava.asyntax.Ctx;
+
+public class CfParse extends CuneiformBaseVisitor<Ctx> {
 
 }

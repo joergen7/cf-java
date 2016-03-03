@@ -16,7 +16,7 @@ public class AppTest {
 		
 		App a;
 		Var var;
-		Amap<String,Alist<Expr>> fa;
+		Amap<String, Alist<Expr>> fa;
 		
 		var = new Var( 1, "f" );
 		fa = new Amap<>();
@@ -35,7 +35,7 @@ public class AppTest {
 		
 		App a;
 		Lam lam;
-		Amap<String,Alist<Expr>> fa;
+		Amap<String, Alist<Expr>> fa;
 		
 		lam = mock( Lam.class );
 		fa = new Amap<>();
@@ -54,7 +54,7 @@ public class AppTest {
 		
 		App a;
 		Var var;
-		Amap<String,Alist<Expr>> fa;
+		Amap<String, Alist<Expr>> fa;
 		
 		var = new Var( 1, "f" );
 		fa = new Amap<>();
@@ -68,7 +68,7 @@ public class AppTest {
 		
 		App a;
 		Var var;
-		Amap<String,Alist<Expr>> fa;
+		Amap<String, Alist<Expr>> fa;
 		
 		var = new Var( 1, "f" );
 		fa = new Amap<>();
@@ -82,7 +82,7 @@ public class AppTest {
 		
 		App a;
 		Var var;
-		Amap<String,Alist<Expr>> fa;
+		Amap<String, Alist<Expr>> fa;
 		
 		var = new Var( 1, "f" );
 		fa = new Amap<>();
@@ -96,7 +96,7 @@ public class AppTest {
 		
 		App a;
 		Var var;
-		Amap<String,Alist<Expr>> fa;
+		Amap<String, Alist<Expr>> fa;
 		
 		var = new Var( 1, "f" );
 		fa = new Amap<>();
@@ -109,7 +109,7 @@ public class AppTest {
 	public void constructorShouldThrowIaeOnNullLamSurrogateTest() {
 		
 		App a;
-		Amap<String,Alist<Expr>> fa;
+		Amap<String, Alist<Expr>> fa;
 		
 		fa = new Amap<>();
 		

@@ -2,10 +2,10 @@ package de.huberlin.wbi.cfjava.asyntax;
 
 public class Param implements InParam {
 
-	private Name name;
-	private boolean isLst;
+	private final Name name;
+	private final boolean isLst;
 	
-	public Param( Name name, boolean isLst ) {
+	public Param( final Name name, final boolean isLst ) {
 		
 		if( name == null )
 			throw new IllegalArgumentException( "Name must not be null." );

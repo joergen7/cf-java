@@ -24,7 +24,7 @@ public class ArgPair {
 		return inParamLst;
 	}
 
-	public Object getBindMap() {
+	public Amap<String, Alist<Expr>> getBindMap() {
 		return bindMap;
 	}
 

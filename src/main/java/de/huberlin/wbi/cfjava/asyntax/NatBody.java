@@ -15,7 +15,7 @@ public class NatBody implements Body {
 		this.bodyMap = bodyMap;
 	}
 
-	public Object getBodyMap() {
+	public Amap<String, Alist<Expr>> getBodyMap() {
 		return bodyMap;
 	}
 

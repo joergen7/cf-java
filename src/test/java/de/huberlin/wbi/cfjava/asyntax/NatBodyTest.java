@@ -17,8 +17,7 @@ public class NatBodyTest {
 		Amap<String, Alist<Expr>> bodyMap;
 		
 		bodyMap = new Amap<String, Alist<Expr>>()
-			.put( "out", new Alist<Expr>()
-				.add( new Str( "blub" ) ) );
+			.put( "out", new Alist<Expr>().add( new Str( "blub" ) ) );
 		
 		nb = new NatBody( bodyMap );
 		
