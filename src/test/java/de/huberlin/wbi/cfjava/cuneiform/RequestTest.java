@@ -56,6 +56,56 @@ public class RequestTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
+	public void notEqualsNullTest() {
+		
+		Request r;
+		Lam lam;
+		Amap<String, Alist<Expr>>bindMap;
+		
+		lam = mock( Lam.class );
+		bindMap = new Amap<>();
+
+		r = new Request( lam, bindMap );
+		
+		assertNotEquals( r, null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsStringTest() {
+		
+		Request r;
+		Lam lam;
+		Amap<String, Alist<Expr>>bindMap;
+		
+		lam = mock( Lam.class );
+		bindMap = new Amap<>();
+
+		r = new Request( lam, bindMap );
+		
+		assertNotEquals( r, "blub" );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void equalsItselfTest() {
+		
+		Request r;
+		Lam lam;
+		Amap<String, Alist<Expr>>bindMap;
+		
+		lam = mock( Lam.class );
+		bindMap = new Amap<>();
+
+		r = new Request( lam, bindMap );
+		
+		assertEquals( r, r );
+	}
+	
+
+	
+	@SuppressWarnings("static-method")
+	@Test
 	public void twoRequestsWithSameLamAndBindMapAreEqualTest() {
 		
 		Request r1, r2;
@@ -107,19 +157,5 @@ public class RequestTest {
 		assertNotEquals( r1, r2 );
 	}
 
-	@SuppressWarnings("static-method")
-	@Test
-	public void requestShouldNeverEqualStringTest() {
-		
-		Request r;
-		Lam lam;
-		Amap<String, Alist<Expr>>bindMap;
-		
-		lam = mock( Lam.class );
-		bindMap = new Amap<>();
 
-		r = new Request( lam, bindMap );
-		
-		assertNotEquals( r, "blub" );
-	}
 }

@@ -53,5 +53,73 @@ public class VarTest {
 		v = new Var( 0, "blub" );
 	}
 	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsNullTest() {
+		
+		Var v;
+		
+		v = new Var( 12, "blub" );
+		
+		assertNotEquals( v, null );
+	}
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsStringTest() {
+		
+		Var v;
+		
+		v = new Var( 12, "blub" );
+		
+		assertNotEquals( v, "blub" );
+	}
 	
+	@SuppressWarnings("static-method")
+	@Test
+	public void equalsItselfTest() {
+		
+		Var v;
+		
+		v = new Var( 12, "blub" );
+		
+		assertEquals( v, v );
+	}
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void equalsIdenticalStrTest() {
+		
+		Var v1, v2;
+		
+		v1 = new Var( 1, "blub" );
+		v2 = new Var( 1, "blub" );
+		
+		assertEquals( v1, v2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsDifferingLineTest() {
+		
+		Var v1, v2;
+		
+		v1 = new Var( 11, "blub" );
+		v2 = new Var( 12, "blub" );
+		
+		assertNotEquals( v1, v2 );
+	}
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsDifferingLabelTest() {
+		
+		Var v1, v2;
+		
+		v1 = new Var( 12, "blub" );
+		v2 = new Var( 12, "bla" );
+		
+		assertNotEquals( v1, v2 );
+	}
+
 }

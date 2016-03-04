@@ -3,6 +3,8 @@ package de.huberlin.wbi.cfjava.data;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class Amap<K,V> {
 
 	private final HashMap<K,V> content;
@@ -139,4 +141,24 @@ public class Amap<K,V> {
 		return acc;
 	}
 
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder( 157, 211 ).append( content ).toHashCode();
+	}
+	
+	@Override
+	public boolean equals( Object obj ) {
+		
+		Amap<?, ?> rhs;
+		
+		if( !( obj instanceof Amap ) )
+			return false;
+		
+		if( obj == this )
+			return true;
+		
+		rhs = ( Amap<?, ?> )obj;
+		
+		return content.equals( rhs.content );
+	}
 }

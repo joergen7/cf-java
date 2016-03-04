@@ -62,4 +62,105 @@ public class SignTest {
 		
 		s = new Sign( lo, null );
 	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void shouldNotEqualNullTest() {
+		
+		Sign s;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		
+		lo = new Alist<Param>().add( mock( Param.class ) );
+		li = new Alist<>();
+		
+		s = new Sign( lo, li );
+		
+		assertNotEquals( s, null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void shouldNotEqualStringTest() {
+		
+		Sign s;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		
+		lo = new Alist<Param>().add( mock( Param.class ) );
+		li = new Alist<>();
+		
+		s = new Sign( lo, li );
+		
+		assertNotEquals( s, "blub" );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void shouldEqualItselfTest() {
+		
+		Sign s;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		
+		lo = new Alist<Param>().add( mock( Param.class ) );
+		li = new Alist<>();
+		
+		s = new Sign( lo, li );
+		
+		assertEquals( s, s );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void shouldEqualWhenSameOutLstAndInLstTest() {
+		
+		Sign s1, s2;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		
+		lo = new Alist<Param>().add( mock( Param.class ) );
+		li = new Alist<>();
+		
+		s1 = new Sign( lo, li );
+		s2 = new Sign( lo, li );
+		
+		assertEquals( s1, s2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void shouldNotEqualWhenDifferingOutLstTest() {
+		
+		Sign s1, s2;
+		Alist<Param> lo1, lo2;
+		Alist<InParam> li;
+		
+		lo1 = new Alist<Param>().add( mock( Param.class ) );
+		lo2 = new Alist<Param>().add( mock( Param.class ) ).add( mock( Param.class ) );
+		li = new Alist<>();
+		
+		s1 = new Sign( lo1, li );
+		s2 = new Sign( lo2, li );
+		
+		assertNotEquals( s1, s2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void shouldNotEqualWhenDifferingInLstTest() {
+		
+		Sign s1, s2;
+		Alist<Param> lo;
+		Alist<InParam> li1, li2;
+		
+		lo = new Alist<Param>().add( mock( Param.class ) );
+		li1 = new Alist<>();
+		li2 = new Alist<InParam>().add( mock( InParam.class ) );
+		
+		s1 = new Sign( lo, li1 );
+		s2 = new Sign( lo, li2 );
+		
+		assertNotEquals( s1, s2 );
+	}
 }

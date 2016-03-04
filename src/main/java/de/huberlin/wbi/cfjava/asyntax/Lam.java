@@ -1,5 +1,8 @@
 package de.huberlin.wbi.cfjava.asyntax;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class Lam extends SrcLocated implements LamSurrogate, LamNameHolder {
 
 	private final String lamName;
@@ -38,6 +41,35 @@ public class Lam extends SrcLocated implements LamSurrogate, LamNameHolder {
 
 	public Body getBody() {
 		return body;
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder( 569, 967 )
+			.appendSuper( super.hashCode() )
+			.append( lamName )
+			.append( sign )
+			.append( body ).toHashCode();
+	}
+	
+	@Override
+	public boolean equals( Object obj ) {
+		
+		Lam rhs;
+		
+		if( !( obj instanceof Lam ) )
+			return false;
+		
+		if( obj == this )
+			return true;
+		
+		rhs = ( Lam )obj;
+		
+		return new EqualsBuilder()
+			.appendSuper( super.equals( obj ) )
+			.append( lamName, rhs.lamName )
+			.append( sign, rhs.sign )
+			.append( body, rhs.body ).isEquals();		
 	}
 
 }

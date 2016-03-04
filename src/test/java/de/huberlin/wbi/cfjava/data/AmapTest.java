@@ -271,4 +271,96 @@ public class AmapTest {
 		
 	}
 	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsNullTest() {
+		
+		Amap<Integer, String> m;
+		
+		m = new Amap<>();
+		
+		assertNotEquals( m, null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsStringTest() {
+		
+		Amap<Integer, String> m;
+		
+		m = new Amap<>();
+		
+		assertNotEquals( m, "blub" );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void emptyMapEqualsItselfTest() {
+		
+		Amap<Integer, String> m;
+		
+		m = new Amap<>();
+		
+		assertEquals( m, m );
+	}
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void nonEmptyMapEqualsItselfTest() {
+		
+		Amap<Integer, String> m;
+		
+		m = new Amap<Integer, String>().put( 4, "bla" );
+		
+		assertEquals( m, m );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void emptyMapEqualsOtherEmptyMapTest() {
+		
+		Amap<Integer, String> m1, m2;
+		
+		m1 = new Amap<>();
+		m2 = new Amap<>();
+		
+		assertEquals( m1, m2 );
+	}
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void nonEmptyMapEqualsIdenticalMapTest() {
+		
+		Amap<Integer, String> m1, m2;
+		
+		m1 = new Amap<Integer, String>().put( 4, "bla" );
+		m2 = new Amap<Integer, String>().put( 4, "bla" );
+		
+		assertEquals( m1, m2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void nonEmptyMapNotEqualsDifferentMapTest() {
+		
+		Amap<Integer, String> m1, m2;
+		
+		m1 = new Amap<Integer, String>().put( 4, "bla" );
+		m2 = new Amap<Integer, String>().put( 4, "blub" );
+		
+		assertNotEquals( m1, m2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void MapsWithDifferentSizesShouldNotBeEqualTest() {
+		
+		Amap<Integer, String> m1, m2;
+		
+		m1 = new Amap<Integer, String>().put( 4, "bla" );
+		m2 = new Amap<Integer, String>().put( 4, "bla" ).put( 5, "blub" );
+		
+		assertNotEquals( m1, m2 );
+	}
+
 }

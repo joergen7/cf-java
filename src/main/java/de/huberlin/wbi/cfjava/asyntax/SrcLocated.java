@@ -1,5 +1,7 @@
 package de.huberlin.wbi.cfjava.asyntax;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public abstract class SrcLocated {
 
 	private final int line;
@@ -14,6 +16,27 @@ public abstract class SrcLocated {
 
 	public int getLine() {
 		return line;
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder( 883, 71 ).append( line ).toHashCode();
+	}
+	
+	@Override
+	public boolean equals( Object obj ) {
+		
+		SrcLocated rhs;
+		
+		if( !( obj instanceof SrcLocated ) )
+			return false;
+		
+		if( obj == this )
+			return true;
+		
+		rhs = ( SrcLocated )obj;
+		
+		return line == rhs.line;
 	}
 
 }

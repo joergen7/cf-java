@@ -67,98 +67,6 @@ public class AlistTest {
 
 	@SuppressWarnings("static-method")
 	@Test
-	public void emptyListEqualsOtherClassShouldReturnFalse() {
-
-		Alist<Integer> l;
-
-		l = new Alist<>();
-
-		assertFalse( l.equals( 4 ) );
-	}
-
-	@SuppressWarnings("static-method")
-	@Test
-	public void listsOfDifferingSizeShouldNotBeEqual() {
-
-		Alist<Integer> l1, l2;
-
-		l1 = new Alist<>();
-		l1 = l1.add( 1 );
-
-		l2 = new Alist<>();
-		l2 = l2.add( 1 ).add( 2 );
-
-		assertNotEquals( l1, l2 );
-	}
-
-	@SuppressWarnings("static-method")
-	@Test
-	public void listsWithEqualElementsShouldBeEqual() {
-
-		Alist<Integer> l1, l2;
-
-		l1 = new Alist<>();
-		l1 = l1.add( 1 ).add( 2 );
-
-		l2 = new Alist<>();
-		l2 = l2.add( 1 ).add( 2 );
-
-		assertEquals( l1, l2 );
-	}
-
-	@SuppressWarnings("static-method")
-	@Test
-	public void listsWithDifferingElementsShouldNotBeEqual() {
-
-		Alist<Integer> l1, l2;
-
-		l1 = new Alist<>();
-		l1 = l1.add( 1 ).add( 3 );
-
-		l2 = new Alist<>();
-		l2 = l2.add( 1 ).add( 2 );
-
-		assertNotEquals( l1, l2 );
-	}
-
-	@SuppressWarnings("static-method")
-	@Test
-	public void nonEmptyListEqualsNullReturnsFalse() {
-
-		Alist<Integer> l;
-
-		l = new Alist<>();
-		l = l.add( 1 );
-
-		assertFalse( l.equals( null ) );
-	}
-
-	@SuppressWarnings("static-method")
-	@Test
-	public void nonEmptyListEqualsOtherClassReturnsFalse() {
-
-		Alist<Integer> l;
-
-		l = new Alist<>();
-		l = l.add( 1 );
-
-		assertFalse( l.equals( 4 ) );
-	}
-
-	@SuppressWarnings("static-method")
-	@Test
-	public void emptyListShouldBeEqualToEmptyList() {
-
-		Alist<Integer> a, b;
-
-		a = new Alist<>();
-		b = new Alist<>();
-
-		assertEquals( a, b );
-	}
-
-	@SuppressWarnings("static-method")
-	@Test
 	public void appendConcatenatesTwoLists() {
 
 		Alist<Integer> l1, l2, l3, x;
@@ -330,6 +238,130 @@ public class AlistTest {
 		
 		assertFalse( list.all( pred ) );
 	}
+	
+	/**********/
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void emptyListNotEqualNullTest() {
+
+		Alist<Integer> l;
+
+		l = new Alist<>();
+
+		assertNotEquals( l, null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void nonEmptyListNotEqualNullTest() {
+
+		Alist<Integer> l;
+
+		l = new Alist<Integer>().add( 4 );
+
+		assertNotEquals( l, null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void emptyListNotEqualStringTest() {
+
+		Alist<Integer> l;
+
+		l = new Alist<>();
+
+		assertNotEquals( l, "blub" );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void nonemptyListNotEqualStringTest() {
+
+		Alist<Integer> l;
+
+		l = new Alist<Integer>().add( 4 );
+
+		assertNotEquals( l, "blub" );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void emptyListEqualsItselfTest() {
+
+		Alist<Integer> l;
+
+		l = new Alist<>();
+
+		assertEquals( l, l );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void nonemptyListEqualsItselfTest() {
+
+		Alist<Integer> l;
+
+		l = new Alist<Integer>().add( 4 );
+
+		assertEquals( l, l );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void emptyListEqualsOtherEmptyListTest() {
+
+		Alist<Integer> l1, l2;
+
+		l1 = new Alist<>();
+		l2 = new Alist<>();
+
+		assertEquals( l1, l2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void nonEmptyListEqualsIdenticalListTest() {
+
+		Alist<Integer> l1, l2;
+
+		l1 = new Alist<Integer>().add( 4 );
+		l2 = new Alist<Integer>().add( 4 );
+
+		assertEquals( l1, l2 );
+	}
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void listsWithDifferingElementsShouldNotBeEqual() {
+
+		Alist<Integer> l1, l2;
+
+		l1 = new Alist<>();
+		l1 = l1.add( 1 ).add( 3 );
+
+		l2 = new Alist<>();
+		l2 = l2.add( 1 ).add( 2 );
+
+		assertNotEquals( l1, l2 );
+	}
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void listsOfDifferingSizeShouldNotBeEqual() {
+
+		Alist<Integer> l1, l2;
+
+		l1 = new Alist<>();
+		l1 = l1.add( 1 );
+
+		l2 = new Alist<>();
+		l2 = l2.add( 1 ).add( 2 );
+
+		assertNotEquals( l1, l2 );
+	}
+
+	/***********/
 	
 	
 	

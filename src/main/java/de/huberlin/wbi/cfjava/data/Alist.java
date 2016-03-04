@@ -7,6 +7,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class Alist<T> implements Iterable<T> {
 
 	private class AlistIterator implements Iterator<T> {
@@ -97,7 +99,10 @@ public class Alist<T> implements Iterable<T> {
 
 		@Override
 		public int hashCode() {
-			return hd.hashCode();
+			return new HashCodeBuilder()
+				.appendSuper( super.hashCode() )
+				.append( hd )
+				.append( tl ).toHashCode();
 		}
 
 		@Override
@@ -172,17 +177,17 @@ public class Alist<T> implements Iterable<T> {
 	@Override
 	public boolean equals( Object obj ) {
 
-		Alist<?> other;
-
-		if( obj == null )
-			return false;
-
+		Alist<?> rhs;
+		
 		if( !( obj instanceof Alist ) )
 			return false;
+		
+		if( obj == this )
+			return true;
+		
+		rhs = ( Alist<?> )obj;
 
-		other = ( Alist<?> )obj;
-
-		return other.isEmpty();
+		return rhs.isEmpty();
 	}
 
 	@SuppressWarnings("unused")
@@ -197,7 +202,7 @@ public class Alist<T> implements Iterable<T> {
 
 	@Override
 	public int hashCode() {
-		return 0;
+		return 379;
 	}
 
 	public T hd() {

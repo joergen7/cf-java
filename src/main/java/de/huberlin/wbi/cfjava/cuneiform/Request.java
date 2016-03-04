@@ -1,5 +1,8 @@
 package de.huberlin.wbi.cfjava.cuneiform;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
 import de.huberlin.wbi.cfjava.data.Alist;
@@ -32,19 +35,26 @@ public class Request {
 
 	@Override
 	public int hashCode() {
-		return lam.hashCode();
+		return new HashCodeBuilder( 733, 101 )
+			.append( lam )
+			.append( bindMap ).toHashCode();
 	}
 	
 	@Override
 	public boolean equals( Object obj ) {
 		
-		Request other;
+		Request rhs;
 		
 		if( !( obj instanceof Request ) )
 			return false;
+
+		if( obj == this )
+			return true;
 		
-		other = ( Request )obj;
+		rhs = ( Request )obj;
 		
-		return other.bindMap.equals( bindMap ) && other.lam.equals( lam );
+		return new EqualsBuilder()
+			.append( lam, rhs.lam )
+			.append( bindMap, rhs.bindMap ).isEquals();
 	}
 }

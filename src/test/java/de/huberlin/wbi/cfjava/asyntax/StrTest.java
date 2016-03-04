@@ -24,6 +24,63 @@ public class StrTest {
 		Str s;
 		
 		s = new Str( null );
-		
 	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsNullTest() {
+		
+		Str s;
+		
+		s = new Str( "blub" );
+		
+		assertNotEquals( s, null );
+	}
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsStringTest() {
+		
+		Str s;
+		
+		s = new Str( "blub" );
+		
+		assertNotEquals( s, "blub" );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void equalsItselfTest() {
+		
+		Str s;
+		
+		s = new Str( "blub" );
+		
+		assertEquals( s, s );
+	}
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void equalsIdenticalStrTest() {
+		
+		Str s1, s2;
+		
+		s1 = new Str( "blub" );
+		s2 = new Str( "blub" );
+		
+		assertEquals( s1, s2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsDifferentStrTest() {
+		
+		Str s1, s2;
+		
+		s1 = new Str( "blub" );
+		s2 = new Str( "bla" );
+		
+		assertNotEquals( s1, s2 );
+	}
+
 }
