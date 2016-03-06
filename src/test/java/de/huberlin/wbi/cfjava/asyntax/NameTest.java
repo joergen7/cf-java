@@ -44,5 +44,73 @@ public class NameTest {
 		
 		n = new Name( "", false );
 	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsNullTest() {
+		
+		Name n;
+		
+		n = new Name( "p", true );
+		
+		assertNotEquals( n, null );
+	}
 
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsStringTest() {
+		
+		Name n;
+		
+		n = new Name( "p", true );
+		
+		assertNotEquals( n, "blub" );
+	}
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void equalsItselfTest() {
+		
+		Name n;
+		
+		n = new Name( "p", true );
+		
+		assertEquals( n, n );
+	}
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void equalsIdenticalInstanceTest() {
+		
+		Name n1, n2;
+		
+		n1 = new Name( "p", true );
+		n2 = new Name( "p", true );
+		
+		assertEquals( n1, n2 );
+	}
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsIfDifferentParamNameTest() {
+		
+		Name n1, n2;
+		
+		n1 = new Name( "p", true );
+		n2 = new Name( "q", true );
+		
+		assertNotEquals( n1, n2 );
+	}
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsIfDifferentFileFlagTest() {
+		
+		Name n1, n2;
+		
+		n1 = new Name( "p", true );
+		n2 = new Name( "p", false );
+		
+		assertNotEquals( n1, n2 );
+	}
 }

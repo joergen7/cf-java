@@ -1,5 +1,7 @@
 package de.huberlin.wbi.cfjava.asyntax;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import de.huberlin.wbi.cfjava.data.Alist;
 
 public class Correl implements InParam {
@@ -14,8 +16,29 @@ public class Correl implements InParam {
 		this.nameLst = nameLst;
 	}
 
+	@Override
+	public boolean equals( Object obj ) {
+		
+		Correl rhs;
+		
+		if( !( obj instanceof Correl ) )
+			return false;
+		
+		if( obj == this )
+			return true;
+		
+		rhs = ( Correl )obj;
+		
+		return nameLst.equals( rhs.nameLst );
+	}
+	
 	public Alist<Name> getNameLst() {
 		return nameLst;
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder( 73, 389 ).append( nameLst ).toHashCode();
 	}
 
 }

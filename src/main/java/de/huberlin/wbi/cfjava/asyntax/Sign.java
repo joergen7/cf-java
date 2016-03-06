@@ -7,8 +7,8 @@ import de.huberlin.wbi.cfjava.data.Alist;
 
 public class Sign {
 
-	private final Alist<Param> outLst;
 	private final Alist<InParam> inLst;
+	private final Alist<Param> outLst;
 	
 	public Sign( final Alist<Param> outLst, final Alist<InParam> inLst ) {
 		
@@ -23,21 +23,6 @@ public class Sign {
 		
 		this.outLst = outLst;
 		this.inLst = inLst;
-	}
-
-	public Alist<Param> getOutLst() {
-		return outLst;
-	}
-
-	public Alist<InParam> getInLst() {
-		return inLst;
-	}
-	
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder( 17, 701 )
-			.append( outLst )
-			.append( inLst ).toHashCode();
 	}
 
 	@Override
@@ -56,5 +41,20 @@ public class Sign {
 		return new EqualsBuilder()
 			.append( outLst, rhs.outLst )
 			.append( inLst, rhs.inLst ).isEquals();
+	}
+
+	public Alist<InParam> getInLst() {
+		return inLst;
+	}
+	
+	public Alist<Param> getOutLst() {
+		return outLst;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder( 17, 701 )
+			.append( outLst )
+			.append( inLst ).toHashCode();
 	}
 }

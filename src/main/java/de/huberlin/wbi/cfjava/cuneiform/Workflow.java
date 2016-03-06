@@ -4,7 +4,7 @@ import de.huberlin.wbi.cfjava.eval.RequestCollector;
 
 public class Workflow {
 
-	private RequestCollector tc;
+	private RequestCollector rc;
 	
 	public Workflow( String script ) {
 		

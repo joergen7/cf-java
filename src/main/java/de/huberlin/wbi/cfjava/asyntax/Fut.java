@@ -1,11 +1,14 @@
 package de.huberlin.wbi.cfjava.asyntax;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import de.huberlin.wbi.cfjava.data.Amap;
 
 public class Fut extends IdHolder implements LamNameHolder {
 	
-	private final String lamName;
 	private final Amap<String, Boolean> fileMap;
+	private final String lamName;
 
 	public Fut( final String lamName, final int id, final Amap<String, Boolean> fileMap ) {
 		
@@ -28,13 +31,40 @@ public class Fut extends IdHolder implements LamNameHolder {
 	}
 
 	@Override
-	public String getLamName() {
-		return lamName;
+	public boolean equals( Object obj ) {
+		
+		Fut rhs;
+		
+		if( !( obj instanceof Fut ) )
+			return false;
+		
+		if( obj == this )
+			return true;
+		
+		rhs = ( Fut )obj;
+		
+		return new EqualsBuilder()
+			.appendSuper( super.equals( rhs ) )
+			.append( lamName, rhs.lamName )
+			.append( fileMap, rhs.fileMap ).isEquals();
 	}
 
 
 	public Amap<String, Boolean> getFileMap() {
 		return fileMap;
+	}
+	
+	@Override
+	public String getLamName() {
+		return lamName;
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder( 443, 787 )
+			.appendSuper( super.hashCode() )
+			.append( lamName )
+			.append( fileMap ).toHashCode();
 	}
 
 }

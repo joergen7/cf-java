@@ -14,15 +14,6 @@ public abstract class ContentHolder {
 		this.content = content;
 	}
 
-	public String getContent() {
-		return content;
-	}
-	
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder( 131, 23 ).append( content ).toHashCode();
-	}
-	
 	@Override
 	public boolean equals( Object obj ) {
 		
@@ -37,6 +28,15 @@ public abstract class ContentHolder {
 		rhs = ( ContentHolder )obj;
 		
 		return content.equals( rhs.content );
+	}
+	
+	public String getContent() {
+		return content;
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder( 131, 23 ).append( content ).toHashCode();
 	}
 
 }

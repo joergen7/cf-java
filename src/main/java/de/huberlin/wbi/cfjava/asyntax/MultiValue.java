@@ -17,17 +17,6 @@ public abstract class MultiValue extends SrcLocated {
 		this.channel = channel;
 	}
 	
-	public int getChannel() {
-		return channel;
-	}
-	
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder( 293, 601 )
-			.appendSuper( super.hashCode() )
-			.append( channel ).toHashCode();
-	}
-	
 	@Override
 	public boolean equals( Object obj ) {
 		
@@ -44,5 +33,16 @@ public abstract class MultiValue extends SrcLocated {
 		return new EqualsBuilder()
 			.appendSuper( super.equals( rhs ) )
 			.append( channel, rhs.channel ).isEquals();
+	}
+	
+	public int getChannel() {
+		return channel;
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder( 293, 601 )
+			.appendSuper( super.hashCode() )
+			.append( channel ).toHashCode();
 	}
 }

@@ -1,9 +1,12 @@
 package de.huberlin.wbi.cfjava.asyntax;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class Name implements LabelHolder {
 
-	private final String label;
 	private final boolean isFile;
+	private final String label;
 	
 	public Name( final String label, final boolean isFile ) {
 		
@@ -17,8 +20,22 @@ public class Name implements LabelHolder {
 		this.isFile = isFile;
 	}
 
-	public boolean isFile() {
-		return isFile;
+	@Override
+	public boolean equals( Object obj ) {
+		
+		Name rhs;
+		
+		if( !( obj instanceof Name ) )
+			return false;
+		
+		if( obj == this )
+			return true;
+		
+		rhs = ( Name )obj;
+		
+		return new EqualsBuilder()
+			.append( label, rhs.label )
+			.append( isFile, rhs.isFile ).isEquals();
 	}
 
 	@Override
@@ -26,4 +43,14 @@ public class Name implements LabelHolder {
 		return label;
 	}
 
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder( 883, 347 )
+			.append( label )
+			.append( isFile ).toHashCode();
+	}
+	
+	public boolean isFile() {
+		return isFile;
+	}
 }
