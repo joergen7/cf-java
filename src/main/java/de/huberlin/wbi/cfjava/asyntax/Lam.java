@@ -5,9 +5,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 public class Lam extends SrcLocated implements LamSurrogate, LamNameHolder {
 
+	private final Body body;
 	private final String lamName;
 	private final Sign sign;
-	private final Body body;
 	
 	public Lam( final int line, final String lamName, final Sign sign, final Body body ) {
 		
@@ -31,28 +31,6 @@ public class Lam extends SrcLocated implements LamSurrogate, LamNameHolder {
 	}
 
 	@Override
-	public String getLamName() {
-		return lamName;
-	}
-
-	public Sign getSign() {
-		return sign;
-	}
-
-	public Body getBody() {
-		return body;
-	}
-	
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder( 569, 967 )
-			.appendSuper( super.hashCode() )
-			.append( lamName )
-			.append( sign )
-			.append( body ).toHashCode();
-	}
-	
-	@Override
 	public boolean equals( Object obj ) {
 		
 		Lam rhs;
@@ -70,6 +48,28 @@ public class Lam extends SrcLocated implements LamSurrogate, LamNameHolder {
 			.append( lamName, rhs.lamName )
 			.append( sign, rhs.sign )
 			.append( body, rhs.body ).isEquals();		
+	}
+
+	public Body getBody() {
+		return body;
+	}
+
+	@Override
+	public String getLamName() {
+		return lamName;
+	}
+	
+	public Sign getSign() {
+		return sign;
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder( 569, 967 )
+			.appendSuper( super.hashCode() )
+			.append( lamName )
+			.append( sign )
+			.append( body ).toHashCode();
 	}
 
 }

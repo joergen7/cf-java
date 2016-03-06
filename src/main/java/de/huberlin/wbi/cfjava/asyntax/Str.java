@@ -9,17 +9,6 @@ public class Str extends ContentHolder implements Expr {
 	}
 	
 	@Override
-	public boolean isFinal() {
-		return true;
-	}
-		
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder( 863, 389 )
-			.appendSuper( super.hashCode() ).toHashCode();
-	}
-	
-	@Override
 	public boolean equals( Object obj ) {
 		
 		if( !( obj instanceof Str ) )
@@ -29,5 +18,16 @@ public class Str extends ContentHolder implements Expr {
 			return true;
 		
 		return super.equals( obj );
+	}
+		
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder( 863, 389 )
+			.appendSuper( super.hashCode() ).toHashCode();
+	}
+	
+	@Override
+	public boolean isFinal() {
+		return true;
 	}
 }

@@ -127,4 +127,142 @@ public class AppTest {
 		
 		a = new App( 12, 1, var, null );
 	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsNullTest() {
+		
+		App a;
+		Var var;
+		Amap<String, Alist<Expr>> fa;
+		
+		var = new Var( 1, "f" );
+		fa = new Amap<>();
+		
+		a = new App( 12, 1, var, fa );
+		
+		assertNotEquals( a, null );
+	}
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsStringTest() {
+		
+		App a;
+		Var var;
+		Amap<String, Alist<Expr>> fa;
+		
+		var = new Var( 1, "f" );
+		fa = new Amap<>();
+		
+		a = new App( 12, 1, var, fa );
+		
+		assertNotEquals( a, "blub" );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void equalsItselfTest() {
+		
+		App a;
+		Var var;
+		Amap<String, Alist<Expr>> fa;
+		
+		var = new Var( 1, "f" );
+		fa = new Amap<>();
+		
+		a = new App( 12, 1, var, fa );
+		
+		assertEquals( a, a );
+	}
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void equalsIdenticalInstanceTest() {
+		
+		App a1, a2;
+		Var var;
+		Amap<String, Alist<Expr>> fa;
+		
+		var = new Var( 1, "f" );
+		fa = new Amap<>();
+		
+		a1 = new App( 12, 1, var, fa );
+		a2 = new App( 12, 1, var, fa );
+		
+		
+		assertEquals( a1, a2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsIfDifferingLineTest() {
+		
+		App a1, a2;
+		Var var;
+		Amap<String, Alist<Expr>> fa;
+		
+		var = new Var( 1, "f" );
+		fa = new Amap<>();
+		
+		a1 = new App( 12, 1, var, fa );
+		a2 = new App( 11, 1, var, fa );
+		
+		
+		assertNotEquals( a1, a2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsIfDifferingChannelTest() {
+		
+		App a1, a2;
+		Var var;
+		Amap<String, Alist<Expr>> fa;
+		
+		var = new Var( 1, "f" );
+		fa = new Amap<>();
+		
+		a1 = new App( 12, 1, var, fa );
+		a2 = new App( 12, 2, var, fa );
+		
+		
+		assertNotEquals( a1, a2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsIfDifferingLamSurrogateTest() {
+		
+		App a1, a2;
+		LamSurrogate l1, l2;
+		Amap<String, Alist<Expr>> fa;
+		
+		l1 = mock( LamSurrogate.class );
+		l2 = mock( LamSurrogate.class );
+		fa = new Amap<>();
+		
+		a1 = new App( 12, 1, l1, fa );
+		a2 = new App( 12, 1, l2, fa );
+		
+		assertNotEquals( a1, a2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsIfDifferingBindMapTest() {
+		
+		App a1, a2;
+		Var var;
+		Amap<String, Alist<Expr>> fa1, fa2;
+		
+		var = new Var( 1, "f" );
+		fa1 = new Amap<>();
+		fa2 = new Amap<String, Alist<Expr>>().put( "bla", new Alist<Expr>().add( new Str( "blub" ) ) ); 
+		
+		a1 = new App( 12, 1, var, fa1 );
+		a2 = new App( 12, 1, var, fa2 );
+		
+		assertNotEquals( a1, a2 );
+	}
 }
