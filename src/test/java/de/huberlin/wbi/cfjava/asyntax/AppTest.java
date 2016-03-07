@@ -50,6 +50,20 @@ public class AppTest {
 	
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test( expected=IllegalArgumentException.class )
+	public void constructorShouldThrowIaeOnNegChannelTest() {
+		
+		App a;
+		Var var;
+		Amap<String, Alist<Expr>> fa;
+		
+		var = new Var( 1, "f" );
+		fa = new Amap<>();
+		
+		a = new App( 12, -1, var, fa );
+	}
+	
+	@SuppressWarnings({ "static-method", "unused" })
+	@Test( expected=IllegalArgumentException.class )
 	public void constructorShouldThrowIaeOnNegLineTest() {
 		
 		App a;
@@ -64,30 +78,26 @@ public class AppTest {
 	
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test( expected=IllegalArgumentException.class )
-	public void constructorShouldThrowIaeOnZeroLineTest() {
+	public void constructorShouldThrowIaeOnNullBindMapTest() {
 		
 		App a;
 		Var var;
-		Amap<String, Alist<Expr>> fa;
 		
 		var = new Var( 1, "f" );
-		fa = new Amap<>();
 		
-		a = new App( 0, 1, var, fa );
+		a = new App( 12, 1, var, null );
 	}
 	
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test( expected=IllegalArgumentException.class )
-	public void constructorShouldThrowIaeOnNegChannelTest() {
+	public void constructorShouldThrowIaeOnNullLamSurrogateTest() {
 		
 		App a;
-		Var var;
 		Amap<String, Alist<Expr>> fa;
 		
-		var = new Var( 1, "f" );
 		fa = new Amap<>();
 		
-		a = new App( 12, -1, var, fa );
+		a = new App( 12, 1, null, fa );
 	}
 	
 	@SuppressWarnings({ "static-method", "unused" })
@@ -106,76 +116,18 @@ public class AppTest {
 	
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test( expected=IllegalArgumentException.class )
-	public void constructorShouldThrowIaeOnNullLamSurrogateTest() {
+	public void constructorShouldThrowIaeOnZeroLineTest() {
 		
 		App a;
+		Var var;
 		Amap<String, Alist<Expr>> fa;
 		
+		var = new Var( 1, "f" );
 		fa = new Amap<>();
 		
-		a = new App( 12, 1, null, fa );
+		a = new App( 0, 1, var, fa );
 	}
 	
-	@SuppressWarnings({ "static-method", "unused" })
-	@Test( expected=IllegalArgumentException.class )
-	public void constructorShouldThrowIaeOnNullBindMapTest() {
-		
-		App a;
-		Var var;
-		
-		var = new Var( 1, "f" );
-		
-		a = new App( 12, 1, var, null );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void notEqualsNullTest() {
-		
-		App a;
-		Var var;
-		Amap<String, Alist<Expr>> fa;
-		
-		var = new Var( 1, "f" );
-		fa = new Amap<>();
-		
-		a = new App( 12, 1, var, fa );
-		
-		assertNotEquals( a, null );
-	}
-
-	@SuppressWarnings("static-method")
-	@Test
-	public void notEqualsStringTest() {
-		
-		App a;
-		Var var;
-		Amap<String, Alist<Expr>> fa;
-		
-		var = new Var( 1, "f" );
-		fa = new Amap<>();
-		
-		a = new App( 12, 1, var, fa );
-		
-		assertNotEquals( a, "blub" );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void equalsItselfTest() {
-		
-		App a;
-		Var var;
-		Amap<String, Alist<Expr>> fa;
-		
-		var = new Var( 1, "f" );
-		fa = new Amap<>();
-		
-		a = new App( 12, 1, var, fa );
-		
-		assertEquals( a, a );
-	}
-
 	@SuppressWarnings("static-method")
 	@Test
 	public void equalsIdenticalInstanceTest() {
@@ -193,21 +145,37 @@ public class AppTest {
 		
 		assertEquals( a1, a2 );
 	}
-	
+
 	@SuppressWarnings("static-method")
 	@Test
-	public void notEqualsIfDifferingLineTest() {
+	public void equalsItselfTest() {
 		
-		App a1, a2;
+		App a;
 		Var var;
 		Amap<String, Alist<Expr>> fa;
 		
 		var = new Var( 1, "f" );
 		fa = new Amap<>();
 		
-		a1 = new App( 12, 1, var, fa );
-		a2 = new App( 11, 1, var, fa );
+		a = new App( 12, 1, var, fa );
 		
+		assertEquals( a, a );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsIfDifferingBindMapTest() {
+		
+		App a1, a2;
+		Var var;
+		Amap<String, Alist<Expr>> fa1, fa2;
+		
+		var = new Var( 1, "f" );
+		fa1 = new Amap<>();
+		fa2 = new Amap<String, Alist<Expr>>().put( "bla", new Alist<Expr>().add( new Str( "blub" ) ) ); 
+		
+		a1 = new App( 12, 1, var, fa1 );
+		a2 = new App( 12, 1, var, fa2 );
 		
 		assertNotEquals( a1, a2 );
 	}
@@ -250,19 +218,51 @@ public class AppTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void notEqualsIfDifferingBindMapTest() {
+	public void notEqualsIfDifferingLineTest() {
 		
 		App a1, a2;
 		Var var;
-		Amap<String, Alist<Expr>> fa1, fa2;
+		Amap<String, Alist<Expr>> fa;
 		
 		var = new Var( 1, "f" );
-		fa1 = new Amap<>();
-		fa2 = new Amap<String, Alist<Expr>>().put( "bla", new Alist<Expr>().add( new Str( "blub" ) ) ); 
+		fa = new Amap<>();
 		
-		a1 = new App( 12, 1, var, fa1 );
-		a2 = new App( 12, 1, var, fa2 );
+		a1 = new App( 12, 1, var, fa );
+		a2 = new App( 11, 1, var, fa );
+		
 		
 		assertNotEquals( a1, a2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsNullTest() {
+		
+		App a;
+		Var var;
+		Amap<String, Alist<Expr>> fa;
+		
+		var = new Var( 1, "f" );
+		fa = new Amap<>();
+		
+		a = new App( 12, 1, var, fa );
+		
+		assertNotEquals( a, null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsStringTest() {
+		
+		App a;
+		Var var;
+		Amap<String, Alist<Expr>> fa;
+		
+		var = new Var( 1, "f" );
+		fa = new Amap<>();
+		
+		a = new App( 12, 1, var, fa );
+		
+		assertNotEquals( a, "blub" );
 	}
 }

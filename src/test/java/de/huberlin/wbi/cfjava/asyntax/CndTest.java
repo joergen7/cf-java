@@ -42,20 +42,6 @@ public class CndTest {
 	
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test( expected=IllegalArgumentException.class )
-	public void constructorShouldThrowIaeOnZeroLineTest() {
-		
-		Cnd c;
-		Alist<Expr> xcond, xthen, xelse;
-		
-		xcond = new Alist<>();
-		xthen = new Alist<>();
-		xelse = new Alist<>();
-
-		c = new Cnd( 0, xcond, xthen, xelse );
-	}
-	
-	@SuppressWarnings({ "static-method", "unused" })
-	@Test( expected=IllegalArgumentException.class )
 	public void constructorShouldThrowIaeOnNullCondLstTest() {
 		
 		Cnd c;
@@ -65,6 +51,19 @@ public class CndTest {
 		xelse = new Alist<>();
 
 		c = new Cnd( 12, null, xthen, xelse );		
+	}
+	
+	@SuppressWarnings({ "static-method", "unused" })
+	@Test( expected=IllegalArgumentException.class )
+	public void constructorShouldThrowIaeOnNullElseLstTest() {
+		
+		Cnd c;
+		Alist<Expr> xcond, xthen;
+		
+		xcond = new Alist<>();
+		xthen = new Alist<>();
+
+		c = new Cnd( 12, xcond, xthen, null );		
 	}
 
 	@SuppressWarnings({ "static-method", "unused" })
@@ -82,47 +81,33 @@ public class CndTest {
 
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test( expected=IllegalArgumentException.class )
-	public void constructorShouldThrowIaeOnNullElseLstTest() {
+	public void constructorShouldThrowIaeOnZeroLineTest() {
 		
 		Cnd c;
-		Alist<Expr> xcond, xthen;
+		Alist<Expr> xcond, xthen, xelse;
 		
 		xcond = new Alist<>();
 		xthen = new Alist<>();
+		xelse = new Alist<>();
 
-		c = new Cnd( 12, xcond, xthen, null );		
+		c = new Cnd( 0, xcond, xthen, xelse );
 	}
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void notEqualsNullTest() {
+	public void equalsIdenticalInstanceTest() {
 		
-		Cnd c;
+		Cnd c1, c2;
 		Alist<Expr> xcond, xthen, xelse;
 		
 		xcond = new Alist<>();
 		xthen = new Alist<>();
 		xelse = new Alist<>();
 		
-		c = new Cnd( 12, xcond, xthen, xelse );
+		c1 = new Cnd( 12, xcond, xthen, xelse );
+		c2 = new Cnd( 12, xcond, xthen, xelse );
 		
-		assertNotEquals( c, null );
-	}
-
-	@SuppressWarnings("static-method")
-	@Test
-	public void notEqualsStringTest() {
-		
-		Cnd c;
-		Alist<Expr> xcond, xthen, xelse;
-		
-		xcond = new Alist<>();
-		xthen = new Alist<>();
-		xelse = new Alist<>();
-		
-		c = new Cnd( 12, xcond, xthen, xelse );
-		
-		assertNotEquals( c, "blub" );
+		assertEquals( c1, c2 );
 	}
 
 	@SuppressWarnings("static-method")
@@ -143,23 +128,6 @@ public class CndTest {
 
 	@SuppressWarnings("static-method")
 	@Test
-	public void equalsIdenticalInstanceTest() {
-		
-		Cnd c1, c2;
-		Alist<Expr> xcond, xthen, xelse;
-		
-		xcond = new Alist<>();
-		xthen = new Alist<>();
-		xelse = new Alist<>();
-		
-		c1 = new Cnd( 12, xcond, xthen, xelse );
-		c2 = new Cnd( 12, xcond, xthen, xelse );
-		
-		assertEquals( c1, c2 );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
 	public void notEqualsIfDifferingCondExprTest() {
 		
 		Cnd c1, c2;
@@ -172,6 +140,24 @@ public class CndTest {
 		
 		c1 = new Cnd( 12, xcond1, xthen, xelse );
 		c2 = new Cnd( 12, xcond2, xthen, xelse );
+		
+		assertNotEquals( c1, c2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsIfDifferingElseExprTest() {
+		
+		Cnd c1, c2;
+		Alist<Expr> xcond, xelse1, xelse2, xthen;
+		
+		xcond = new Alist<>();
+		xthen = new Alist<>();
+		xelse1 = new Alist<>();
+		xelse2 = new Alist<Expr>().add( new Str( "blub" ) );
+		
+		c1 = new Cnd( 12, xcond, xthen, xelse1 );
+		c2 = new Cnd( 12, xcond, xthen, xelse2 );
 		
 		assertNotEquals( c1, c2 );
 	}
@@ -196,19 +182,33 @@ public class CndTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void notEqualsIfDifferingElseExprTest() {
+	public void notEqualsNullTest() {
 		
-		Cnd c1, c2;
-		Alist<Expr> xcond, xelse1, xelse2, xthen;
+		Cnd c;
+		Alist<Expr> xcond, xthen, xelse;
 		
 		xcond = new Alist<>();
 		xthen = new Alist<>();
-		xelse1 = new Alist<>();
-		xelse2 = new Alist<Expr>().add( new Str( "blub" ) );
+		xelse = new Alist<>();
 		
-		c1 = new Cnd( 12, xcond, xthen, xelse1 );
-		c2 = new Cnd( 12, xcond, xthen, xelse2 );
+		c = new Cnd( 12, xcond, xthen, xelse );
 		
-		assertNotEquals( c1, c2 );
+		assertNotEquals( c, null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsStringTest() {
+		
+		Cnd c;
+		Alist<Expr> xcond, xthen, xelse;
+		
+		xcond = new Alist<>();
+		xthen = new Alist<>();
+		xelse = new Alist<>();
+		
+		c = new Cnd( 12, xcond, xthen, xelse );
+		
+		assertNotEquals( c, "blub" );
 	}
 }

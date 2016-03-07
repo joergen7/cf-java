@@ -26,8 +26,4 @@ public class Str extends ContentHolder implements Expr {
 			.appendSuper( super.hashCode() ).toHashCode();
 	}
 	
-	@Override
-	public boolean isFinal() {
-		return true;
-	}
 }

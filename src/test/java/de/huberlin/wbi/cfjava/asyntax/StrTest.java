@@ -28,26 +28,16 @@ public class StrTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void notEqualsNullTest() {
+	public void equalsIdenticalStrTest() {
 		
-		Str s;
+		Str s1, s2;
 		
-		s = new Str( "blub" );
+		s1 = new Str( "blub" );
+		s2 = new Str( "blub" );
 		
-		assertNotEquals( s, null );
+		assertEquals( s1, s2 );
 	}
 
-	@SuppressWarnings("static-method")
-	@Test
-	public void notEqualsStringTest() {
-		
-		Str s;
-		
-		s = new Str( "blub" );
-		
-		assertNotEquals( s, "blub" );
-	}
-	
 	@SuppressWarnings("static-method")
 	@Test
 	public void equalsItselfTest() {
@@ -57,18 +47,6 @@ public class StrTest {
 		s = new Str( "blub" );
 		
 		assertEquals( s, s );
-	}
-
-	@SuppressWarnings("static-method")
-	@Test
-	public void equalsIdenticalStrTest() {
-		
-		Str s1, s2;
-		
-		s1 = new Str( "blub" );
-		s2 = new Str( "blub" );
-		
-		assertEquals( s1, s2 );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -81,6 +59,28 @@ public class StrTest {
 		s2 = new Str( "bla" );
 		
 		assertNotEquals( s1, s2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsNullTest() {
+		
+		Str s;
+		
+		s = new Str( "blub" );
+		
+		assertNotEquals( s, null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsStringTest() {
+		
+		Str s;
+		
+		s = new Str( "blub" );
+		
+		assertNotEquals( s, "blub" );
 	}
 
 }

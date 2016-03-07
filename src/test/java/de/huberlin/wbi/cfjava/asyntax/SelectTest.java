@@ -26,6 +26,18 @@ public class SelectTest {
 	
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test( expected=IllegalArgumentException.class )
+	public void constructorShouldThrowIaeOnNegChannelTest() {
+		
+		Select s;
+		Fut fut;
+		
+		fut = mock( Fut.class );
+		
+		s = new Select( 12, -1, fut );
+	}
+	
+	@SuppressWarnings({ "static-method", "unused" })
+	@Test( expected=IllegalArgumentException.class )
 	public void constructorShouldThrowIaeOnNegLineTest() {
 		
 		Select s;
@@ -38,26 +50,11 @@ public class SelectTest {
 	
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test( expected=IllegalArgumentException.class )
-	public void constructorShouldThrowIaeOnZeroLineTest() {
+	public void constructorShouldThrowIaeOnNullFutTest() {
 		
 		Select s;
-		Fut fut;
 		
-		fut = mock( Fut.class );
-		
-		s = new Select( 0, 1, fut );
-	}
-	
-	@SuppressWarnings({ "static-method", "unused" })
-	@Test( expected=IllegalArgumentException.class )
-	public void constructorShouldThrowIaeOnNegChannelTest() {
-		
-		Select s;
-		Fut fut;
-		
-		fut = mock( Fut.class );
-		
-		s = new Select( 12, -1, fut );
+		s = new Select( 12, 1, null );
 	}
 	
 	@SuppressWarnings({ "static-method", "unused" })
@@ -74,53 +71,14 @@ public class SelectTest {
 	
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test( expected=IllegalArgumentException.class )
-	public void constructorShouldThrowIaeOnNullFutTest() {
-		
-		Select s;
-		
-		s = new Select( 12, 1, null );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void notEqualsNullTest() {
+	public void constructorShouldThrowIaeOnZeroLineTest() {
 		
 		Select s;
 		Fut fut;
 		
 		fut = mock( Fut.class );
 		
-		s = new Select( 12, 1, fut );
-		
-		assertNotEquals( s, null );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void notEqualsStringTest() {
-		
-		Select s;
-		Fut fut;
-		
-		fut = mock( Fut.class );
-		
-		s = new Select( 12, 1, fut );
-		
-		assertNotEquals( s, "blub" );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void equalsItselfTest() {
-		
-		Select s;
-		Fut fut;
-		
-		fut = mock( Fut.class );
-		
-		s = new Select( 12, 1, fut );
-		
-		assertEquals( s, s );
+		s = new Select( 0, 1, fut );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -140,17 +98,16 @@ public class SelectTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void notEqualsIfDifferingLineTest() {
+	public void equalsItselfTest() {
 		
-		Select s1, s2;
+		Select s;
 		Fut fut;
 		
 		fut = mock( Fut.class );
 		
-		s1 = new Select( 12, 1, fut );
-		s2 = new Select( 11, 1, fut );
+		s = new Select( 12, 1, fut );
 		
-		assertNotEquals( s1, s2 );
+		assertEquals( s, s );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -182,5 +139,48 @@ public class SelectTest {
 		s2 = new Select( 12, 1, fut2 );
 		
 		assertNotEquals( s1, s2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsIfDifferingLineTest() {
+		
+		Select s1, s2;
+		Fut fut;
+		
+		fut = mock( Fut.class );
+		
+		s1 = new Select( 12, 1, fut );
+		s2 = new Select( 11, 1, fut );
+		
+		assertNotEquals( s1, s2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsNullTest() {
+		
+		Select s;
+		Fut fut;
+		
+		fut = mock( Fut.class );
+		
+		s = new Select( 12, 1, fut );
+		
+		assertNotEquals( s, null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void notEqualsStringTest() {
+		
+		Select s;
+		Fut fut;
+		
+		fut = mock( Fut.class );
+		
+		s = new Select( 12, 1, fut );
+		
+		assertNotEquals( s, "blub" );
 	}
 }
