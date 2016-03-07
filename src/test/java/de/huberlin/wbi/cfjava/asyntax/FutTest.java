@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import de.huberlin.wbi.cfjava.data.Amap;
+import de.huberlin.wbi.cfjava.data.Alist;
 
 public class FutTest {
 
@@ -13,15 +13,15 @@ public class FutTest {
 	public void constructorArgsShouldBeRetrievableTest() {
 		
 		Fut f;
-		Amap<String,Boolean> fileMap;
+		Alist<Param> lo;
 		
-		fileMap = new Amap<>();
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
 		
-		f = new Fut( "f", 435, fileMap );
+		f = new Fut( "f", 435, lo );
 		
 		assertEquals( "f", f.getLamName() );
 		assertEquals( 435, f.getId() );
-		assertSame( fileMap, f.getFileMap() );
+		assertSame( lo, f.getOutLst() );
 	}
 	
 	@SuppressWarnings({ "static-method", "unused" })
@@ -29,11 +29,11 @@ public class FutTest {
 	public void constructorShouldThrowIaeOnNullLamNameTest() {
 		
 		Fut f;
-		Amap<String,Boolean> fileMap;
+		Alist<Param> lo;
 		
-		fileMap = new Amap<>();
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
 		
-		f = new Fut( null, 435, fileMap );		
+		f = new Fut( null, 435, lo );		
 	}
 	
 	@SuppressWarnings({ "static-method", "unused" })
@@ -41,11 +41,11 @@ public class FutTest {
 	public void constructorShouldThrowIaeOnEmptyLamNameTest() {
 		
 		Fut f;
-		Amap<String,Boolean> fileMap;
+		Alist<Param> lo;
 		
-		fileMap = new Amap<>();
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
 		
-		f = new Fut( "", 435, fileMap );		
+		f = new Fut( "", 435, lo );		
 	}
 	
 	@SuppressWarnings({ "static-method", "unused" })
@@ -53,11 +53,11 @@ public class FutTest {
 	public void constructorShouldThrowIaeOnNegIdTest() {
 		
 		Fut f;
-		Amap<String,Boolean> fileMap;
+		Alist<Param> lo;
 		
-		fileMap = new Amap<>();
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
 		
-		f = new Fut( "f", -12, fileMap );		
+		f = new Fut( "f", -12, lo );		
 	}
 	
 	@SuppressWarnings({ "static-method", "unused" })
@@ -65,11 +65,11 @@ public class FutTest {
 	public void constructorShouldThrowIaeOnZeroIdTest() {
 		
 		Fut f;
-		Amap<String,Boolean> fileMap;
+		Alist<Param> lo;
 		
-		fileMap = new Amap<>();
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
 		
-		f = new Fut( "f", 0, fileMap );		
+		f = new Fut( "f", 0, lo );		
 	}
 	
 	@SuppressWarnings({ "static-method", "unused" })
@@ -86,11 +86,11 @@ public class FutTest {
 	public void notEqualsNullTest() {
 		
 		Fut f;
-		Amap<String,Boolean> fileMap;
+		Alist<Param> lo;
 		
-		fileMap = new Amap<>();
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
 		
-		f = new Fut( "f", 435, fileMap );
+		f = new Fut( "f", 435, lo );
 		
 		assertNotEquals( f, null );
 	}
@@ -100,11 +100,11 @@ public class FutTest {
 	public void notEqualsStringTest() {
 		
 		Fut f;
-		Amap<String,Boolean> fileMap;
+		Alist<Param> lo;
 		
-		fileMap = new Amap<>();
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
 		
-		f = new Fut( "f", 435, fileMap );
+		f = new Fut( "f", 435, lo );
 		
 		assertNotEquals( f, "blub" );
 	}
@@ -114,11 +114,11 @@ public class FutTest {
 	public void equalsItselfTest() {
 		
 		Fut f;
-		Amap<String,Boolean> fileMap;
+		Alist<Param> lo;
 		
-		fileMap = new Amap<>();
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
 		
-		f = new Fut( "f", 435, fileMap );
+		f = new Fut( "f", 435, lo );
 		
 		assertEquals( f, f );
 	}
@@ -128,12 +128,12 @@ public class FutTest {
 	public void equalsIdenticalInstanceTest() {
 		
 		Fut f1, f2;
-		Amap<String,Boolean> fileMap;
+		Alist<Param> lo;
 		
-		fileMap = new Amap<>();
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
 		
-		f1 = new Fut( "f", 435, fileMap );
-		f2 = new Fut( "f", 435, fileMap );
+		f1 = new Fut( "f", 435, lo );
+		f2 = new Fut( "f", 435, lo );
 		
 		assertEquals( f1, f2 );
 	}
@@ -143,12 +143,12 @@ public class FutTest {
 	public void notEqualsIfDifferentLamNameTest() {
 		
 		Fut f1, f2;
-		Amap<String,Boolean> fileMap;
+		Alist<Param> lo;
 		
-		fileMap = new Amap<>();
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
 		
-		f1 = new Fut( "f", 435, fileMap );
-		f2 = new Fut( "g", 435, fileMap );
+		f1 = new Fut( "f", 435, lo );
+		f2 = new Fut( "g", 435, lo );
 		
 		assertNotEquals( f1, f2 );
 	}
@@ -158,12 +158,12 @@ public class FutTest {
 	public void notEqualsIfDifferentIdTest() {
 		
 		Fut f1, f2;
-		Amap<String,Boolean> fileMap;
+		Alist<Param> lo;
 		
-		fileMap = new Amap<>();
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
 		
-		f1 = new Fut( "f", 435, fileMap );
-		f2 = new Fut( "f", 436, fileMap );
+		f1 = new Fut( "f", 435, lo );
+		f2 = new Fut( "f", 436, lo );
 		
 		assertNotEquals( f1, f2 );
 	}
@@ -173,13 +173,13 @@ public class FutTest {
 	public void notEqualsIfDifferentFileMapTest() {
 		
 		Fut f1, f2;
-		Amap<String,Boolean> fileMap1, fileMap2;
+		Alist<Param> lo1, lo2;
 		
-		fileMap1 = new Amap<>();
-		fileMap2 = new Amap<String, Boolean>().put( "blub", false );
+		lo1 = new Alist<Param>().add( new Param( new Name( "out1", false ), false ) );
+		lo2 = new Alist<Param>().add( new Param( new Name( "out2", false ), false ) );
 		
-		f1 = new Fut( "f", 435, fileMap1 );
-		f2 = new Fut( "f", 435, fileMap2 );
+		f1 = new Fut( "f", 435, lo1 );
+		f2 = new Fut( "f", 435, lo2 );
 		
 		assertNotEquals( f1, f2 );
 	}

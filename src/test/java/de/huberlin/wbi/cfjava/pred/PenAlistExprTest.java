@@ -49,6 +49,19 @@ public class PenAlistExprTest {
 		
 		assertFalse( pred.test( x ) );
 	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void allVarLstIsNotEnumerableTest() {
+		
+		PenAlistExpr pred;
+		Alist<Expr> x;
+		
+		pred = new PenAlistExpr();
+		x = new Alist<Expr>().add( new Var( 12, "x" ) ).add( new Var( 13, "blub" ) );
+		
+		assertFalse( pred.test( x ) );
+	}
 
 
 }

@@ -3,14 +3,14 @@ package de.huberlin.wbi.cfjava.asyntax;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-import de.huberlin.wbi.cfjava.data.Amap;
+import de.huberlin.wbi.cfjava.data.Alist;
 
 public class Fut extends IdHolder implements LamNameHolder {
 	
-	private final Amap<String, Boolean> fileMap;
+	private final Alist<Param> outLst;
 	private final String lamName;
 
-	public Fut( final String lamName, final int id, final Amap<String, Boolean> fileMap ) {
+	public Fut( final String lamName, final int id, final Alist<Param> outLst ) {
 		
 		super( id );
 		
@@ -23,11 +23,11 @@ public class Fut extends IdHolder implements LamNameHolder {
 		if( id <= 0 )
 			throw new IllegalArgumentException( "Id must be positive." );
 		
-		if( fileMap == null )
-			throw new IllegalArgumentException( "File map must not be null." );
+		if( outLst == null )
+			throw new IllegalArgumentException( "Output parameter list must not be null." );
 		
 		this.lamName = lamName;
-		this.fileMap = fileMap;
+		this.outLst = outLst;
 	}
 
 	@Override
@@ -46,12 +46,12 @@ public class Fut extends IdHolder implements LamNameHolder {
 		return new EqualsBuilder()
 			.appendSuper( super.equals( rhs ) )
 			.append( lamName, rhs.lamName )
-			.append( fileMap, rhs.fileMap ).isEquals();
+			.append( outLst, rhs.outLst ).isEquals();
 	}
 
 
-	public Amap<String, Boolean> getFileMap() {
-		return fileMap;
+	public Alist<Param> getOutLst() {
+		return outLst;
 	}
 	
 	@Override
@@ -64,7 +64,7 @@ public class Fut extends IdHolder implements LamNameHolder {
 		return new HashCodeBuilder( 443, 787 )
 			.appendSuper( super.hashCode() )
 			.append( lamName )
-			.append( fileMap ).toHashCode();
+			.append( outLst ).toHashCode();
 	}
 
 }
