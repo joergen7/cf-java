@@ -66,4 +66,17 @@ public class Var extends SrcLocated implements LamSurrogate, Expr, LabelHolder {
 			.appendSuper( super.hashCode() )
 			.append( label ).toHashCode();
 	}
+	
+	@Override
+	public String toString() {
+		
+		StringBuffer buf;
+		
+		buf = new StringBuffer();
+		
+		buf.append( "{var," ).append( getLine() ).append( ',' ).append( label )
+			.append( '}' );
+		
+		return buf.toString();
+	}
 }

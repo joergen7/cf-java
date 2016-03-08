@@ -66,7 +66,7 @@ public class Workflow {
 			asv = new ParseTripleVisitor();
 			
 			tree = parser.script();
-			triple = ( ParseTriple )asv.visit( tree );
+			triple = asv.visit( tree );
 			rho = triple.getRho();
 			gamma = triple.getGamma();
 			omega = new Amap<>();

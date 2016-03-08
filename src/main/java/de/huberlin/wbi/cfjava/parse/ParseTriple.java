@@ -17,6 +17,9 @@
 
 package de.huberlin.wbi.cfjava.parse;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
 import de.huberlin.wbi.cfjava.data.Alist;
@@ -67,6 +70,35 @@ public class ParseTriple {
 			.append( ',' ).append( gamma ).append( '}' );
 		
 		return buf.toString();
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder( 421, 7 )
+			.append( query )
+			.append( rho )
+			.append( gamma ).toHashCode();
+	}
+	
+	@Override
+	public boolean equals( Object obj ) {
+		
+		ParseTriple rhs;
+		
+		if( !( obj instanceof ParseTriple ) )
+			return false;
+		
+		if( obj == this )
+			return true;
+		
+		rhs = ( ParseTriple )obj;
+		
+		return new EqualsBuilder()
+			.append( query, rhs.query )
+			.append( rho, rhs.rho )
+			.append( gamma, rhs.gamma ).isEquals();
+		
+		
 	}
 
 }

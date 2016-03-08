@@ -76,4 +76,18 @@ public class App extends MultiValue implements Expr {
 			.append( bindMap )
 			.append( lamSurrogate ).toHashCode();
 	}
+	
+	@Override
+	public String toString() {
+		
+		StringBuffer buf;
+		
+		buf = new StringBuffer();
+		
+		buf.append( "{app," ).append( getLine() ).append( ',' )
+			.append( getChannel() ).append( ',' ).append( lamSurrogate )
+			.append( ',' ).append( bindMap ).append( '}' );
+		
+		return buf.toString();
+	}
 }
