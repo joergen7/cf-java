@@ -7,15 +7,25 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import de.huberlin.wbi.cfjava.asyntax.Ctx;
+import de.huberlin.wbi.cfjava.asyntax.Expr;
+import de.huberlin.wbi.cfjava.asyntax.Lam;
 import de.huberlin.wbi.cfjava.asyntax.ParseTriple;
+import de.huberlin.wbi.cfjava.asyntax.ResultKey;
+import de.huberlin.wbi.cfjava.data.Alist;
+import de.huberlin.wbi.cfjava.data.Amap;
+import de.huberlin.wbi.cfjava.eval.EvalAlistExpr;
 import de.huberlin.wbi.cfjava.eval.RequestCollector;
 import de.huberlin.wbi.cfjava.parse.AsyntaxVisitor;
 import de.huberlin.wbi.cfjava.parse.CuneiformLexer;
 import de.huberlin.wbi.cfjava.parse.CuneiformParser;
+import de.huberlin.wbi.cfjava.pred.PfinalAlistExpr;
 
 public class Workflow {
 
 	private final RequestCollector requestCollector;
+	private final Ctx ctx;
+	private Alist<Expr> query;
 	
 	public Workflow( final String script ) throws IOException {
 		
@@ -26,6 +36,10 @@ public class Workflow {
 		ParseTree tree;
 		AsyntaxVisitor asv;
 		ParseTriple triple;
+		Amap<String, Alist<Expr>> rho;
+		Amap<String, Lam> gamma;
+		Amap<ResultKey, Alist<Expr>> omega;
+		
 		
 		requestCollector = new RequestCollector();
 
@@ -39,10 +53,25 @@ public class Workflow {
 			
 			tree = parser.script();
 			triple = asv.visit( tree );
+			rho = triple.getRho();
+			gamma = triple.getGamma();
+			omega = new Amap<>();
 			
-			
+			query = triple.getQuery();			
+			ctx = new Ctx( rho, requestCollector, gamma, omega );
 		}
+	}
+	
+	public boolean reduce() {
 		
+		EvalAlistExpr evalFn;
+		PfinalAlistExpr finalPred;
 		
+		finalPred = new PfinalAlistExpr();
+		evalFn = new EvalAlistExpr( ctx );
+		
+		query = evalFn.apply( query );
+		
+		return finalPred.test( query );
 	}
 }

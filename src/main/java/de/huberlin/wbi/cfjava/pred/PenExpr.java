@@ -7,6 +7,7 @@ import de.huberlin.wbi.cfjava.asyntax.Cnd;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
 import de.huberlin.wbi.cfjava.asyntax.Param;
+import de.huberlin.wbi.cfjava.asyntax.Select;
 import de.huberlin.wbi.cfjava.asyntax.Sign;
 import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.data.Alist;
@@ -25,6 +26,7 @@ public class PenExpr implements Predicate<Expr> {
 		Alist<Param> lo;
 		Param param;
 		int channel;
+		Select s;
 		
 		if( x instanceof Str )
 			return true;
@@ -60,6 +62,17 @@ public class PenExpr implements Predicate<Expr> {
 			
 			return !param.isLst();
 			
+		}
+		
+		if( x instanceof Select ) {
+			
+			s = ( Select )x;
+			
+			channel = s.getChannel();
+			lo = s.getFut().getOutLst();
+			param = lo.nth( channel );
+			
+			return !param.isLst();
 		}
 		
 		return false;
