@@ -39,7 +39,7 @@ param        : name
           
 name         : ID( LPAREN STRING RPAREN | LPAREN FILE RPAREN )? ; 
 
-assign       : ID+ EQ compoundexpr ;
+assign       : ID+ EQ compoundexpr SEMICOLON ;
 
 lang         : BASH
              | R

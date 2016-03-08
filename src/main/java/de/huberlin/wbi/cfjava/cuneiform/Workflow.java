@@ -56,6 +56,7 @@ public class Workflow {
 		Amap<String, Lam> gamma;
 		Amap<ResultKey, Alist<Expr>> omega;
 		RequestCollector requestCollector;
+		int nerr;
 		
 		try( StringReader reader = new StringReader( script ) ) {
 			
@@ -66,6 +67,11 @@ public class Workflow {
 			asv = new ParseTripleVisitor();
 			
 			tree = parser.script();
+
+			nerr = parser.getNumberOfSyntaxErrors();
+			if( nerr > 0 )
+				throw new RuntimeException( "Encountered "+nerr+" syntax errors." );
+			
 			triple = asv.visit( tree );
 			rho = triple.getRho();
 			gamma = triple.getGamma();

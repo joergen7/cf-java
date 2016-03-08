@@ -506,5 +506,84 @@ public class ParseTripleVisitorTest {
 			assertEquals( ptExpect, ptActual );
 		}
 	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void assignMultipleValuesShouldBeRecognizedTest() throws IOException {
+		
+		ANTLRInputStream input;
+		CuneiformLexer lexer;
+		CuneiformParser parser;
+		CommonTokenStream tokenStream;
+		ParseTree tree;
+		ParseTripleVisitor asv;
+		String script;
+		ParseTriple ptExpect, ptActual;
+		Alist<Expr> query;
+		Amap<String, Alist<Expr>> rho;
+		Amap<String, Lam> gamma;
+		
+		script = "x y = f();";
+		
+		query = new Alist<>();
+		
+		rho = new Amap<String, Alist<Expr>>()
+			.put( "x", new Alist<Expr>()
+				.add( new App( 1, 1, new Var( 1, "f" ),
+					new Amap<String, Alist<Expr>>() ) ) )
+			.put( "y", new Alist<Expr>()
+					.add( new App( 1, 2, new Var( 1, "f" ),
+							new Amap<String, Alist<Expr>>() ) ) );
+		
+		gamma = new Amap<>();
+		
+		ptExpect = new ParseTriple( query, rho, gamma );
+		
+		try( StringReader reader = new StringReader( script ) ) {
+			
+			input = new ANTLRInputStream( reader );
+			lexer = new CuneiformLexer( input );
+			tokenStream = new CommonTokenStream( lexer );
+			parser = new CuneiformParser( tokenStream );
+			asv = new ParseTripleVisitor();
+			
+			tree = parser.script();
 
+			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
+
+			ptActual = asv.visit( tree );
+			
+			assertEquals( ptExpect, ptActual );
+		}
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=ParseException.class )
+	public void assignMultipleValuesToStrShouldThrowPeTest() throws IOException {
+		
+		ANTLRInputStream input;
+		CuneiformLexer lexer;
+		CuneiformParser parser;
+		CommonTokenStream tokenStream;
+		ParseTree tree;
+		ParseTripleVisitor asv;
+		String script;
+		
+		script = "x y = \"blub\";";
+		
+		try( StringReader reader = new StringReader( script ) ) {
+			
+			input = new ANTLRInputStream( reader );
+			lexer = new CuneiformLexer( input );
+			tokenStream = new CommonTokenStream( lexer );
+			parser = new CuneiformParser( tokenStream );
+			asv = new ParseTripleVisitor();
+			
+			tree = parser.script();
+
+			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
+
+			asv.visit( tree );
+		}
+	}
 }
