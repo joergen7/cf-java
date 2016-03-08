@@ -5,6 +5,70 @@
 	<artifactId>cf-java</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>cf-java</name>
+	<description>Java bindings for the Cuneiform workflow language.</description>
+	
+	
+	<!--
+	
+	     To deploy with signature execute:
+	     
+	     mvn clean deploy -DperformRelease=true
+	     
+	     For signing to be sucessful you need the following content in the ~/.m2/settings.xml
+	     
+	     <servers>
+           <server>
+             <id>ossrh</id>
+             <username>joergen7</username>
+             <password>deployment123</password>
+           </server>
+         </servers>
+	     
+	 -->
+
+	<url>http://www.cuneiform-lang.org</url>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<scm>
+		<url>https://github.com/joergen7/cf-java.git</url>
+	</scm>
+
+	<developers>
+		<developer>
+			<name>Jörgen Brandt</name>
+			<email>brandjoe@informatik.hu-berlin.de</email>
+			<organization>Humboldt-Universität zu Berlin</organization>
+			<organizationUrl>https://www.hu-berlin.de/</organizationUrl>
+		</developer>
+		<developer>
+			<name>Marc Bux</name>
+			<email>buxmarcn@informatik.hu-berlin.de</email>
+			<organization>Humboldt-Universität zu Berlin</organization>
+			<organizationUrl>https://www.hu-berlin.de/</organizationUrl>
+		</developer>
+		<developer>
+			<name>Ulf Leser</name>
+			<email>leser@informatik.hu-berlin.de</email>
+			<organization>Humboldt-Universität zu Berlin</organization>
+			<organizationUrl>https://www.hu-berlin.de/</organizationUrl>
+		</developer>
+	</developers>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
