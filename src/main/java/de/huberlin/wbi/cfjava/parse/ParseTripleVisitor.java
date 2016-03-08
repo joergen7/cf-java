@@ -17,8 +17,35 @@
 
 package de.huberlin.wbi.cfjava.parse;
 
-import de.huberlin.wbi.cfjava.asyntax.ParseTriple;
+import de.huberlin.wbi.cfjava.asyntax.Expr;
+import de.huberlin.wbi.cfjava.asyntax.Lam;
+import de.huberlin.wbi.cfjava.data.Alist;
+import de.huberlin.wbi.cfjava.data.Amap;
 
-public class AsyntaxVisitor extends CuneiformBaseVisitor<ParseTriple> {
+public class ParseTripleVisitor extends CuneiformBaseVisitor<ParseTriple> {
+	
+	@Override
+	public ParseTriple visitCompoundexpr( CuneiformParser.CompoundexprContext ctx ) {
+		
+		Amap<String, Alist<Expr>> rho;
+		Amap<String, Lam> gamma;
+		
+		rho = new Amap<>();
+		gamma = new Amap<>();
+		
+		if( ctx.NIL() != null )
+			return new ParseTriple( new Alist<Expr>(), rho, gamma );
+		
+		return this.visitChildren( ctx );
+	}
 
+
+	@Override
+	protected ParseTriple aggregateResult( ParseTriple a, ParseTriple b ) {
+		
+		if( a == null )
+			return b;
+		
+		return a;
+	}
 }

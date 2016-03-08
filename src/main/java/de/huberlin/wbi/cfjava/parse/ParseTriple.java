@@ -15,8 +15,10 @@
  * limitations under the License.
  */
 
-package de.huberlin.wbi.cfjava.asyntax;
+package de.huberlin.wbi.cfjava.parse;
 
+import de.huberlin.wbi.cfjava.asyntax.Expr;
+import de.huberlin.wbi.cfjava.asyntax.Lam;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 
@@ -52,6 +54,19 @@ public class ParseTriple {
 
 	public Amap<String, Lam> getGamma() {
 		return gamma;
+	}
+	
+	@Override
+	public String toString() {
+		
+		StringBuffer buf;
+		
+		buf = new StringBuffer();
+		
+		buf.append( '{' ).append( query ).append( ',' ).append( rho )
+			.append( ',' ).append( gamma ).append( '}' );
+		
+		return buf.toString();
 	}
 
 }

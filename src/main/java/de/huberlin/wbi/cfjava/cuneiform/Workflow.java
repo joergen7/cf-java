@@ -27,20 +27,19 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import de.huberlin.wbi.cfjava.asyntax.Ctx;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
-import de.huberlin.wbi.cfjava.asyntax.ParseTriple;
 import de.huberlin.wbi.cfjava.asyntax.ResultKey;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 import de.huberlin.wbi.cfjava.eval.EvalAlistExpr;
 import de.huberlin.wbi.cfjava.eval.RequestCollector;
-import de.huberlin.wbi.cfjava.parse.AsyntaxVisitor;
+import de.huberlin.wbi.cfjava.parse.ParseTripleVisitor;
 import de.huberlin.wbi.cfjava.parse.CuneiformLexer;
 import de.huberlin.wbi.cfjava.parse.CuneiformParser;
+import de.huberlin.wbi.cfjava.parse.ParseTriple;
 import de.huberlin.wbi.cfjava.pred.PfinalAlistExpr;
 
 public class Workflow {
 
-	private final RequestCollector requestCollector;
 	private final Ctx ctx;
 	private Alist<Expr> query;
 	
@@ -51,28 +50,27 @@ public class Workflow {
 		CuneiformParser parser;
 		CommonTokenStream tokenStream;
 		ParseTree tree;
-		AsyntaxVisitor asv;
+		ParseTripleVisitor asv;
 		ParseTriple triple;
 		Amap<String, Alist<Expr>> rho;
 		Amap<String, Lam> gamma;
 		Amap<ResultKey, Alist<Expr>> omega;
+		RequestCollector requestCollector;
 		
-		
-		requestCollector = new RequestCollector();
-
 		try( StringReader reader = new StringReader( script ) ) {
 			
 			input = new ANTLRInputStream( reader );
 			lexer = new CuneiformLexer( input );
 			tokenStream = new CommonTokenStream( lexer );
 			parser = new CuneiformParser( tokenStream );
-			asv = new AsyntaxVisitor();
+			asv = new ParseTripleVisitor();
 			
 			tree = parser.script();
-			triple = asv.visit( tree );
+			triple = ( ParseTriple )asv.visit( tree );
 			rho = triple.getRho();
 			gamma = triple.getGamma();
 			omega = new Amap<>();
+			requestCollector = new RequestCollector();
 			
 			query = triple.getQuery();			
 			ctx = new Ctx( rho, requestCollector, gamma, omega );
