@@ -20,10 +20,17 @@ package de.huberlin.wbi.cfjava.cuneiform;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Set;
+
 import org.junit.Test;
 
 import de.huberlin.wbi.cfjava.asyntax.Expr;
+import de.huberlin.wbi.cfjava.asyntax.ForBody;
+import de.huberlin.wbi.cfjava.asyntax.InParam;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
+import de.huberlin.wbi.cfjava.asyntax.Name;
+import de.huberlin.wbi.cfjava.asyntax.Param;
+import de.huberlin.wbi.cfjava.asyntax.Sign;
 import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
@@ -174,5 +181,73 @@ public class RequestTest {
 		assertNotEquals( r1, r2 );
 	}
 
+	@SuppressWarnings("static-method")
+	@Test
+	public void bindingWithoutStageInFilesTest() {
+		
+		Request r;
+		Lam lam;
+		Sign sign;
+		ForBody body;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		Amap<String, Alist<Expr>> fa;
+		
+		body = mock( ForBody.class );
+		
+		lo = new Alist<Param>()
+			.add( new Param( new Name( "out", false ), false ) );
+		li = new Alist<InParam>()
+			.add( new Param( new Name( "x", false ), false ) );
+		sign = new Sign( lo, li );
+		
+		fa = new Amap<String, Alist<Expr>>()
+			.put( "x", new Alist<Expr>()
+				.add( new Str( "bla" ) )
+				.add( new Str( "blub" ) ) );
+		
+		lam = new Lam( 12, "f", sign, body );
+		
+		r = new Request( lam, fa );
+		assertTrue( r.getStageInFilenameSet().isEmpty() );
+	}
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void bindingWithOneStageArgTest() {
+		
+		Request r;
+		Lam lam;
+		Sign sign;
+		ForBody body;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		Amap<String, Alist<Expr>> fa;
+		Set<String> filenameSet;
+		
+		body = mock( ForBody.class );
+		
+		lo = new Alist<Param>()
+			.add( new Param( new Name( "out", false ), false ) );
+		li = new Alist<InParam>()
+			.add( new Param( new Name( "x", false ), false ) )
+			.add( new Param( new Name( "y", true ), false ) );
+		sign = new Sign( lo, li );
+		
+		fa = new Amap<String, Alist<Expr>>()
+			.put( "x", new Alist<Expr>()
+				.add( new Str( "bla" ) )
+				.add( new Str( "blub" ) ) )
+			.put( "y", new Alist<Expr>().add( new Str( "a.txt" ) ).add( new Str( "b.txt" ) ) );
+		
+		lam = new Lam( 12, "f", sign, body );
+		
+		r = new Request( lam, fa );
+		filenameSet = r.getStageInFilenameSet();
+		
+		assertEquals( 2, filenameSet.size() );
+		assertTrue( filenameSet.contains( "a.txt" ) );
+		assertTrue( filenameSet.contains( "b.txt" ) );
+	}
 
 }
