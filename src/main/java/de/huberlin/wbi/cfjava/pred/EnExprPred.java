@@ -37,7 +37,7 @@ public class EnExprPred implements Predicate<Expr> {
 		Cnd c;
 		App a;
 		Alist<Expr> xt, xe;
-		SingAppPred psing;
+		SingPred psing;
 		Lam lam;
 		Sign sign;
 		Alist<Param> lo;
@@ -66,7 +66,7 @@ public class EnExprPred implements Predicate<Expr> {
 		if( x instanceof App ) {
 			
 			a = ( App )x;
-			psing = new SingAppPred();
+			psing = new SingPred();
 			
 			if( !psing.test( a ) )
 				return false;

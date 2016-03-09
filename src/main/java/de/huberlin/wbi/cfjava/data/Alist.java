@@ -32,7 +32,7 @@ public class Alist<T> implements Iterable<T> {
 
 		private Alist<T> cursor;
 
-		AlistIterator( Alist<T> template ) {
+		public AlistIterator( Alist<T> template ) {
 			cursor = template;
 		}
 

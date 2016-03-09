@@ -84,4 +84,10 @@ public class Fut extends IdHolder implements LamNameHolder {
 			.append( outLst ).toHashCode();
 	}
 
+	@Override
+	public String toString() {
+		return new StringBuffer().append( "{fut,\"" ).append( lamName )
+			.append( "\"," ).append( getId() ).append( ',' ).append( outLst )
+			.append( '}' ).toString();
+	}
 }

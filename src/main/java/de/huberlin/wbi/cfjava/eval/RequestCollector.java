@@ -17,21 +17,57 @@
 
 package de.huberlin.wbi.cfjava.eval;
 
+import java.util.Set;
 import java.util.function.Function;
 
 import de.huberlin.wbi.cfjava.asyntax.App;
+import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Fut;
+import de.huberlin.wbi.cfjava.asyntax.Lam;
+import de.huberlin.wbi.cfjava.asyntax.Param;
 import de.huberlin.wbi.cfjava.cuneiform.Request;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 
 public class RequestCollector implements Function<App, Fut> {
 	
-	private Amap<Request, Integer> ticketLst;
+	private Amap<Request, Fut> cache;
+	private int nextId;
+	
+	public RequestCollector() {
+		cache = new Amap<>();
+		nextId = 1;
+	}
+	
+	public Set<Request> getRequestSet() {
+		return cache.keys();
+	}
 
 	@Override
-	public Fut apply( App arg0 ) {
-		return null;
+	public Fut apply( App app ) {
+		
+		Fut fut;
+		Lam lam;
+		String lamName;
+		Alist<Param> lo;
+		Request request;
+		Amap<String, Alist<Expr>> fa;
+
+		lam = ( Lam )app.getLamSurrogate();
+		fa = app.getBindMap();
+		
+		request = new Request( lam, fa );
+		
+		if( cache.isKey( request ) )
+			return cache.get( request );
+		
+		lamName = lam.getLamName();
+		lo = lam.getSign().getOutLst();
+		
+		fut = new Fut( lamName, nextId++, lo );
+		cache = cache.put( request, fut );
+		
+		return fut;
 	}
 
 }

@@ -74,4 +74,10 @@ public class Request {
 			.append( lam, rhs.lam )
 			.append( bindMap, rhs.bindMap ).isEquals();
 	}
+	
+	@Override
+	public String toString() {
+		return new StringBuffer().append( '{' ).append( lam ).append( ',' )
+			.append( bindMap ).append( '}' ).toString();
+	}
 }

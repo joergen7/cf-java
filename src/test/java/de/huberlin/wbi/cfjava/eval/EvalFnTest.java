@@ -22,14 +22,17 @@ import static org.junit.Assert.*;
 import java.util.Random;
 import java.util.function.Function;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.huberlin.wbi.cfjava.asyntax.App;
 import de.huberlin.wbi.cfjava.asyntax.Ctx;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Fut;
+import de.huberlin.wbi.cfjava.asyntax.InParam;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
 import de.huberlin.wbi.cfjava.asyntax.Name;
+import de.huberlin.wbi.cfjava.asyntax.NatBody;
 import de.huberlin.wbi.cfjava.asyntax.Param;
 import de.huberlin.wbi.cfjava.asyntax.ResultKey;
 import de.huberlin.wbi.cfjava.asyntax.Select;
@@ -216,6 +219,37 @@ public class EvalFnTest {
 		eval = new EvalFn( new Ctx( rho, mu0, gamma, omega ) );
 
 		y = eval.apply( x );
+		
+		assertEquals( expected, y );
+	}
+	
+	@Ignore @Test
+	public void noargFnShouldEvalPlainTest() {
+		
+		Alist<Expr> x, y, expected;
+
+		Lam lam;
+		Sign sign;
+		NatBody body;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		
+		expected = new Alist<Expr>().add( new Str( "blub" ) );
+		
+		
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
+		li = new Alist<>();
+		
+		sign = new Sign( lo, li );
+		body = new NatBody( new Amap<String, Alist<Expr>>().put( "out", expected ) );
+		
+		lam = new Lam( 1, "f", sign, body );
+		
+		x = new Alist<Expr>()
+				.add( new App( 1, 1, lam,
+					new Amap<String, Alist<Expr>>() ) );
+		
+		y = eval0.apply( x );
 		
 		assertEquals( expected, y );
 	}

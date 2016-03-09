@@ -19,6 +19,7 @@ package de.huberlin.wbi.cfjava.cuneiform;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Set;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -40,7 +41,7 @@ import de.huberlin.wbi.cfjava.pred.FinalAlistExprPred;
 
 public class Workflow {
 
-	private final Ctx ctx;
+	private Ctx ctx;
 	private Alist<Expr> query;
 	
 	public Workflow( final String script ) throws IOException {
@@ -97,15 +98,12 @@ public class Workflow {
 	}
 	
 	@Override
-	public String toString() {
-		
-		StringBuffer buf;
-		
-		buf = new StringBuffer();
-		
-		buf.append( '{' ).append( query ).append( ',' ).append( ctx )
-			.append( '}' );
-		
-		return buf.toString();
+	public String toString() {		
+		return new StringBuffer().append( '{' ).append( query ).append( ',' )
+			.append( ctx ).append( '}' ).toString();
+	}
+
+	public Set<Request> getRequestSet() {		
+		return ( ( RequestCollector )ctx.getMu() ).getRequestSet();
 	}
 }

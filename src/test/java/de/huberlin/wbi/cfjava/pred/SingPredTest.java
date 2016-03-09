@@ -36,7 +36,7 @@ import de.huberlin.wbi.cfjava.asyntax.Var;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 
-public class SingAppPredTest {
+public class SingPredTest {
 
 	
 	@SuppressWarnings("static-method")
@@ -48,7 +48,7 @@ public class SingAppPredTest {
 		Lam lam;
 		App app;
 		Amap<String, Alist<Expr>> bindMap;
-		SingAppPred pred;
+		SingPred pred;
 		
 		sign = new Sign(
 			new Alist<Param>().add( new Param( new Name( "out", false ), false ) ),
@@ -62,7 +62,7 @@ public class SingAppPredTest {
 		
 		app = new App( 13, 1, lam, bindMap );
 		
-		pred = new SingAppPred();
+		pred = new SingPred();
 		
 		assertTrue( pred.test( app ) );
 	}
@@ -76,7 +76,7 @@ public class SingAppPredTest {
 		Lam lam;
 		App app;
 		Amap<String, Alist<Expr>> bindMap;
-		SingAppPred pred;
+		SingPred pred;
 		
 		sign = new Sign(
 			new Alist<Param>().add( new Param( new Name( "out", false ), false ) ),
@@ -91,7 +91,7 @@ public class SingAppPredTest {
 		
 		app = new App( 13, 1, lam, bindMap );
 		
-		pred = new SingAppPred();
+		pred = new SingPred();
 		
 		assertTrue( pred.test( app ) );
 	}
@@ -105,7 +105,7 @@ public class SingAppPredTest {
 		Lam lam;
 		App app;
 		Amap<String, Alist<Expr>> bindMap;
-		SingAppPred pred;
+		SingPred pred;
 		
 		sign = new Sign(
 			new Alist<Param>().add( new Param( new Name( "out", false ), false ) ),
@@ -120,7 +120,7 @@ public class SingAppPredTest {
 		
 		app = new App( 13, 1, lam, bindMap );
 		
-		pred = new SingAppPred();
+		pred = new SingPred();
 		
 		assertFalse( pred.test( app ) );
 	}
@@ -134,7 +134,7 @@ public class SingAppPredTest {
 		Lam lam;
 		App app;
 		Amap<String, Alist<Expr>> bindMap;
-		SingAppPred pred;
+		SingPred pred;
 		
 		sign = new Sign(
 			new Alist<Param>().add( new Param( new Name( "out", false ), false ) ),
@@ -149,7 +149,7 @@ public class SingAppPredTest {
 		
 		app = new App( 13, 1, lam, bindMap );
 		
-		pred = new SingAppPred();
+		pred = new SingPred();
 		
 		assertTrue( pred.test( app ) );
 	}
@@ -163,7 +163,7 @@ public class SingAppPredTest {
 		Lam lam;
 		App app;
 		Amap<String, Alist<Expr>> bindMap;
-		SingAppPred pred;
+		SingPred pred;
 		
 		sign = new Sign(
 			new Alist<Param>().add(
@@ -184,7 +184,7 @@ public class SingAppPredTest {
 		
 		app = new App( 13, 1, lam, bindMap );
 		
-		pred = new SingAppPred();
+		pred = new SingPred();
 		
 		assertFalse( pred.test( app ) );
 	}

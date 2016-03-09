@@ -62,4 +62,11 @@ public class Select extends MultiValue implements Expr {
 			.appendSuper( super.hashCode() )
 			.append( fut ).toHashCode();
 	}
+	
+	@Override
+	public String toString() {
+		return new StringBuffer().append( "{select," ).append( getLine() )
+			.append( ',' ).append( getChannel() ).append( ',' ).append( fut )
+			.append( '}' ).toString();
+	}
 }
