@@ -22,6 +22,7 @@ import java.util.function.Function;
 import de.huberlin.wbi.cfjava.asyntax.Ctx;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Str;
+import de.huberlin.wbi.cfjava.asyntax.Var;
 import de.huberlin.wbi.cfjava.data.Alist;
 
 public class EvalExprFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
@@ -35,6 +36,9 @@ public class EvalExprFn extends CtxHolder implements Function<Expr, Alist<Expr>>
 		
 		if( x instanceof Str )
 			return new Alist<Expr>().add( x );
+		
+		if( x instanceof Var )
+			throw new UndefinedVariableException( ( Var )x );
 		
 		throw new UnsupportedOperationException(
 			"Evaluation of "+x.getClass()+" expression not supported." );

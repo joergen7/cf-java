@@ -87,7 +87,7 @@ public class ParseTripleVisitor extends CuneiformBaseVisitor<ParseTriple> {
 		if( lc.R() != null )
 			return Lang.R;
 		
-		throw new LangException();
+		throw new UnsupportedOperationException( "Language not supported: "+lc.getText() );
 	}
 
 	private static Param processParam( CuneiformParser.ParamContext pc ) {

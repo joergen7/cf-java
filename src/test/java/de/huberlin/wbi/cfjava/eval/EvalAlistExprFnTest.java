@@ -33,6 +33,7 @@ import de.huberlin.wbi.cfjava.asyntax.Param;
 import de.huberlin.wbi.cfjava.asyntax.ResultKey;
 import de.huberlin.wbi.cfjava.asyntax.Sign;
 import de.huberlin.wbi.cfjava.asyntax.Str;
+import de.huberlin.wbi.cfjava.asyntax.Var;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 
@@ -91,5 +92,15 @@ public class EvalAlistExprFnTest {
 		y = eval0.apply( x );
 		
 		assertEquals( x, y );
+	}
+	
+	@Test( expected=UndefinedVariableException.class )
+	public void undefVarShouldFailTest() {
+		
+		Alist<Expr> x;
+		
+		x = new Alist<Expr>().add( new Var( 12, "blub" ) );
+		eval0.apply( x );
+	
 	}
 }
