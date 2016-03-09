@@ -21,10 +21,10 @@ public class Main {
 		// Create a workflow object from that script.
 		workflow = new Workflow( script );
 
-		System.out.println( "\n[original]"+workflow );
+		System.out.println( "\n[original]\n"+workflow );
 		
 		// Applying the reduce method attempts to simplify the workflow as far
-		// as possible. It returns a boolean telling whether the workflow is
+		// as possible. Reduce returns a boolean telling whether the workflow is
 		// finished.
 		isFinished = workflow.reduce();
 		

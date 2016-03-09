@@ -23,15 +23,23 @@ import de.huberlin.wbi.cfjava.asyntax.Ctx;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.data.Alist;
 
-public class EvalAlistExprFn extends CtxHolder implements Function<Alist<Expr>, Alist<Expr>> {
+public class EvalFn extends CtxHolder implements Function<Alist<Expr>, Alist<Expr>> {
 	
-	public EvalAlistExprFn( final Ctx ctx ) {
+	public EvalFn( final Ctx ctx ) {
 		super( ctx );
 	}
 
 	@Override
 	public Alist<Expr> apply( Alist<Expr> x ) {
-		return x.flatMap( new EvalExprFn( getCtx() ) );
+		
+		Alist<Expr> x1;
+		
+		x1 = x.flatMap( new StepFn( getCtx() ) );
+		
+		if( x.equals( x1 ) )
+			return x;
+		
+		return apply( x1 );
 	}
 
 }

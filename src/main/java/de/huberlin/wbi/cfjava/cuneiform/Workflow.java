@@ -30,7 +30,7 @@ import de.huberlin.wbi.cfjava.asyntax.Lam;
 import de.huberlin.wbi.cfjava.asyntax.ResultKey;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
-import de.huberlin.wbi.cfjava.eval.EvalAlistExprFn;
+import de.huberlin.wbi.cfjava.eval.EvalFn;
 import de.huberlin.wbi.cfjava.eval.RequestCollector;
 import de.huberlin.wbi.cfjava.parse.ParseTripleVisitor;
 import de.huberlin.wbi.cfjava.parse.CuneiformLexer;
@@ -85,11 +85,11 @@ public class Workflow {
 	
 	public boolean reduce() {
 		
-		EvalAlistExprFn evalFn;
+		EvalFn evalFn;
 		FinalAlistExprPred finalPred;
 		
 		finalPred = new FinalAlistExprPred();
-		evalFn = new EvalAlistExprFn( ctx );
+		evalFn = new EvalFn( ctx );
 		
 		query = evalFn.apply( query );
 		
