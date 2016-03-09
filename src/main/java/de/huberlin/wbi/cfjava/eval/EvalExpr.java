@@ -19,7 +19,6 @@ package de.huberlin.wbi.cfjava.eval;
 
 import java.util.function.Function;
 
-import de.huberlin.wbi.cfjava.asyntax.Ctx;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.data.Alist;

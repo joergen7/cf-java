@@ -15,10 +15,15 @@
  * limitations under the License.
  */
 
-package de.huberlin.wbi.cfjava.asyntax;
+package de.huberlin.wbi.cfjava.eval;
 
 import java.util.function.Function;
 
+import de.huberlin.wbi.cfjava.asyntax.App;
+import de.huberlin.wbi.cfjava.asyntax.Expr;
+import de.huberlin.wbi.cfjava.asyntax.Fut;
+import de.huberlin.wbi.cfjava.asyntax.Lam;
+import de.huberlin.wbi.cfjava.asyntax.ResultKey;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 
@@ -66,4 +71,10 @@ public class Ctx {
 		return omega;
 	}
 
+	@Override
+	public String toString() {		
+		return new StringBuffer().append( '{' ).append( rho ).append( ',' )
+			.append( mu ).append( ',' ).append( gamma ).append( ',' )
+			.append( omega ).append( '}' ).toString();
+	}
 }

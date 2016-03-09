@@ -13,7 +13,14 @@ import org.junit.Test;
 import de.huberlin.wbi.cfjava.asyntax.App;
 import de.huberlin.wbi.cfjava.asyntax.Cnd;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
+import de.huberlin.wbi.cfjava.asyntax.ForBody;
+import de.huberlin.wbi.cfjava.asyntax.InParam;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
+import de.huberlin.wbi.cfjava.asyntax.Lang;
+import de.huberlin.wbi.cfjava.asyntax.Name;
+import de.huberlin.wbi.cfjava.asyntax.NatBody;
+import de.huberlin.wbi.cfjava.asyntax.Param;
+import de.huberlin.wbi.cfjava.asyntax.Sign;
 import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.asyntax.Var;
 import de.huberlin.wbi.cfjava.data.Alist;
@@ -584,6 +591,117 @@ public class ParseTripleVisitorTest {
 			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
 
 			asv.visit( tree );
+		}
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void nativeDeftaskShouldBeRecognizedTest() throws IOException {
+		
+		ANTLRInputStream input;
+		CuneiformLexer lexer;
+		CuneiformParser parser;
+		CommonTokenStream tokenStream;
+		ParseTree tree;
+		ParseTripleVisitor asv;
+		String script;
+		ParseTriple ptExpect, ptActual;
+		Alist<Expr> query;
+		Amap<String, Alist<Expr>> rho;
+		Amap<String, Lam> gamma;
+		Lam lam;
+		Sign sign;
+		NatBody body;
+		
+		script = "deftask f( out : ) { out = \"A\"; }";
+		
+		sign = new Sign(
+			new Alist<Param>().add( new Param( new Name( "out", false ), false ) ),
+			new Alist<InParam>() );
+		
+		body = new NatBody(
+			new Amap<String, Alist<Expr>>()
+				.put( "out", new Alist<Expr>().add( new Str( "A" ) ) ) );
+		
+		lam = new Lam( 1, "f", sign, body );
+		
+		query = new Alist<>();
+		rho = new Amap<>();
+		
+		gamma = new Amap<String, Lam>().put( "f", lam );
+		
+		
+		ptExpect = new ParseTriple( query, rho, gamma );
+		
+		try( StringReader reader = new StringReader( script ) ) {
+			
+			input = new ANTLRInputStream( reader );
+			lexer = new CuneiformLexer( input );
+			tokenStream = new CommonTokenStream( lexer );
+			parser = new CuneiformParser( tokenStream );
+			asv = new ParseTripleVisitor();
+			
+			tree = parser.script();
+
+			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
+
+			ptActual = asv.visit( tree );
+			
+			assertEquals( ptExpect, ptActual );
+		}
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void foreignDeftaskShouldBeRecognizedTest() throws IOException {
+		
+		ANTLRInputStream input;
+		CuneiformLexer lexer;
+		CuneiformParser parser;
+		CommonTokenStream tokenStream;
+		ParseTree tree;
+		ParseTripleVisitor asv;
+		String script;
+		ParseTriple ptExpect, ptActual;
+		Alist<Expr> query;
+		Amap<String, Alist<Expr>> rho;
+		Amap<String, Lam> gamma;
+		Lam lam;
+		Sign sign;
+		ForBody body;
+		
+		script = "deftask f( out : )in bash *{out=\"A\"}*";
+		
+		sign = new Sign(
+			new Alist<Param>().add( new Param( new Name( "out", false ), false ) ),
+			new Alist<InParam>() );
+		
+		body = new ForBody( Lang.BASH, "out=\"A\"" );
+		
+		lam = new Lam( 1, "f", sign, body );
+		
+		query = new Alist<>();
+		rho = new Amap<>();
+		
+		gamma = new Amap<String, Lam>().put( "f", lam );
+		
+		ptExpect = new ParseTriple( query, rho, gamma );
+		
+		try( StringReader reader = new StringReader( script ) ) {
+			
+			input = new ANTLRInputStream( reader );
+			lexer = new CuneiformLexer( input );
+			tokenStream = new CommonTokenStream( lexer );
+			parser = new CuneiformParser( tokenStream );
+			asv = new ParseTripleVisitor();
+			
+			tree = parser.script();
+
+			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
+
+			ptActual = asv.visit( tree );
+			
+			assertEquals( ptExpect, ptActual );
 		}
 	}
 }

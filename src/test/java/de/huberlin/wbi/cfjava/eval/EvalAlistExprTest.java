@@ -25,7 +25,6 @@ import java.util.function.Function;
 import org.junit.Test;
 
 import de.huberlin.wbi.cfjava.asyntax.App;
-import de.huberlin.wbi.cfjava.asyntax.Ctx;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Fut;
 import de.huberlin.wbi.cfjava.asyntax.Lam;

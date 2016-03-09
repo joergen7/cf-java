@@ -62,4 +62,10 @@ public class ForBody extends ContentHolder implements Body {
 			.appendSuper( super.hashCode() )
 			.append( lang ).toHashCode();
 	}
+	
+	@Override
+	public String toString() {
+		return new StringBuffer().append( "{forbody," ).append( lang )
+			.append( ",\"" ).append( getContent() ).append( "\"}" ).toString();
+	}
 }

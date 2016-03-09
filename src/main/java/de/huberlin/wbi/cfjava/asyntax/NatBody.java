@@ -58,5 +58,11 @@ public class NatBody implements Body {
 	public int hashCode() {
 		return new HashCodeBuilder( 103, 101 ).append( bodyMap ).toHashCode();
 	}
+	
+	@Override
+	public String toString() {
+		return new StringBuffer().append( "{natbody," ).append( bodyMap )
+			.append( '}' ).toString();
+	}
 
 }

@@ -66,4 +66,10 @@ public class Param implements InParam {
 	public boolean isLst() {
 		return isLst;
 	}
+	
+	@Override
+	public String toString() {
+		return new StringBuffer().append( "{param," ).append( name )
+			.append( ',' ).append( isLst ).append( '}' ).toString();
+	}
 }

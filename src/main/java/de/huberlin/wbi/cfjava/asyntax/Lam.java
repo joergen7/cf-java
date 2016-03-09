@@ -89,4 +89,10 @@ public class Lam extends SrcLocated implements LamSurrogate, LamNameHolder {
 			.append( body ).toHashCode();
 	}
 
+	@Override
+	public String toString() {
+		return new StringBuffer().append( "{lam," ).append( getLine() )
+			.append( ",\"" ).append( lamName ).append( "\"," ).append( sign )
+			.append( ',' ).append( body ).append( '}' ).toString();
+	}
 }

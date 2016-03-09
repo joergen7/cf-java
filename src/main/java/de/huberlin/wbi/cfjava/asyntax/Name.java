@@ -70,4 +70,10 @@ public class Name implements LabelHolder {
 	public boolean isFile() {
 		return isFile;
 	}
+	
+	@Override
+	public String toString() {
+		return new StringBuffer().append( "{name,\"" ).append( label )
+			.append( "\"," ).append( isFile ).append( '}' ).toString();
+	}
 }

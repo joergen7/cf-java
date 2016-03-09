@@ -43,4 +43,9 @@ public class Str extends ContentHolder implements Expr {
 			.appendSuper( super.hashCode() ).toHashCode();
 	}
 	
+	@Override
+	public String toString() {
+		return new StringBuffer().append( "{str,\"" ).append( getContent() )
+			.append( "\"}" ).toString();
+	}
 }

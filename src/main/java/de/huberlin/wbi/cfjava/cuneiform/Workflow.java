@@ -24,12 +24,12 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import de.huberlin.wbi.cfjava.asyntax.Ctx;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
 import de.huberlin.wbi.cfjava.asyntax.ResultKey;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
+import de.huberlin.wbi.cfjava.eval.Ctx;
 import de.huberlin.wbi.cfjava.eval.EvalAlistExpr;
 import de.huberlin.wbi.cfjava.eval.RequestCollector;
 import de.huberlin.wbi.cfjava.parse.ParseTripleVisitor;
@@ -94,5 +94,18 @@ public class Workflow {
 		query = evalFn.apply( query );
 		
 		return finalPred.test( query );
+	}
+	
+	@Override
+	public String toString() {
+		
+		StringBuffer buf;
+		
+		buf = new StringBuffer();
+		
+		buf.append( '{' ).append( query ).append( ',' ).append( ctx )
+			.append( '}' );
+		
+		return buf.toString();
 	}
 }

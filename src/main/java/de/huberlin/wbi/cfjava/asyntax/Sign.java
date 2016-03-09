@@ -74,4 +74,10 @@ public class Sign {
 			.append( outLst )
 			.append( inLst ).toHashCode();
 	}
+	
+	@Override
+	public String toString() {
+		return new StringBuffer().append( "{sign," ).append( outLst )
+			.append( ',' ).append( inLst ).append( '}' ).toString();
+	}
 }
