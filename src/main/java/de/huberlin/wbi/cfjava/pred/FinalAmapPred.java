@@ -20,19 +20,14 @@ package de.huberlin.wbi.cfjava.pred;
 import java.util.function.Predicate;
 
 import de.huberlin.wbi.cfjava.asyntax.Expr;
-import de.huberlin.wbi.cfjava.asyntax.Str;
+import de.huberlin.wbi.cfjava.data.Alist;
+import de.huberlin.wbi.cfjava.data.Amap;
 
-public class PfinalExpr implements Predicate<Expr> {
+public class FinalAmapPred implements Predicate<Amap<String,Alist<Expr>>> {
 
 	@Override
-	public boolean test( Expr x ) {
-		
-		if( x instanceof Str )
-			return true;
-		
-		return false;
+	public boolean test( Amap<String, Alist<Expr>> m ) {
+		return m.values().all( new FinalAlistExprPred() );
 	}
-	
-	
 
 }

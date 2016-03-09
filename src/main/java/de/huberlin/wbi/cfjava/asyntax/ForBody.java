@@ -66,6 +66,9 @@ public class ForBody extends ContentHolder implements Body {
 	@Override
 	public String toString() {
 		return new StringBuffer().append( "{forbody," ).append( lang )
-			.append( ",\"" ).append( getContent() ).append( "\"}" ).toString();
+			.append( ",\"" )
+			.append(
+				getContent().replace( "\n", "\\n" ).replace( "\"", "\\\"" ) )
+			.append( "\"}" ).toString();
 	}
 }

@@ -32,17 +32,17 @@ import de.huberlin.wbi.cfjava.asyntax.Var;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 
-public class PfinalExprTest {
+public class FinalExprPredTest {
 
 	@SuppressWarnings("static-method")
 	@Test
 	public void strIsFinalTest() {
 		
 		Expr e;
-		PfinalExpr pred;
+		FinalExprPred pred;
 		
 		e = new Str( "blub" );
-		pred = new PfinalExpr();
+		pred = new FinalExprPred();
 		
 		assertTrue( pred.test( e ) );
 	}
@@ -54,13 +54,13 @@ public class PfinalExprTest {
 		Expr e;
 		Var var;
 		Amap<String, Alist<Expr>> fa;
-		PfinalExpr pred;
+		FinalExprPred pred;
 		
 		var = new Var( 1, "f" );
 		fa = new Amap<>();
 		
 		e = new App( 12, 1, var, fa );
-		pred = new PfinalExpr();
+		pred = new FinalExprPred();
 		
 		assertFalse( pred.test( e ) );
 	}
@@ -70,7 +70,7 @@ public class PfinalExprTest {
 	public void cndIsNotFinalTest() {
 		
 		Expr e;
-		PfinalExpr pred;
+		FinalExprPred pred;
 		Alist<Expr> xcond, xthen, xelse;
 		
 		xcond = new Alist<>();
@@ -78,7 +78,7 @@ public class PfinalExprTest {
 		xelse = new Alist<>();
 		
 		e = new Cnd( 12, xcond, xthen, xelse );
-		pred = new PfinalExpr();
+		pred = new FinalExprPred();
 		
 		assertFalse( pred.test( e ) );
 	}
@@ -88,13 +88,13 @@ public class PfinalExprTest {
 	public void selectIsNotFinalTest() {
 		
 		Expr e;
-		PfinalExpr pred;
+		FinalExprPred pred;
 		Fut fut;
 		
 		fut = mock( Fut.class );
 		
 		e = new Select( 12, 1, fut );
-		pred = new PfinalExpr();
+		pred = new FinalExprPred();
 		
 		assertFalse( pred.test( e ) );
 	}
@@ -104,10 +104,10 @@ public class PfinalExprTest {
 	public void varIsNotFinalTest() {
 		
 		Expr e;
-		PfinalExpr pred;
+		FinalExprPred pred;
 		
 		e = new Var( 12, "blub" );
-		pred = new PfinalExpr();
+		pred = new FinalExprPred();
 		
 		assertFalse( pred.test( e ) );
 	}	

@@ -26,16 +26,16 @@ import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.asyntax.Var;
 import de.huberlin.wbi.cfjava.data.Alist;
 
-public class PenAlistExprTest {
+public class EnAlistExprPredTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
 	public void emptyLstIsEnumerableTest() {
 		
-		PenAlistExpr pred;
+		EnAlistExprPred pred;
 		Alist<Expr> x;
 		
-		pred = new PenAlistExpr();
+		pred = new EnAlistExprPred();
 		x = new Alist<>();
 		
 		assertTrue( pred.test( x ) );
@@ -45,10 +45,10 @@ public class PenAlistExprTest {
 	@Test
 	public void strLstIsEnumerableTest() {
 		
-		PenAlistExpr pred;
+		EnAlistExprPred pred;
 		Alist<Expr> x;
 		
-		pred = new PenAlistExpr();
+		pred = new EnAlistExprPred();
 		x = new Alist<Expr>().add( new Str( "bla" ) ).add( new Str( "blub" ) );
 		
 		assertTrue( pred.test( x ) );
@@ -58,10 +58,10 @@ public class PenAlistExprTest {
 	@Test
 	public void oneVarLstIsNotEnumerableTest() {
 		
-		PenAlistExpr pred;
+		EnAlistExprPred pred;
 		Alist<Expr> x;
 		
-		pred = new PenAlistExpr();
+		pred = new EnAlistExprPred();
 		x = new Alist<Expr>().add( new Var( 12, "x" ) ).add( new Str( "blub" ) );
 		
 		assertFalse( pred.test( x ) );
@@ -71,10 +71,10 @@ public class PenAlistExprTest {
 	@Test
 	public void allVarLstIsNotEnumerableTest() {
 		
-		PenAlistExpr pred;
+		EnAlistExprPred pred;
 		Alist<Expr> x;
 		
-		pred = new PenAlistExpr();
+		pred = new EnAlistExprPred();
 		x = new Alist<Expr>().add( new Var( 12, "x" ) ).add( new Var( 13, "blub" ) );
 		
 		assertFalse( pred.test( x ) );

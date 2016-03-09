@@ -24,19 +24,19 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import de.huberlin.wbi.cfjava.asyntax.Ctx;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
 import de.huberlin.wbi.cfjava.asyntax.ResultKey;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
-import de.huberlin.wbi.cfjava.eval.Ctx;
-import de.huberlin.wbi.cfjava.eval.EvalAlistExpr;
+import de.huberlin.wbi.cfjava.eval.EvalAlistExprFn;
 import de.huberlin.wbi.cfjava.eval.RequestCollector;
 import de.huberlin.wbi.cfjava.parse.ParseTripleVisitor;
 import de.huberlin.wbi.cfjava.parse.CuneiformLexer;
 import de.huberlin.wbi.cfjava.parse.CuneiformParser;
 import de.huberlin.wbi.cfjava.parse.ParseTriple;
-import de.huberlin.wbi.cfjava.pred.PfinalAlistExpr;
+import de.huberlin.wbi.cfjava.pred.FinalAlistExprPred;
 
 public class Workflow {
 
@@ -85,11 +85,11 @@ public class Workflow {
 	
 	public boolean reduce() {
 		
-		EvalAlistExpr evalFn;
-		PfinalAlistExpr finalPred;
+		EvalAlistExprFn evalFn;
+		FinalAlistExprPred finalPred;
 		
-		finalPred = new PfinalAlistExpr();
-		evalFn = new EvalAlistExpr( ctx );
+		finalPred = new FinalAlistExprPred();
+		evalFn = new EvalAlistExprFn( ctx );
 		
 		query = evalFn.apply( query );
 		

@@ -15,28 +15,41 @@
  * limitations under the License.
  */
 
-package de.huberlin.wbi.cfjava.eval;
+package de.huberlin.wbi.cfjava.pred;
 
-import java.util.function.Function;
+import java.util.function.Predicate;
 
+import de.huberlin.wbi.cfjava.asyntax.App;
+import de.huberlin.wbi.cfjava.asyntax.ArgPair;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
-import de.huberlin.wbi.cfjava.asyntax.Str;
+import de.huberlin.wbi.cfjava.asyntax.InParam;
+import de.huberlin.wbi.cfjava.asyntax.Lam;
+import de.huberlin.wbi.cfjava.asyntax.LamSurrogate;
 import de.huberlin.wbi.cfjava.data.Alist;
+import de.huberlin.wbi.cfjava.data.Amap;
 
-public class EvalExpr extends CtxHolder implements Function<Expr, Alist<Expr>> {
-
-	public EvalExpr( final Ctx ctx ) {
-		super( ctx );
-	}
+public class SingAppPred implements Predicate<App> {
 
 	@Override
-	public Alist<Expr> apply( Expr x ) {
+	public boolean test( App app ) {
 		
-		if( x instanceof Str )
-			return new Alist<Expr>().add( x );
+		SingArgPairPred pred;
+		LamSurrogate ls;
+		Lam lam;
+		Alist<InParam> li;
+		Amap<String, Alist<Expr>> fa;
 		
-		throw new UnsupportedOperationException(
-			"Evaluation of "+x.getClass()+" expression not supported." );
+		pred = new SingArgPairPred();
+		
+		ls = app.getLamSurrogate();
+		
+		if( !( ls instanceof Lam ) )
+			return false;
+		
+		lam = ( Lam )ls;
+		li = lam.getSign().getInLst();
+		fa = app.getBindMap();
+		
+		return pred.test( new ArgPair( li, fa ) );
 	}
-
 }

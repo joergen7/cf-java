@@ -22,144 +22,90 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import de.huberlin.wbi.cfjava.asyntax.App;
-import de.huberlin.wbi.cfjava.asyntax.Cnd;
+import de.huberlin.wbi.cfjava.asyntax.Correl;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.ForBody;
-import de.huberlin.wbi.cfjava.asyntax.Fut;
 import de.huberlin.wbi.cfjava.asyntax.InParam;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
 import de.huberlin.wbi.cfjava.asyntax.Lang;
 import de.huberlin.wbi.cfjava.asyntax.Name;
 import de.huberlin.wbi.cfjava.asyntax.Param;
-import de.huberlin.wbi.cfjava.asyntax.Select;
 import de.huberlin.wbi.cfjava.asyntax.Sign;
 import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.asyntax.Var;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 
-public class PenExprTest {
+public class SingAppPredTest {
+
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void strShouldBeEnumerableTest() {
-		
-		PenExpr pred;
-		
-		pred = new PenExpr();
-		
-		assertTrue( pred.test( new Str( "blub" ) ) );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void cndWithSingleStrBranchesShouldBeEnumerableTest() {
-		
-		PenExpr pred;
-		Cnd c;
-		
-		pred = new PenExpr();
-		
-		c = new Cnd( 12,
-			new Alist<Expr>(),
-			new Alist<Expr>().add( new Str( "bla" ) ),
-			new Alist<Expr>().add( new Str( "blub" ) ) );
-		
-		assertTrue( pred.test( c ) );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void cndWithEmptyThenBrancheShouldNotBeEnumerableTest() {
-		
-		PenExpr pred;
-		Cnd c;
-		
-		pred = new PenExpr();
-		
-		c = new Cnd( 12,
-			new Alist<Expr>(),
-			new Alist<Expr>(),
-			new Alist<Expr>().add( new Str( "blub" ) ) );
-		
-		assertFalse( pred.test( c ) );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void cndWithEmptyElseBrancheShouldNotBeEnumerableTest() {
-		
-		PenExpr pred;
-		Cnd c;
-		
-		pred = new PenExpr();
-		
-		c = new Cnd( 12,
-			new Alist<Expr>(),
-			new Alist<Expr>().add( new Str( "bla" ) ),
-			new Alist<Expr>() );
-		
-		assertFalse( pred.test( c ) );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void selectNonLstSingAppShouldBeEnumerableTest() {
+	public void appWithoutArgShouldBeSingularTest() {
 		
 		Sign sign;
 		ForBody forBody;
 		Lam lam;
 		App app;
 		Amap<String, Alist<Expr>> bindMap;
-		PenExpr pred;
+		SingAppPred pred;
 		
 		sign = new Sign(
 			new Alist<Param>().add( new Param( new Name( "out", false ), false ) ),
 			new Alist<InParam>() );
 		
 		forBody = new ForBody( Lang.BASH, "shalala" );
+		
 		lam = new Lam( 12, "f", sign, forBody );
+		
 		bindMap = new Amap<>();
+		
 		app = new App( 13, 1, lam, bindMap );
-		pred = new PenExpr();
+		
+		pred = new SingAppPred();
 		
 		assertTrue( pred.test( app ) );
 	}
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void selectLstSingAppShouldNotBeEnumerableTest() {
+	public void appBindingSingleStrShouldBeSingularTest() {
 		
 		Sign sign;
 		ForBody forBody;
 		Lam lam;
 		App app;
 		Amap<String, Alist<Expr>> bindMap;
-		PenExpr pred;
+		SingAppPred pred;
 		
 		sign = new Sign(
-			new Alist<Param>().add( new Param( new Name( "out", false ), true ) ),
-			new Alist<InParam>() );
+			new Alist<Param>().add( new Param( new Name( "out", false ), false ) ),
+			new Alist<InParam>().add( new Param( new Name( "x", false ), false ) ) );
 		
 		forBody = new ForBody( Lang.BASH, "shalala" );
-		lam = new Lam( 12, "f", sign, forBody );
-		bindMap = new Amap<>();
-		app = new App( 13, 1, lam, bindMap );
-		pred = new PenExpr();
 		
-		assertFalse( pred.test( app ) );
+		lam = new Lam( 12, "f", sign, forBody );
+		
+		bindMap = new Amap<String, Alist<Expr>>()
+			.put( "x", new Alist<Expr>().add( new Str( "bla" ) ) );
+		
+		app = new App( 13, 1, lam, bindMap );
+		
+		pred = new SingAppPred();
+		
+		assertTrue( pred.test( app ) );
 	}
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void nonSingAppShouldNotBeEnumerableTest() {
+	public void appBindingStrLstShouldNotBeSingularTest() {
 		
 		Sign sign;
 		ForBody forBody;
 		Lam lam;
 		App app;
 		Amap<String, Alist<Expr>> bindMap;
-		PenExpr pred;
+		SingAppPred pred;
 		
 		sign = new Sign(
 			new Alist<Param>().add( new Param( new Name( "out", false ), false ) ),
@@ -174,44 +120,72 @@ public class PenExprTest {
 		
 		app = new App( 13, 1, lam, bindMap );
 		
-		pred = new PenExpr();
+		pred = new SingAppPred();
 		
 		assertFalse( pred.test( app ) );
 	}
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void nonLstSelectShouldBeEnumerableTest() {
+	public void appWithOnlyAggregateArgsShouldBeSingTest() {
 		
-		Select s;
-		Alist<Param> lo;
-		Fut fut;
-		PenExpr pred;
+		Sign sign;
+		ForBody forBody;
+		Lam lam;
+		App app;
+		Amap<String, Alist<Expr>> bindMap;
+		SingAppPred pred;
 		
-		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
-		fut = new Fut( "f", 1234, lo );
+		sign = new Sign(
+			new Alist<Param>().add( new Param( new Name( "out", false ), false ) ),
+			new Alist<InParam>().add( new Param( new Name( "x", false ), true ) ) );
 		
-		s = new Select( 12, 1, fut );
-		pred = new PenExpr();
+		forBody = new ForBody( Lang.BASH, "shalala" );
 		
-		assertTrue( pred.test( s ) );
+		lam = new Lam( 12, "f", sign, forBody );
+		
+		bindMap = new Amap<String, Alist<Expr>>()
+			.put( "x", new Alist<Expr>().add( new Str( "bla" ) ).add( new Var( 1, "blub" ) ) );
+		
+		app = new App( 13, 1, lam, bindMap );
+		
+		pred = new SingAppPred();
+		
+		assertTrue( pred.test( app ) );
 	}
-
+	
 	@SuppressWarnings("static-method")
 	@Test
-	public void lstSelectShouldNotBeEnumerableTest() {
+	public void appWithCorrelArgShouldNotBeSingTest() {
 		
-		Select s;
-		Alist<Param> lo;
-		Fut fut;
-		PenExpr pred;
+		Sign sign;
+		ForBody forBody;
+		Lam lam;
+		App app;
+		Amap<String, Alist<Expr>> bindMap;
+		SingAppPred pred;
 		
-		lo = new Alist<Param>().add( new Param( new Name( "out", false ), true ) );
-		fut = new Fut( "f", 1234, lo );
+		sign = new Sign(
+			new Alist<Param>().add(
+				new Param( new Name( "out", false ), false ) ),
+			new Alist<InParam>().add(
+				new Correl(
+					new Alist<Name>()
+						.add( new Name( "a", false ) )
+						.add( new Name( "b", false ) ) ) ) );
 		
-		s = new Select( 12, 1, fut );
-		pred = new PenExpr();
+		forBody = new ForBody( Lang.BASH, "shalala" );
 		
-		assertFalse( pred.test( s ) );
+		lam = new Lam( 12, "f", sign, forBody );
+		
+		bindMap = new Amap<String, Alist<Expr>>()
+			.put( "a", new Alist<Expr>().add( new Str( "bla" ) ) )
+			.put( "b", new Alist<Expr>().add( new Str( "blub" ) ) );
+		
+		app = new App( 13, 1, lam, bindMap );
+		
+		pred = new SingAppPred();
+		
+		assertFalse( pred.test( app ) );
 	}
 }

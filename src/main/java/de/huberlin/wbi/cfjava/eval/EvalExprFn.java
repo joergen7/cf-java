@@ -15,19 +15,29 @@
  * limitations under the License.
  */
 
-package de.huberlin.wbi.cfjava.pred;
+package de.huberlin.wbi.cfjava.eval;
 
-import java.util.function.Predicate;
+import java.util.function.Function;
 
+import de.huberlin.wbi.cfjava.asyntax.Ctx;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
+import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.data.Alist;
-import de.huberlin.wbi.cfjava.data.Amap;
 
-public class PfinalAmap implements Predicate<Amap<String,Alist<Expr>>> {
+public class EvalExprFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
+
+	public EvalExprFn( final Ctx ctx ) {
+		super( ctx );
+	}
 
 	@Override
-	public boolean test( Amap<String, Alist<Expr>> m ) {
-		return m.values().all( new PfinalAlistExpr() );
+	public Alist<Expr> apply( Expr x ) {
+		
+		if( x instanceof Str )
+			return new Alist<Expr>().add( x );
+		
+		throw new UnsupportedOperationException(
+			"Evaluation of "+x.getClass()+" expression not supported." );
 	}
 
 }

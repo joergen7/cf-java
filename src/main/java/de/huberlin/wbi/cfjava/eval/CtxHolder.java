@@ -17,6 +17,8 @@
 
 package de.huberlin.wbi.cfjava.eval;
 
+import de.huberlin.wbi.cfjava.asyntax.Ctx;
+
 public abstract class CtxHolder {
 	
 	private final Ctx ctx;

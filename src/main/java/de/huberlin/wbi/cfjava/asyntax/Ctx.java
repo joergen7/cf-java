@@ -15,15 +15,10 @@
  * limitations under the License.
  */
 
-package de.huberlin.wbi.cfjava.eval;
+package de.huberlin.wbi.cfjava.asyntax;
 
 import java.util.function.Function;
 
-import de.huberlin.wbi.cfjava.asyntax.App;
-import de.huberlin.wbi.cfjava.asyntax.Expr;
-import de.huberlin.wbi.cfjava.asyntax.Fut;
-import de.huberlin.wbi.cfjava.asyntax.Lam;
-import de.huberlin.wbi.cfjava.asyntax.ResultKey;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 

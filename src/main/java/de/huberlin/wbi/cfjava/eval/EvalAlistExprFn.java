@@ -15,18 +15,23 @@
  * limitations under the License.
  */
 
-package de.huberlin.wbi.cfjava.pred;
+package de.huberlin.wbi.cfjava.eval;
 
-import java.util.function.Predicate;
+import java.util.function.Function;
 
+import de.huberlin.wbi.cfjava.asyntax.Ctx;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.data.Alist;
 
-public class PenAlistExpr implements Predicate<Alist<Expr>> {
+public class EvalAlistExprFn extends CtxHolder implements Function<Alist<Expr>, Alist<Expr>> {
+	
+	public EvalAlistExprFn( final Ctx ctx ) {
+		super( ctx );
+	}
 
 	@Override
-	public boolean test( Alist<Expr> x ) {
-		return x.all( new PenExpr() );
+	public Alist<Expr> apply( Alist<Expr> x ) {
+		return x.flatMap( new EvalExprFn( getCtx() ) );
 	}
 
 }

@@ -20,11 +20,14 @@ package de.huberlin.wbi.cfjava.parse;
 import java.util.List;
 
 import de.huberlin.wbi.cfjava.asyntax.App;
+import de.huberlin.wbi.cfjava.asyntax.Body;
 import de.huberlin.wbi.cfjava.asyntax.Cnd;
 import de.huberlin.wbi.cfjava.asyntax.Correl;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
+import de.huberlin.wbi.cfjava.asyntax.ForBody;
 import de.huberlin.wbi.cfjava.asyntax.InParam;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
+import de.huberlin.wbi.cfjava.asyntax.Lang;
 import de.huberlin.wbi.cfjava.asyntax.Name;
 import de.huberlin.wbi.cfjava.asyntax.NatBody;
 import de.huberlin.wbi.cfjava.asyntax.Param;
@@ -37,6 +40,92 @@ import de.huberlin.wbi.cfjava.parse.CuneiformParser.BindingContext;
 
 public class ParseTripleVisitor extends CuneiformBaseVisitor<ParseTriple> {
 	
+	private static InParam processInParam( CuneiformParser.InparamContext ipc ) {
+		
+		Alist<Name> acc;
+		boolean isFile;
+		String label;
+		
+		if( ipc.LSQUAREBR() != null ) {
+			
+			acc = new Alist<>();
+			
+			for( CuneiformParser.NameContext nc : ipc.name() ) {
+				
+				isFile = nc.FILE() != null;
+				label = nc.ID().getText();
+				
+				acc = acc.add( new Name( label, isFile ) );
+			}
+			
+			return new Correl( acc.reverse() );
+		}
+		
+		return processParam( ipc.param() );
+	}
+	
+	private static Alist<InParam> processInParamLst( List<CuneiformParser.InparamContext> ipcl ) {
+		
+		Alist<InParam> acc;
+		
+		acc = new Alist<>();
+		
+		for( CuneiformParser.InparamContext ipc : ipcl )			
+			acc = acc.add( processInParam( ipc ) );
+		
+		return acc.reverse();
+	}
+	
+	private static Lang processLang( CuneiformParser.LangContext lc ) {
+		
+		if( lc.BASH() != null )
+			return Lang.BASH;
+		
+		if( lc.PYTHON() != null )
+			return Lang.PYTHON;
+		
+		if( lc.R() != null )
+			return Lang.R;
+		
+		throw new LangException();
+	}
+
+	private static Param processParam( CuneiformParser.ParamContext pc ) {
+		
+		boolean isLst, isFile;
+		String label;
+
+		isLst = pc.LTAG() != null;
+		isFile = pc.name().FILE() != null;
+		label = pc.name().ID().getText();
+		
+		return new Param( new Name( label, isFile ), isLst );
+	}
+
+	
+	private static Alist<Param> processParamLst( List<CuneiformParser.ParamContext> pcl ) {
+		
+		Alist<Param> acc;
+		
+		acc = new Alist<>();
+		
+		for( CuneiformParser.ParamContext pc : pcl )			
+			acc = acc.add( processParam( pc ) );
+		
+		return acc.reverse();
+	}
+	
+	private static Sign processSign( CuneiformParser.SignContext ctx ) {
+		
+		Alist<Param> lo;
+		Alist<InParam> li;
+		
+		lo = processParamLst( ctx.param() );
+		li = processInParamLst( ctx.inparam() );
+		
+		return new Sign( lo, li );
+	}
+	
 	@Override
 	protected ParseTriple aggregateResult( ParseTriple a, ParseTriple b ) {
 		
@@ -44,13 +133,8 @@ public class ParseTripleVisitor extends CuneiformBaseVisitor<ParseTriple> {
 		Amap<String, Alist<Expr>> rho;
 		Amap<String, Lam> gamma;
 		
-		if( a == null ) {
-			
-			if( b == null )
-				throw new UnsupportedOperationException( "Some argument must be non-null." );
-			
+		if( a == null )			
 			return b;
-		}
 		
 		if( b == null )
 			return a;
@@ -61,6 +145,7 @@ public class ParseTripleVisitor extends CuneiformBaseVisitor<ParseTriple> {
 		
 		return new ParseTriple( query, rho, gamma );
 	}
+
 	
 	@Override
 	public ParseTriple visitApp( CuneiformParser.AppContext ctx ) {
@@ -99,14 +184,37 @@ public class ParseTripleVisitor extends CuneiformBaseVisitor<ParseTriple> {
 		Amap<String, Alist<Expr>> rho;
 		Amap<String, Lam> gamma;
 		Alist<Expr> query;
+		String varname;
+		Alist<Expr> rhs, rhs1;
+		int i, n;
 		
 		gamma = new Amap<>();
 		query = new Alist<>();
-		rho = processAssign( ctx );
+		
+		rho = new Amap<>();
+
+		rhs = visit( ctx.compoundexpr() ).getQuery();
+		
+		n = ctx.ID().size();
+		for( i = 0; i < n; i++ ) {
+			
+			varname = ctx.ID( i ).getText();
+			
+			try {
+				rhs1 = rhs.map( new SetChannelFn( i+1 ) );
+			}
+			catch( @SuppressWarnings("unused") SetChannelException pe ) {
+				throw new ParseException(
+					ctx.EQ().getSymbol().getLine(),
+					"Unable to set channel in right hand side of assignment." );
+			}
+			
+			rho = rho.put( varname, rhs1 );
+		}	
 		
 		return new ParseTriple( query, rho, gamma );
 	}
-
+	
 	@Override
 	public ParseTriple visitCnd( CuneiformParser.CndContext ctx ) {
 		
@@ -128,7 +236,6 @@ public class ParseTripleVisitor extends CuneiformBaseVisitor<ParseTriple> {
 		
 		return new ParseTriple( x, rho, gamma );
 	}
-
 	
 	@Override
 	public ParseTriple visitCompoundexpr( CuneiformParser.CompoundexprContext ctx ) {
@@ -143,6 +250,42 @@ public class ParseTripleVisitor extends CuneiformBaseVisitor<ParseTriple> {
 			return new ParseTriple( new Alist<Expr>(), rho, gamma );
 		
 		return this.visitChildren( ctx );
+	}
+	
+	@Override
+	public ParseTriple visitDefun( CuneiformParser.DefunContext ctx ) {
+		
+		String lamName;
+		Sign sign;
+		Body body;
+		Lam lam;
+		int line;
+		Amap<String, Alist<Expr>> rho;
+		Amap<String, Lam> gamma;
+		Alist<Expr> query;
+		String s;
+		
+		lamName = ctx.ID().getText();
+		sign = processSign( ctx.sign() );
+		line = ctx.ID().getSymbol().getLine();
+		
+		if( ctx.IN() == null )
+			body = new NatBody( visitChildren( ctx ).getRho() );
+		else {
+			
+			s = ctx.BODY().getText();
+			s = s.substring( 2, s.length()-2 );
+			
+			body = new ForBody( processLang( ctx.lang() ), s );
+		}
+			
+		lam = new Lam( line, lamName, sign, body );
+		
+		query = new Alist<>();
+		rho = new Amap<>();
+		gamma = new Amap<String, Lam>().put( lamName, lam );
+		
+		return new ParseTriple( query, rho, gamma );
 	}
 	
 	@Override
@@ -186,142 +329,4 @@ public class ParseTripleVisitor extends CuneiformBaseVisitor<ParseTriple> {
 		
 		return visitChildren( ctx );		
 	}
-	
-	@Override
-	public ParseTriple visitDefun( CuneiformParser.DefunContext ctx ) {
-		
-		String lamName;
-		Sign sign;
-		NatBody natBody;
-		Lam lam;
-		int line;
-		Amap<String, Alist<Expr>> rho;
-		Amap<String, Lam> gamma;
-		Alist<Expr> query;
-		
-		lamName = ctx.ID().getText();
-		sign = processSign( ctx.sign() );
-		natBody = new NatBody( processAssignLst( ctx.assign() ) );
-		line = ctx.ID().getSymbol().getLine();
-		lam = new Lam( line, lamName, sign, natBody );
-		
-		query = new Alist<>();
-		rho = new Amap<>();
-		gamma = new Amap<String, Lam>().put( lamName, lam );
-		
-		return new ParseTriple( query, rho, gamma );
-	}
-
-	private static Sign processSign( CuneiformParser.SignContext ctx ) {
-		
-		Alist<Param> lo;
-		Alist<InParam> li;
-		
-		lo = processParamLst( ctx.param() );
-		li = processInParamLst( ctx.inparam() );
-		
-		return new Sign( lo, li );
-	}
-	
-	private static Alist<Param> processParamLst( List<CuneiformParser.ParamContext> pcl ) {
-		
-		Alist<Param> acc;
-		
-		acc = new Alist<>();
-		
-		for( CuneiformParser.ParamContext pc : pcl )			
-			acc = acc.add( processParam( pc ) );
-		
-		return acc.reverse();
-	}
-	
-	private static Param processParam( CuneiformParser.ParamContext pc ) {
-		
-		boolean isLst, isFile;
-		String label;
-
-		isLst = pc.LTAG() != null;
-		isFile = pc.name().FILE() != null;
-		label = pc.name().ID().getText();
-		
-		return new Param( new Name( label, isFile ), isLst );
-	}
-	
-	private static Alist<InParam> processInParamLst( List<CuneiformParser.InparamContext> ipcl ) {
-		
-		Alist<InParam> acc;
-		
-		acc = new Alist<>();
-		
-		for( CuneiformParser.InparamContext ipc : ipcl )			
-			acc = acc.add( processInParam( ipc ) );
-		
-		return acc.reverse();
-	}
-	
-	private static InParam processInParam( CuneiformParser.InparamContext ipc ) {
-		
-		Alist<Name> acc;
-		boolean isFile;
-		String label;
-		
-		if( ipc.LSQUAREBR() != null ) {
-			
-			acc = new Alist<>();
-			
-			for( CuneiformParser.NameContext nc : ipc.name() ) {
-				
-				isFile = nc.FILE() != null;
-				label = nc.ID().getText();
-				
-				acc = acc.add( new Name( label, isFile ) );
-			}
-			
-			return new Correl( acc.reverse() );
-		}
-		
-		return processParam( ipc.param() );
-	}
-	
-	private Amap<String, Alist<Expr>> processAssignLst( List<CuneiformParser.AssignContext> acl ) {
-		
-		Amap<String, Alist<Expr>> acc;
-		
-		acc = new Amap<>();
-		for( CuneiformParser.AssignContext ac : acl )
-			acc = acc.merge( processAssign( ac ) );
-		
-		return acc;
-	}
-	
-	private Amap<String, Alist<Expr>> processAssign( CuneiformParser.AssignContext ctx ) {
-		
-		Amap<String, Alist<Expr>> rho;
-		String varname;
-		Alist<Expr> rhs, rhs1;
-		int i, n;
-		
-		rho = new Amap<>();
-
-		rhs = visit( ctx.compoundexpr() ).getQuery();
-		
-		n = ctx.ID().size();
-		for( i = 0; i < n; i++ ) {
-			
-			varname = ctx.ID( i ).getText();
-			
-			try {
-				rhs1 = rhs.map( new SetChannelFn( i+1 ) );
-			}
-			catch( @SuppressWarnings("unused") SetChannelException pe ) {
-				throw new ParseException(
-					ctx.EQ().getSymbol().getLine(),
-					"Unable to set channel in right hand side of assignment." );
-			}
-			
-			rho = rho.put( varname, rhs1 );
-		}	
-		
-		return rho;
-	}	
 }

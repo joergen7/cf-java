@@ -26,17 +26,17 @@ import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.asyntax.Var;
 import de.huberlin.wbi.cfjava.data.Alist;
 
-public class PfinalAlistExprTest {
+public class FinalAlistExprPredTest {
 
 	@SuppressWarnings("static-method")
 	@Test
 	public void allStrIsFinalTest() {
 		
 		Alist<Expr> x;
-		PfinalAlistExpr pred;
+		FinalAlistExprPred pred;
 		
 		x = new Alist<Expr>().add( new Str( "bla" ) ).add( new Str( "blub" ) );
-		pred = new PfinalAlistExpr();
+		pred = new FinalAlistExprPred();
 		
 		assertTrue( pred.test( x ) );
 	}
@@ -46,10 +46,10 @@ public class PfinalAlistExprTest {
 	public void EmptyListIsFinalTest() {
 		
 		Alist<Expr> x;
-		PfinalAlistExpr pred;
+		FinalAlistExprPred pred;
 		
 		x = new Alist<>();
-		pred = new PfinalAlistExpr();
+		pred = new FinalAlistExprPred();
 		
 		assertTrue( pred.test( x ) );
 	}
@@ -59,10 +59,10 @@ public class PfinalAlistExprTest {
 	public void oneVarIsNotFinalTest() {
 		
 		Alist<Expr> x;
-		PfinalAlistExpr pred;
+		FinalAlistExprPred pred;
 		
 		x = new Alist<Expr>().add( new Str( "bla" ) ).add( new Var( 12, "x" ) ).add( new Str( "blub" ) );
-		pred = new PfinalAlistExpr();
+		pred = new FinalAlistExprPred();
 		
 		assertFalse( pred.test( x ) );
 	}
@@ -72,10 +72,10 @@ public class PfinalAlistExprTest {
 	public void allVarIsNotFinalTest() {
 		
 		Alist<Expr> x;
-		PfinalAlistExpr pred;
+		FinalAlistExprPred pred;
 		
 		x = new Alist<Expr>().add( new Var( 11, "y" ) ).add( new Var( 12, "x" ) );
-		pred = new PfinalAlistExpr();
+		pred = new FinalAlistExprPred();
 		
 		assertFalse( pred.test( x ) );
 	}

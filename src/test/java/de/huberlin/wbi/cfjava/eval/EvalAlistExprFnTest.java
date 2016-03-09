@@ -25,6 +25,7 @@ import java.util.function.Function;
 import org.junit.Test;
 
 import de.huberlin.wbi.cfjava.asyntax.App;
+import de.huberlin.wbi.cfjava.asyntax.Ctx;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Fut;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
@@ -35,7 +36,7 @@ import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 
-public class EvalAlistExprTest {
+public class EvalAlistExprFnTest {
 
 	private final Function<App, Fut> mu0 = new Function<App, Fut>() {
 
@@ -68,7 +69,7 @@ public class EvalAlistExprTest {
 		new Amap<String, Lam>(),
 		new Amap<ResultKey, Alist<Expr>>());
 	
-	private final Function<Alist<Expr>, Alist<Expr>> eval0 = new EvalAlistExpr( theta0 );
+	private final Function<Alist<Expr>, Alist<Expr>> eval0 = new EvalAlistExprFn( theta0 );
 	
 	@Test
 	public void nilShouldEvalItselfTest() {

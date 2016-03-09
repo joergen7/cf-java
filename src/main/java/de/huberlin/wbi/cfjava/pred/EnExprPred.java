@@ -29,7 +29,7 @@ import de.huberlin.wbi.cfjava.asyntax.Sign;
 import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.data.Alist;
 
-public class PenExpr implements Predicate<Expr> {
+public class EnExprPred implements Predicate<Expr> {
 
 	@Override
 	public boolean test( Expr x ) {
@@ -37,7 +37,7 @@ public class PenExpr implements Predicate<Expr> {
 		Cnd c;
 		App a;
 		Alist<Expr> xt, xe;
-		PsingApp psing;
+		SingAppPred psing;
 		Lam lam;
 		Sign sign;
 		Alist<Param> lo;
@@ -66,7 +66,7 @@ public class PenExpr implements Predicate<Expr> {
 		if( x instanceof App ) {
 			
 			a = ( App )x;
-			psing = new PsingApp();
+			psing = new SingAppPred();
 			
 			if( !psing.test( a ) )
 				return false;
