@@ -1,6 +1,7 @@
 package de.huberlin.wbi.cfjava.parse;
 
 import de.huberlin.wbi.cfjava.asyntax.Expr;
+import de.huberlin.wbi.cfjava.asyntax.Param;
 import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
@@ -106,5 +107,9 @@ public class ReplyListener extends EffiBaseListener {
 	
 	public Amap<String, Alist<Expr>> getRetMap() {
 		return retMap;
+	}
+
+	public Alist<Param> getOutLst() {
+		return null;
 	}
 }

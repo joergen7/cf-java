@@ -2,6 +2,7 @@ package de.huberlin.wbi.cfjava.cuneiform;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -11,6 +12,8 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.IdHolder;
+import de.huberlin.wbi.cfjava.asyntax.Param;
+import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 import de.huberlin.wbi.cfjava.parse.EffiLexer;
@@ -23,11 +26,18 @@ public class Reply extends IdHolder {
 	private final Alist<String> out;
 	private final long tstart;
 	private final long tdur;
+	private final Alist<Param> outLst;
 	
-	public Reply( int id, Amap<String, Alist<Expr>> retMap, Alist<String> out,
+	public Reply( int id, Alist<Param> lo, Amap<String, Alist<Expr>> retMap, Alist<String> out,
 		long tstart, long tdur) {
 		
 		super( id );
+		
+		if( lo == null )
+			throw new IllegalArgumentException( "Output parameter list must not be null." );
+		
+		if( lo.isEmpty() )
+			throw new IllegalArgumentException( "Output parameter list must not be empty." );
 		
 		if( out == null )
 			throw new IllegalArgumentException( "Output string list must not be null." );
@@ -45,6 +55,7 @@ public class Reply extends IdHolder {
 		this.out = out;
 		this.tstart = tstart;
 		this.tdur = tdur;
+		this.outLst = lo;
 	}
 
 	public static Reply createReply( String summary ) {
@@ -75,7 +86,7 @@ public class Reply extends IdHolder {
 
 			walker.walk( rv, tree );
 
-			return new Reply( rv.getId(), rv.getRetMap(), rv.getOut(),
+			return new Reply( rv.getId(), rv.getOutLst(), rv.getRetMap(), rv.getOut(),
 				rv.getTstart(), rv.getTdur() );
 		}
 		catch( IOException e ) {
@@ -100,7 +111,21 @@ public class Reply extends IdHolder {
 	}
 	
 	public List<String> getStageOutFilenameList() {
-		return null;
+		
+		List<String> l;
+		
+		l = new ArrayList<>();
+		
+		for( Param param : outLst )	
+			if( param.getName().isFile() )
+				for( Expr expr : retMap.get( param.getName().getLabel() ) )
+					l.add( ( ( Str )expr ).getContent() );
+		
+		return l;
+	}
+
+	public Alist<Param> getOutLst() {
+		return outLst;
 	}
 
 }
