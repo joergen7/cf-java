@@ -52,11 +52,13 @@ public class RequestCollector implements Function<App, Fut> {
 		Alist<Param> lo;
 		Request request;
 		Amap<String, Alist<Expr>> fa;
+		int id;
 
 		lam = ( Lam )app.getLamSurrogate();
 		fa = app.getBindMap();
+		id = nextId++;
 		
-		request = new Request( lam, fa );
+		request = new Request( lam, fa, id );
 		
 		if( cache.isKey( request ) )
 			return cache.get( request );
@@ -64,7 +66,7 @@ public class RequestCollector implements Function<App, Fut> {
 		lamName = lam.getLamName();
 		lo = lam.getSign().getOutLst();
 		
-		fut = new Fut( lamName, nextId++, lo );
+		fut = new Fut( lamName, id, lo );
 		cache = cache.put( request, fut );
 		
 		return fut;

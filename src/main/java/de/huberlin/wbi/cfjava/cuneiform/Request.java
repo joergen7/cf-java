@@ -24,7 +24,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import de.huberlin.wbi.cfjava.asyntax.Expr;
-import de.huberlin.wbi.cfjava.asyntax.ForBody;
+import de.huberlin.wbi.cfjava.asyntax.IdHolder;
 import de.huberlin.wbi.cfjava.asyntax.InParam;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
 import de.huberlin.wbi.cfjava.asyntax.Name;
@@ -34,12 +34,14 @@ import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 
-public class Request {
+public class Request extends IdHolder {
 	
-	private final Lam lam;
 	private final Amap<String, Alist<Expr>> bindMap;
+	private final Lam lam;
 
-	public Request( final Lam lam, final Amap<String, Alist<Expr>> bindMap ) {
+	public Request( final Lam lam, final Amap<String, Alist<Expr>> bindMap, int id ) {
+		
+		super( id );
 		
 		if( lam == null )
 			throw new IllegalArgumentException( "Lambda must not be null." );
@@ -51,21 +53,6 @@ public class Request {
 		this.bindMap = bindMap;
 	}
 
-	public Lam getLam() {
-		return lam;
-	}
-
-	public Amap<String, Alist<Expr>> getBindMap() {
-		return bindMap;
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder( 733, 101 )
-			.append( lam )
-			.append( bindMap ).toHashCode();
-	}
-	
 	@Override
 	public boolean equals( Object obj ) {
 		
@@ -83,13 +70,15 @@ public class Request {
 			.append( lam, rhs.lam )
 			.append( bindMap, rhs.bindMap ).isEquals();
 	}
-	
-	@Override
-	public String toString() {
-		return new StringBuffer().append( '{' ).append( lam ).append( ',' )
-			.append( bindMap ).append( '}' ).toString();
+
+	public Amap<String, Alist<Expr>> getBindMap() {
+		return bindMap;
 	}
 
+	public Lam getLam() {
+		return lam;
+	}
+	
 	public Set<String> getStageInFilenameSet() {
 		
 		Set<String> filenameSet;
@@ -123,71 +112,35 @@ public class Request {
 		
 		return filenameSet;
 	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder( 733, 101 )
+			.append( lam )
+			.append( bindMap ).toHashCode();
+	}
 	
-	public String getEffiConf( String dir ) {
+
+	@Override
+	public String toString() {
 		
 		StringBuffer buf;
-		Sign sign;
-		ForBody body;
-		String lang;
-		String lamName;
 		boolean comma;
-		Alist<Param> lo;
-		Alist<InParam> li;
-		Param p;
-		String label;
-		Str str;
 		
-		sign = lam.getSign();
-		lo = sign.getOutLst();
-		li = sign.getInLst();
-		body = ( ForBody )lam.getBody();
-		lang = body.getLang().toString().toLowerCase();
-		lamName = lam.getLamName();
-		
-		buf = new StringBuffer();
-
-		buf.append( "#{prefix=>undef,dir=>\"" ).append( dir )
-			.append( "\",lang=>" ).append( lang ).append( ",taskname=>\"" )
-			.append( lamName ).append( "\",outlist=>[" );
+		buf = new StringBuffer().append( '{' ).append( lam ).append( ",#{" );
 		
 		comma = false;
-		for( Param param : lo ) {
+		for( String n : bindMap.keys() ) {
 			
 			if( comma )
 				buf.append( ',' );
 			comma = true;
 			
-			buf.append( '"' ).append( param.getName().getLabel() )
-				.append( '"' );
+			buf.append( '"' ).append( n ).append( "\"=>" )
+				.append( bindMap.get( n ) );
 		}
-		
-		buf.append( "],inmap=>#{" );
-		
-		for( InParam inParam : li ) {
 			
-			p = ( Param )inParam;
-			label = p.getName().getLabel();
-			buf.append( '"' ).append( label ).append( "\"=>[" );
-			
-			comma = false;
-			for( Expr expr : bindMap.get( label ) ) {
-				
-				str = ( Str )expr;
-				
-			}
-		}
-		
-		buf.append( "},lmap=>#{" );
-		
-		// TODO: append lmap
-		
-		buf.append( "},fmap=>#{" );
-		
-		// TODO: append fmap
-		
-		buf.append( "}}.\n" );
-		
+		buf.append( "}," ).append( getId() ).append( "}." );
 		
 		return buf.toString();
 	}

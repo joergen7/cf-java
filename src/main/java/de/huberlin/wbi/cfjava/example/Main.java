@@ -3,6 +3,7 @@ package de.huberlin.wbi.cfjava.example;
 import java.io.IOException;
 import java.util.Set;
 
+import de.huberlin.wbi.cfjava.cuneiform.Reply;
 import de.huberlin.wbi.cfjava.cuneiform.Request;
 import de.huberlin.wbi.cfjava.cuneiform.Workflow;
 
@@ -14,6 +15,8 @@ public class Main {
 		Workflow workflow;
 		boolean isFinished;
 		Set<Request> requestSet;
+		String replyStr;
+		Reply reply;
 		
 		// Assume the user provided us the following workflow script:
 		script = "deftask greet( out : person )in bash "
@@ -38,6 +41,20 @@ public class Main {
 		requestSet = workflow.getRequestSet();
 		
 		System.out.println( "\nREQUESTS\n"+requestSet );
+		
+		replyStr = "#{arg => #{\"person\" => [{str,\"Jorgen\"}]},"
+			+"  id => 1,"
+			+"  lam => {lam,1,\"greet\","
+			+"    {sign,[{param,{name,\"out\",false},false}],"
+			+"          [{param,{name,\"person\",false},false}]},"
+			+"    {forbody,bash,\"\\n  out=\\\"Hello $person\\\"\\n\"}},"
+			+"  out => [],"
+			+"  ret => #{\"out\" => [{str,\"Hello Jorgen\"}]},"
+			+"  tdur => 5,"
+			+"  tstart => 1457946567909}";
+
+		
+		// reply = new Reply( replyStr );
 
 	}
 

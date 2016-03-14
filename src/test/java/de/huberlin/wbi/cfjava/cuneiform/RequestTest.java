@@ -48,10 +48,11 @@ public class RequestTest {
 		lam = mock( Lam.class );
 		bindMap = new Amap<>();
 		
-		r = new Request( lam, bindMap );
+		r = new Request( lam, bindMap, 1234 );
 		
 		assertSame( lam, r.getLam() );
 		assertSame( bindMap, r.getBindMap() );
+		assertEquals( 1234, r.getId() );
 	}
 
 	@SuppressWarnings({ "static-method", "unused" })
@@ -63,7 +64,7 @@ public class RequestTest {
 		
 		bindMap = new Amap<>();
 		
-		r = new Request( null, bindMap );
+		r = new Request( null, bindMap, 1234 );
 	}
 	
 	@SuppressWarnings({ "static-method", "unused" })
@@ -75,7 +76,35 @@ public class RequestTest {
 		
 		lam = mock( Lam.class );
 		
-		r = new Request( lam, null );
+		r = new Request( lam, null, 1234 );
+	}
+	
+	@SuppressWarnings({ "static-method", "unused" })
+	@Test( expected=IllegalArgumentException.class )
+	public void constructorShouldThrowIaeOnZeroIdTest() {
+		
+		Request r;
+		Lam lam;
+		Amap<String, Alist<Expr>>bindMap;
+		
+		lam = mock( Lam.class );
+		bindMap = new Amap<>();
+		
+		r = new Request( lam, bindMap, 0 );
+	}
+	
+	@SuppressWarnings({ "static-method", "unused" })
+	@Test( expected=IllegalArgumentException.class )
+	public void constructorShouldThrowIaeOnNegIdTest() {
+		
+		Request r;
+		Lam lam;
+		Amap<String, Alist<Expr>>bindMap;
+		
+		lam = mock( Lam.class );
+		bindMap = new Amap<>();
+		
+		r = new Request( lam, bindMap, -12 );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -89,7 +118,7 @@ public class RequestTest {
 		lam = mock( Lam.class );
 		bindMap = new Amap<>();
 
-		r = new Request( lam, bindMap );
+		r = new Request( lam, bindMap, 1234 );
 		
 		assertNotEquals( r, null );
 	}
@@ -105,7 +134,7 @@ public class RequestTest {
 		lam = mock( Lam.class );
 		bindMap = new Amap<>();
 
-		r = new Request( lam, bindMap );
+		r = new Request( lam, bindMap, 1234 );
 		
 		assertNotEquals( r, "blub" );
 	}
@@ -121,7 +150,7 @@ public class RequestTest {
 		lam = mock( Lam.class );
 		bindMap = new Amap<>();
 
-		r = new Request( lam, bindMap );
+		r = new Request( lam, bindMap, 1234 );
 		
 		assertEquals( r, r );
 	}
@@ -130,7 +159,7 @@ public class RequestTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void twoRequestsWithSameLamAndBindMapAreEqualTest() {
+	public void equalsIdenticalInstanceTest() {
 		
 		Request r1, r2;
 		Lam lam;
@@ -139,15 +168,15 @@ public class RequestTest {
 		lam = mock( Lam.class );
 		bindMap = new Amap<>();
 
-		r1 = new Request( lam, bindMap );
-		r2 = new Request( lam, bindMap );
+		r1 = new Request( lam, bindMap, 1234 );
+		r2 = new Request( lam, bindMap, 1234 );
 		
 		assertEquals( r1, r2 );
 	}
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void twoRequestsWithSameLamButDifferentBindMapAreNotEqualTest() {
+	public void notEqualsIfDifferentBindMapTest() {
 		
 		Request r1, r2;
 		Lam lam;
@@ -157,15 +186,15 @@ public class RequestTest {
 		bindMap1 = new Amap<>();
 		bindMap2 = new Amap<String, Alist<Expr>>().put( "bla", new Alist<Expr>().add( new Str( "blub" ) ) );
 
-		r1 = new Request( lam, bindMap1 );
-		r2 = new Request( lam, bindMap2 );
+		r1 = new Request( lam, bindMap1, 1234 );
+		r2 = new Request( lam, bindMap2, 1234 );
 		
 		assertNotEquals( r1, r2 );
 	}
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void twoRequestsWithSameBindMapButDifferentLamAreNotEqualTest() {
+	public void notEqualsIfDifferentLamTest() {
 		
 		Request r1, r2;
 		Lam lam1, lam2;
@@ -175,11 +204,29 @@ public class RequestTest {
 		lam2 = mock( Lam.class );
 		bindMap = new Amap<>();
 
-		r1 = new Request( lam1, bindMap );
-		r2 = new Request( lam2, bindMap );
+		r1 = new Request( lam1, bindMap, 1234 );
+		r2 = new Request( lam2, bindMap, 1234 );
 		
 		assertNotEquals( r1, r2 );
 	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void idNotPartOfEqualityTest() {
+		
+		Request r1, r2;
+		Lam lam;
+		Amap<String, Alist<Expr>>bindMap;
+		
+		lam = mock( Lam.class );
+		bindMap = new Amap<>();
+
+		r1 = new Request( lam, bindMap, 1234 );
+		r2 = new Request( lam, bindMap, 1235 );
+		
+		assertEquals( r1, r2 );
+	}
+	
 
 	@SuppressWarnings("static-method")
 	@Test
@@ -208,7 +255,7 @@ public class RequestTest {
 		
 		lam = new Lam( 12, "f", sign, body );
 		
-		r = new Request( lam, fa );
+		r = new Request( lam, fa, 1234 );
 		assertTrue( r.getStageInFilenameSet().isEmpty() );
 	}
 
@@ -242,7 +289,7 @@ public class RequestTest {
 		
 		lam = new Lam( 12, "f", sign, body );
 		
-		r = new Request( lam, fa );
+		r = new Request( lam, fa, 1234 );
 		filenameSet = r.getStageInFilenameSet();
 		
 		assertEquals( 2, filenameSet.size() );

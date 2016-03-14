@@ -65,7 +65,7 @@ public class ForBody extends ContentHolder implements Body {
 	
 	@Override
 	public String toString() {
-		return new StringBuffer().append( "{forbody," ).append( lang )
+		return new StringBuffer().append( "{forbody," ).append( lang.name().toLowerCase() )
 			.append( ",\"" )
 			.append(
 				getContent().replace( "\n", "\\n" ).replace( "\"", "\\\"" ) )
