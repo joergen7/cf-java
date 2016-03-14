@@ -1,9 +1,8 @@
 package de.huberlin.wbi.cfjava.cuneiform;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -76,7 +75,8 @@ public class Reply extends IdHolder {
 
 			walker.walk( rv, tree );
 
-			return rv.getReply();
+			return new Reply( rv.getId(), rv.getRetMap(), rv.getOut(),
+				rv.getTstart(), rv.getTdur() );
 		}
 		catch( IOException e ) {
 			throw new RuntimeException( e );
@@ -97,6 +97,10 @@ public class Reply extends IdHolder {
 
 	public long getTdur() {
 		return tdur;
+	}
+	
+	public List<String> getStageOutFilenameList() {
+		return null;
 	}
 
 }

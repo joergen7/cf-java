@@ -86,4 +86,11 @@ public class Cnd extends SrcLocated implements Expr {
 			.append( thenLst, rhs.thenLst )
 			.append( elseLst, rhs.elseLst ).isEquals();
 	}
+	
+	@Override
+	public String toString() {
+		return new StringBuffer().append( "{cnd," ).append( condLst )
+			.append( ',' ).append( thenLst ).append( ',' ).append( elseLst )
+			.append( '}' ).toString();
+	}
 }

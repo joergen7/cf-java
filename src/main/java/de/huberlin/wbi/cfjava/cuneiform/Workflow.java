@@ -24,6 +24,7 @@ import java.util.Set;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import de.huberlin.wbi.cfjava.asyntax.Ctx;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
@@ -33,10 +34,9 @@ import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 import de.huberlin.wbi.cfjava.eval.EvalFn;
 import de.huberlin.wbi.cfjava.eval.RequestCollector;
-import de.huberlin.wbi.cfjava.parse.ParseTripleVisitor;
+import de.huberlin.wbi.cfjava.parse.WorkflowListener;
 import de.huberlin.wbi.cfjava.parse.CuneiformLexer;
 import de.huberlin.wbi.cfjava.parse.CuneiformParser;
-import de.huberlin.wbi.cfjava.parse.ParseTriple;
 import de.huberlin.wbi.cfjava.pred.FinalAlistExprPred;
 
 public class Workflow {
@@ -44,20 +44,16 @@ public class Workflow {
 	private Ctx ctx;
 	private Alist<Expr> query;
 	
-	public Workflow( final String script ) {
+	public static Workflow createWorkflow( final String script ) {
 		
 		ANTLRInputStream input;
 		CuneiformLexer lexer;
 		CuneiformParser parser;
 		CommonTokenStream tokenStream;
 		ParseTree tree;
-		ParseTripleVisitor asv;
-		ParseTriple triple;
-		Amap<String, Alist<Expr>> rho;
-		Amap<String, Lam> gamma;
-		Amap<ResultKey, Alist<Expr>> omega;
-		RequestCollector requestCollector;
 		int nerr;
+		WorkflowListener asv;
+		ParseTreeWalker walker;
 		
 		try( StringReader reader = new StringReader( script ) ) {
 			
@@ -65,7 +61,8 @@ public class Workflow {
 			lexer = new CuneiformLexer( input );
 			tokenStream = new CommonTokenStream( lexer );
 			parser = new CuneiformParser( tokenStream );
-			asv = new ParseTripleVisitor();
+			asv = new WorkflowListener();
+			walker = new ParseTreeWalker();
 			
 			tree = parser.script();
 
@@ -73,18 +70,28 @@ public class Workflow {
 			if( nerr > 0 )
 				throw new RuntimeException( "Encountered "+nerr+" syntax errors." );
 			
-			triple = asv.visit( tree );
-			rho = triple.getRho();
-			gamma = triple.getGamma();
-			omega = new Amap<>();
-			requestCollector = new RequestCollector();
+			walker.walk( asv, tree );
 			
-			query = triple.getQuery();			
-			ctx = new Ctx( rho, requestCollector, gamma, omega );
+			return new Workflow( asv.getQuery(), asv.getRho(), asv.getGamma() );			
 		}
 		catch( IOException e ) {
 			throw new RuntimeException( e );
 		}
+	}
+	
+	public Workflow( Alist<Expr> query, Amap<String, Alist<Expr>> rho, Amap<String, Lam> gamma ) {
+		
+		if( query == null )
+			throw new IllegalArgumentException( "Query must not be null." );
+		
+		if( rho == null )
+			throw new IllegalArgumentException( "Rho must not be null." );
+		
+		if( gamma == null )
+			throw new IllegalArgumentException( "Gamma must not be null." );
+		
+		this.query = query;
+		this.ctx = new Ctx( rho, new RequestCollector(), gamma, new Amap<ResultKey, Alist<Expr>>() );
 	}
 	
 	public boolean reduce() {
@@ -123,5 +130,17 @@ public class Workflow {
 			omega = omega.put( new ResultKey( n, id ), retMap.get( n ) );
 		
 		ctx = new Ctx( ctx.getRho(), ctx.getMu(), ctx.getGamma(), omega );
+	}
+
+	public Alist<Expr> getQuery() {
+		return query;
+	}
+
+	public Amap<String, Alist<Expr>> getRho() {
+		return ctx.getRho();
+	}
+
+	public Amap<String, Lam> getGamma() {
+		return ctx.getGamma();
 	}
 }

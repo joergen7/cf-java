@@ -2,7 +2,6 @@ package de.huberlin.wbi.cfjava.parse;
 
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Str;
-import de.huberlin.wbi.cfjava.cuneiform.Reply;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 
@@ -11,7 +10,6 @@ public class ReplyListener extends EffiBaseListener {
 	private int id;
 	private Alist<String> binLst;
 	private Alist<String> out;
-	private Reply reply;
 	private Amap<String, Alist<Expr>> retMap, map;
 	private long tdur;
 	private long tstart;
@@ -90,18 +88,23 @@ public class ReplyListener extends EffiBaseListener {
 		retMap = map;
 	}
 	
-	
-	@Override
-	public void exitScript( EffiParser.ScriptContext ctx ) {
-		reply = new Reply( id, retMap, out, tstart, tdur );
+	public int getId() {
+		return id;
 	}
 	
-	public Reply getReply() {
-		
-		if( reply == null )
-			throw new RuntimeException( "Listener has never been run." );
-		
-		return reply;
+	public long getTstart() {
+		return tstart;
 	}
-
+	
+	public long getTdur() {
+		return tdur;
+	}
+	
+	public Alist<String> getOut() {
+		return out;
+	}
+	
+	public Amap<String, Alist<Expr>> getRetMap() {
+		return retMap;
+	}
 }

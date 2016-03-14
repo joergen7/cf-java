@@ -13,10 +13,8 @@ import org.junit.Test;
 
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Str;
-import de.huberlin.wbi.cfjava.cuneiform.Reply;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
-import de.huberlin.wbi.cfjava.parse.EffiParser.ScriptContext;
 
 public class EffiListenerTest {
 	
@@ -32,7 +30,6 @@ public class EffiListenerTest {
 		ReplyListener rv;
 		ParseTree tree;
 		ParseTreeWalker walker;
-		Reply reply;
 		
 		script = "#{arg => #{\"person\" => [{str,\"Jorgen\"}]},\n"
 			+"  id => 1,\n"
@@ -60,15 +57,13 @@ public class EffiListenerTest {
 
 			walker.walk( rv, tree );
 			
-			reply = rv.getReply();
-			
-			assertEquals( 1, reply.getId() );
-			assertEquals( 1457946567909L, reply.getTstart() );
-			assertEquals( 5, reply.getTdur() );
+			assertEquals( 1, rv.getId() );
+			assertEquals( 1457946567909L, rv.getTstart() );
+			assertEquals( 5, rv.getTdur() );
 			assertEquals(
 				new Amap<String, Alist<Expr>>().put( "out", new Alist<Expr>().add( new Str( "Hello Jorgen" ) ) ),
-				reply.getRetMap() );
-			assertEquals( new Alist<String>(), reply.getOut() );
+				rv.getRetMap() );
+			assertEquals( new Alist<String>(), rv.getOut() );
 		}
 
 	}

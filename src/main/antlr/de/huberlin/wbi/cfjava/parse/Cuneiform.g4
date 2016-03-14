@@ -48,11 +48,11 @@ lang         : BASH
 compoundexpr : NIL
              | expr+ ;
              
-expr         : ID
-             | INTLIT
-             | STRLIT
-             | cnd
-             | app ;
+expr         : ID     # VarExpr
+             | INTLIT # IntLitExpr
+             | STRLIT # StrLitExpr
+             | cnd    # CndExpr
+             | app    # AppExpr ;
              
 cnd          : IF compoundexpr THEN compoundexpr ELSE compoundexpr END ;
 

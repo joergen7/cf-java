@@ -23,7 +23,7 @@ public class Main {
 		System.out.println( "SCRIPT\n"+script );
 		
 		// Create a workflow object from that script.
-		workflow = new Workflow( script );
+		workflow = Workflow.createWorkflow( script );
 
 		System.out.println( "\nORIGINAL\n"+workflow );
 		

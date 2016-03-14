@@ -8,6 +8,7 @@ import java.io.StringReader;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
 import de.huberlin.wbi.cfjava.asyntax.App;
@@ -26,7 +27,7 @@ import de.huberlin.wbi.cfjava.asyntax.Var;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 
-public class ParseTripleVisitorTest {
+public class WorkflowListenerTest {
 
 	@SuppressWarnings("static-method")
 	@Test
@@ -37,12 +38,12 @@ public class ParseTripleVisitorTest {
 		CuneiformParser parser;
 		CommonTokenStream tokenStream;
 		ParseTree tree;
-		ParseTripleVisitor asv;
+		WorkflowListener asv;
 		String script;
-		ParseTriple ptExpect, ptActual;
 		Alist<Expr> query;
 		Amap<String, Alist<Expr>> rho;
 		Amap<String, Lam> gamma;
+		ParseTreeWalker walker;
 		
 		script = "nil;";
 		
@@ -50,26 +51,27 @@ public class ParseTripleVisitorTest {
 		rho = new Amap<>();
 		gamma = new Amap<>();
 		
-		ptExpect = new ParseTriple( query, rho, gamma );
-		
 		try( StringReader reader = new StringReader( script ) ) {
 			
 			input = new ANTLRInputStream( reader );
 			lexer = new CuneiformLexer( input );
 			tokenStream = new CommonTokenStream( lexer );
 			parser = new CuneiformParser( tokenStream );
-			asv = new ParseTripleVisitor();
+			asv = new WorkflowListener();
+			walker = new ParseTreeWalker();
 			
 			tree = parser.script();
 			
 			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
-
-			ptActual = asv.visit( tree );
-		
-			assertEquals( ptExpect, ptActual );
+			
+			walker.walk( asv, tree );
+			
+			assertEquals( query, asv.getQuery() );
+			assertEquals( rho, asv.getRho() );
+			assertEquals( gamma, asv.getGamma() );
 		}
 	}
-	
+
 	@SuppressWarnings("static-method")
 	@Test
 	public void varShouldBeRecognizedTest() throws IOException {
@@ -79,12 +81,12 @@ public class ParseTripleVisitorTest {
 		CuneiformParser parser;
 		CommonTokenStream tokenStream;
 		ParseTree tree;
-		ParseTripleVisitor asv;
+		WorkflowListener asv;
 		String script;
-		ParseTriple ptExpect, ptActual;
 		Alist<Expr> query;
 		Amap<String, Alist<Expr>> rho;
 		Amap<String, Lam> gamma;
+		ParseTreeWalker walker;
 		
 		script = "blub;";
 		
@@ -92,23 +94,24 @@ public class ParseTripleVisitorTest {
 		rho = new Amap<>();
 		gamma = new Amap<>();
 		
-		ptExpect = new ParseTriple( query, rho, gamma );
-		
 		try( StringReader reader = new StringReader( script ) ) {
 			
 			input = new ANTLRInputStream( reader );
 			lexer = new CuneiformLexer( input );
 			tokenStream = new CommonTokenStream( lexer );
 			parser = new CuneiformParser( tokenStream );
-			asv = new ParseTripleVisitor();
+			asv = new WorkflowListener();
+			walker = new ParseTreeWalker();
 			
 			tree = parser.script();
 			
 			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
-
-			ptActual = asv.visit( tree );
-		
-			assertEquals( ptExpect, ptActual );
+			
+			walker.walk( asv, tree );
+			
+			assertEquals( query, asv.getQuery() );
+			assertEquals( rho, asv.getRho() );
+			assertEquals( gamma, asv.getGamma() );
 		}
 	}
 	
@@ -121,12 +124,12 @@ public class ParseTripleVisitorTest {
 		CuneiformParser parser;
 		CommonTokenStream tokenStream;
 		ParseTree tree;
-		ParseTripleVisitor asv;
+		WorkflowListener asv;
 		String script;
-		ParseTriple ptExpect, ptActual;
 		Alist<Expr> query;
 		Amap<String, Alist<Expr>> rho;
 		Amap<String, Lam> gamma;
+		ParseTreeWalker walker;
 		
 		script = "bla blub;";
 		
@@ -134,23 +137,24 @@ public class ParseTripleVisitorTest {
 		rho = new Amap<>();
 		gamma = new Amap<>();
 		
-		ptExpect = new ParseTriple( query, rho, gamma );
-		
 		try( StringReader reader = new StringReader( script ) ) {
 			
 			input = new ANTLRInputStream( reader );
 			lexer = new CuneiformLexer( input );
 			tokenStream = new CommonTokenStream( lexer );
 			parser = new CuneiformParser( tokenStream );
-			asv = new ParseTripleVisitor();
+			asv = new WorkflowListener();
+			walker = new ParseTreeWalker();
 			
 			tree = parser.script();
 			
 			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
-
-			ptActual = asv.visit( tree );
 			
-			assertEquals( ptExpect, ptActual );
+			walker.walk( asv, tree );
+			
+			assertEquals( query, asv.getQuery() );
+			assertEquals( rho, asv.getRho() );
+			assertEquals( gamma, asv.getGamma() );
 		}
 	}
 	
@@ -163,12 +167,12 @@ public class ParseTripleVisitorTest {
 		CuneiformParser parser;
 		CommonTokenStream tokenStream;
 		ParseTree tree;
-		ParseTripleVisitor asv;
+		WorkflowListener asv;
 		String script;
-		ParseTriple ptExpect, ptActual;
 		Alist<Expr> query;
 		Amap<String, Alist<Expr>> rho;
 		Amap<String, Lam> gamma;
+		ParseTreeWalker walker;
 		
 		script = "bla; blub;";
 		
@@ -176,23 +180,24 @@ public class ParseTripleVisitorTest {
 		rho = new Amap<>();
 		gamma = new Amap<>();
 		
-		ptExpect = new ParseTriple( query, rho, gamma );
-		
 		try( StringReader reader = new StringReader( script ) ) {
 			
 			input = new ANTLRInputStream( reader );
 			lexer = new CuneiformLexer( input );
 			tokenStream = new CommonTokenStream( lexer );
 			parser = new CuneiformParser( tokenStream );
-			asv = new ParseTripleVisitor();
+			asv = new WorkflowListener();
+			walker = new ParseTreeWalker();
 			
 			tree = parser.script();
 			
 			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
-
-			ptActual = asv.visit( tree );
 			
-			assertEquals( ptExpect, ptActual );
+			walker.walk( asv, tree );
+			
+			assertEquals( query, asv.getQuery() );
+			assertEquals( rho, asv.getRho() );
+			assertEquals( gamma, asv.getGamma() );
 		}
 	}
 	
@@ -205,12 +210,12 @@ public class ParseTripleVisitorTest {
 		CuneiformParser parser;
 		CommonTokenStream tokenStream;
 		ParseTree tree;
-		ParseTripleVisitor asv;
+		WorkflowListener asv;
 		String script;
-		ParseTriple ptExpect, ptActual;
 		Alist<Expr> query;
 		Amap<String, Alist<Expr>> rho;
 		Amap<String, Lam> gamma;
+		ParseTreeWalker walker;
 		
 		script = "\"bla\";";
 		
@@ -218,25 +223,27 @@ public class ParseTripleVisitorTest {
 		rho = new Amap<>();
 		gamma = new Amap<>();
 		
-		ptExpect = new ParseTriple( query, rho, gamma );
-		
 		try( StringReader reader = new StringReader( script ) ) {
 			
 			input = new ANTLRInputStream( reader );
 			lexer = new CuneiformLexer( input );
 			tokenStream = new CommonTokenStream( lexer );
 			parser = new CuneiformParser( tokenStream );
-			asv = new ParseTripleVisitor();
+			asv = new WorkflowListener();
+			walker = new ParseTreeWalker();
 			
 			tree = parser.script();
 			
 			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
-
-			ptActual = asv.visit( tree );
 			
-			assertEquals( ptExpect, ptActual );
+			walker.walk( asv, tree );
+			
+			assertEquals( query, asv.getQuery() );
+			assertEquals( rho, asv.getRho() );
+			assertEquals( gamma, asv.getGamma() );
 		}
 	}
+	
 	
 	@SuppressWarnings("static-method")
 	@Test
@@ -247,12 +254,12 @@ public class ParseTripleVisitorTest {
 		CuneiformParser parser;
 		CommonTokenStream tokenStream;
 		ParseTree tree;
-		ParseTripleVisitor asv;
+		WorkflowListener asv;
 		String script;
-		ParseTriple ptExpect, ptActual;
 		Alist<Expr> query;
 		Amap<String, Alist<Expr>> rho;
 		Amap<String, Lam> gamma;
+		ParseTreeWalker walker;
 		
 		script = "5;";
 		
@@ -260,23 +267,24 @@ public class ParseTripleVisitorTest {
 		rho = new Amap<>();
 		gamma = new Amap<>();
 		
-		ptExpect = new ParseTriple( query, rho, gamma );
-		
 		try( StringReader reader = new StringReader( script ) ) {
 			
 			input = new ANTLRInputStream( reader );
 			lexer = new CuneiformLexer( input );
 			tokenStream = new CommonTokenStream( lexer );
 			parser = new CuneiformParser( tokenStream );
-			asv = new ParseTripleVisitor();
+			asv = new WorkflowListener();
+			walker = new ParseTreeWalker();
 			
 			tree = parser.script();
 			
 			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
-
-			ptActual = asv.visit( tree );
 			
-			assertEquals( ptExpect, ptActual );
+			walker.walk( asv, tree );
+			
+			assertEquals( query, asv.getQuery() );
+			assertEquals( rho, asv.getRho() );
+			assertEquals( gamma, asv.getGamma() );
 		}
 	}
 	
@@ -289,12 +297,12 @@ public class ParseTripleVisitorTest {
 		CuneiformParser parser;
 		CommonTokenStream tokenStream;
 		ParseTree tree;
-		ParseTripleVisitor asv;
+		WorkflowListener asv;
 		String script;
-		ParseTriple ptExpect, ptActual;
 		Alist<Expr> query;
 		Amap<String, Alist<Expr>> rho;
 		Amap<String, Lam> gamma;
+		ParseTreeWalker walker;
 		Alist<Expr> xc, xt, xe;
 		
 		script = "if nil then \"bla\" else \"blub\" end;";
@@ -306,8 +314,8 @@ public class ParseTripleVisitorTest {
 		query = new Alist<Expr>().add( new Cnd( 1, xc, xt, xe ) );
 		rho = new Amap<>();
 		gamma = new Amap<>();
-		
-		ptExpect = new ParseTriple( query, rho, gamma );
+
+
 		
 		try( StringReader reader = new StringReader( script ) ) {
 			
@@ -315,15 +323,18 @@ public class ParseTripleVisitorTest {
 			lexer = new CuneiformLexer( input );
 			tokenStream = new CommonTokenStream( lexer );
 			parser = new CuneiformParser( tokenStream );
-			asv = new ParseTripleVisitor();
+			asv = new WorkflowListener();
+			walker = new ParseTreeWalker();
 			
 			tree = parser.script();
 			
 			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
-
-			ptActual = asv.visit( tree );
 			
-			assertEquals( ptExpect, ptActual );
+			walker.walk( asv, tree );
+			
+			assertEquals( query, asv.getQuery() );
+			assertEquals( rho, asv.getRho() );
+			assertEquals( gamma, asv.getGamma() );
 		}
 	}
 	
@@ -336,25 +347,22 @@ public class ParseTripleVisitorTest {
 		CuneiformParser parser;
 		CommonTokenStream tokenStream;
 		ParseTree tree;
-		ParseTripleVisitor asv;
+		WorkflowListener asv;
 		String script;
-		ParseTriple ptExpect, ptActual;
 		Alist<Expr> query;
 		Amap<String, Alist<Expr>> rho;
 		Amap<String, Lam> gamma;
-		Var var;
-		Amap<String, Alist<Expr>> fa;
+		ParseTreeWalker walker;
 		
 		script = "f();";
 		
-		var = new Var( 1, "f" );
-		fa = new Amap<>();
 		
-		query = new Alist<Expr>().add( new App( 1, 1, var, fa ) );
+		
+		query = new Alist<Expr>().add( new App( 1, 1, new Var( 1, "f" ), new Amap<String, Alist<Expr>>() ) );
 		rho = new Amap<>();
 		gamma = new Amap<>();
-		
-		ptExpect = new ParseTriple( query, rho, gamma );
+
+
 		
 		try( StringReader reader = new StringReader( script ) ) {
 			
@@ -362,15 +370,18 @@ public class ParseTripleVisitorTest {
 			lexer = new CuneiformLexer( input );
 			tokenStream = new CommonTokenStream( lexer );
 			parser = new CuneiformParser( tokenStream );
-			asv = new ParseTripleVisitor();
+			asv = new WorkflowListener();
+			walker = new ParseTreeWalker();
 			
 			tree = parser.script();
 			
 			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
-
-			ptActual = asv.visit( tree );
 			
-			assertEquals( ptExpect, ptActual );
+			walker.walk( asv, tree );
+			
+			assertEquals( query, asv.getQuery() );
+			assertEquals( rho, asv.getRho() );
+			assertEquals( gamma, asv.getGamma() );
 		}
 	}
 	
@@ -383,26 +394,22 @@ public class ParseTripleVisitorTest {
 		CuneiformParser parser;
 		CommonTokenStream tokenStream;
 		ParseTree tree;
-		ParseTripleVisitor asv;
+		WorkflowListener asv;
 		String script;
-		ParseTriple ptExpect, ptActual;
 		Alist<Expr> query;
 		Amap<String, Alist<Expr>> rho;
 		Amap<String, Lam> gamma;
-		Var var;
-		Amap<String, Alist<Expr>> fa;
+		ParseTreeWalker walker;
 		
 		script = "f( x: x );";
 		
-		var = new Var( 1, "f" );
-		fa = new Amap<String, Alist<Expr>>()
-			.put( "x", new Alist<Expr>().add( new Var( 1, "x" ) ) );
 		
-		query = new Alist<Expr>().add( new App( 1, 1, var, fa ) );
+		
+		query = new Alist<Expr>().add( new App( 1, 1, new Var( 1, "f" ), new Amap<String, Alist<Expr>>().put( "x", new Alist<Expr>().add( new Var( 1, "x" ) ) ) ) );
 		rho = new Amap<>();
 		gamma = new Amap<>();
-		
-		ptExpect = new ParseTriple( query, rho, gamma );
+
+
 		
 		try( StringReader reader = new StringReader( script ) ) {
 			
@@ -410,15 +417,18 @@ public class ParseTripleVisitorTest {
 			lexer = new CuneiformLexer( input );
 			tokenStream = new CommonTokenStream( lexer );
 			parser = new CuneiformParser( tokenStream );
-			asv = new ParseTripleVisitor();
+			asv = new WorkflowListener();
+			walker = new ParseTreeWalker();
 			
 			tree = parser.script();
 			
 			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
-
-			ptActual = asv.visit( tree );
 			
-			assertEquals( ptExpect, ptActual );
+			walker.walk( asv, tree );
+			
+			assertEquals( query, asv.getQuery() );
+			assertEquals( rho, asv.getRho() );
+			assertEquals( gamma, asv.getGamma() );
 		}
 	}
 	
@@ -431,27 +441,28 @@ public class ParseTripleVisitorTest {
 		CuneiformParser parser;
 		CommonTokenStream tokenStream;
 		ParseTree tree;
-		ParseTripleVisitor asv;
+		WorkflowListener asv;
 		String script;
-		ParseTriple ptExpect, ptActual;
 		Alist<Expr> query;
 		Amap<String, Alist<Expr>> rho;
 		Amap<String, Lam> gamma;
-		Var var;
-		Amap<String, Alist<Expr>> fa;
+		ParseTreeWalker walker;
 		
 		script = "f( x: x, y: \"y\" );";
 		
-		var = new Var( 1, "f" );
-		fa = new Amap<String, Alist<Expr>>()
-			.put( "x", new Alist<Expr>().add( new Var( 1, "x" ) ) )
-			.put( "y", new Alist<Expr>().add( new Str( "y" ) ) );
-		
-		query = new Alist<Expr>().add( new App( 1, 1, var, fa ) );
+		query = new Alist<Expr>()
+			.add( new App(
+				1,
+				1,
+				new Var( 1, "f" ),
+				new Amap<String, Alist<Expr>>()
+					.put( "x", new Alist<Expr>().add( new Var( 1, "x" ) ) )
+					.put( "y", new Alist<Expr>().add( new Str( "y" ) ) ) ) );
+					
 		rho = new Amap<>();
 		gamma = new Amap<>();
-		
-		ptExpect = new ParseTriple( query, rho, gamma );
+
+
 		
 		try( StringReader reader = new StringReader( script ) ) {
 			
@@ -459,15 +470,18 @@ public class ParseTripleVisitorTest {
 			lexer = new CuneiformLexer( input );
 			tokenStream = new CommonTokenStream( lexer );
 			parser = new CuneiformParser( tokenStream );
-			asv = new ParseTripleVisitor();
+			asv = new WorkflowListener();
+			walker = new ParseTreeWalker();
 			
 			tree = parser.script();
 			
 			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
-
-			ptActual = asv.visit( tree );
 			
-			assertEquals( ptExpect, ptActual );
+			walker.walk( asv, tree );
+			
+			assertEquals( query, asv.getQuery() );
+			assertEquals( rho, asv.getRho() );
+			assertEquals( gamma, asv.getGamma() );
 		}
 	}
 	
@@ -480,21 +494,20 @@ public class ParseTripleVisitorTest {
 		CuneiformParser parser;
 		CommonTokenStream tokenStream;
 		ParseTree tree;
-		ParseTripleVisitor asv;
+		WorkflowListener asv;
 		String script;
-		ParseTriple ptExpect, ptActual;
 		Alist<Expr> query;
 		Amap<String, Alist<Expr>> rho;
 		Amap<String, Lam> gamma;
+		ParseTreeWalker walker;
 		
 		script = "x = \"x\";";
 		
 		query = new Alist<>();
-		rho = new Amap<String, Alist<Expr>>()
-			.put( "x", new Alist<Expr>().add( new Str( "x" ) ) );
+		rho = new Amap<String, Alist<Expr>>().put( "x", new Alist<Expr>().add( new Str( "x" ) ) );
 		gamma = new Amap<>();
-		
-		ptExpect = new ParseTriple( query, rho, gamma );
+
+
 		
 		try( StringReader reader = new StringReader( script ) ) {
 			
@@ -502,15 +515,18 @@ public class ParseTripleVisitorTest {
 			lexer = new CuneiformLexer( input );
 			tokenStream = new CommonTokenStream( lexer );
 			parser = new CuneiformParser( tokenStream );
-			asv = new ParseTripleVisitor();
+			asv = new WorkflowListener();
+			walker = new ParseTreeWalker();
 			
 			tree = parser.script();
-
-			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
-
-			ptActual = asv.visit( tree );
 			
-			assertEquals( ptExpect, ptActual );
+			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
+			
+			walker.walk( asv, tree );
+			
+			assertEquals( query, asv.getQuery() );
+			assertEquals( rho, asv.getRho() );
+			assertEquals( gamma, asv.getGamma() );
 		}
 	}
 	
@@ -523,28 +539,22 @@ public class ParseTripleVisitorTest {
 		CuneiformParser parser;
 		CommonTokenStream tokenStream;
 		ParseTree tree;
-		ParseTripleVisitor asv;
+		WorkflowListener asv;
 		String script;
-		ParseTriple ptExpect, ptActual;
 		Alist<Expr> query;
 		Amap<String, Alist<Expr>> rho;
 		Amap<String, Lam> gamma;
+		ParseTreeWalker walker;
 		
 		script = "x y = f();";
 		
 		query = new Alist<>();
-		
 		rho = new Amap<String, Alist<Expr>>()
-			.put( "x", new Alist<Expr>()
-				.add( new App( 1, 1, new Var( 1, "f" ),
-					new Amap<String, Alist<Expr>>() ) ) )
-			.put( "y", new Alist<Expr>()
-					.add( new App( 1, 2, new Var( 1, "f" ),
-							new Amap<String, Alist<Expr>>() ) ) );
-		
+			.put( "x", new Alist<Expr>().add( new App( 1, 1, new Var( 1, "f" ), new Amap<String, Alist<Expr>>() ) ) )
+			.put( "y", new Alist<Expr>().add( new App( 1, 2, new Var( 1, "f" ), new Amap<String, Alist<Expr>>() ) ) );
 		gamma = new Amap<>();
-		
-		ptExpect = new ParseTriple( query, rho, gamma );
+
+
 		
 		try( StringReader reader = new StringReader( script ) ) {
 			
@@ -552,15 +562,18 @@ public class ParseTripleVisitorTest {
 			lexer = new CuneiformLexer( input );
 			tokenStream = new CommonTokenStream( lexer );
 			parser = new CuneiformParser( tokenStream );
-			asv = new ParseTripleVisitor();
+			asv = new WorkflowListener();
+			walker = new ParseTreeWalker();
 			
 			tree = parser.script();
-
-			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
-
-			ptActual = asv.visit( tree );
 			
-			assertEquals( ptExpect, ptActual );
+			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
+			
+			walker.walk( asv, tree );
+			
+			assertEquals( query, asv.getQuery() );
+			assertEquals( rho, asv.getRho() );
+			assertEquals( gamma, asv.getGamma() );
 		}
 	}
 	
@@ -573,10 +586,22 @@ public class ParseTripleVisitorTest {
 		CuneiformParser parser;
 		CommonTokenStream tokenStream;
 		ParseTree tree;
-		ParseTripleVisitor asv;
+		WorkflowListener asv;
 		String script;
+		Alist<Expr> query;
+		Amap<String, Alist<Expr>> rho;
+		Amap<String, Lam> gamma;
+		ParseTreeWalker walker;
 		
 		script = "x y = \"blub\";";
+		
+		query = new Alist<>();
+		rho = new Amap<String, Alist<Expr>>()
+			.put( "x", new Alist<Expr>().add( new App( 1, 1, new Var( 1, "f" ), new Amap<String, Alist<Expr>>() ) ) )
+			.put( "y", new Alist<Expr>().add( new App( 1, 2, new Var( 1, "f" ), new Amap<String, Alist<Expr>>() ) ) );
+		gamma = new Amap<>();
+
+
 		
 		try( StringReader reader = new StringReader( script ) ) {
 			
@@ -584,13 +609,18 @@ public class ParseTripleVisitorTest {
 			lexer = new CuneiformLexer( input );
 			tokenStream = new CommonTokenStream( lexer );
 			parser = new CuneiformParser( tokenStream );
-			asv = new ParseTripleVisitor();
+			asv = new WorkflowListener();
+			walker = new ParseTreeWalker();
 			
 			tree = parser.script();
-
+			
 			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
-
-			asv.visit( tree );
+			
+			walker.walk( asv, tree );
+			
+			assertEquals( query, asv.getQuery() );
+			assertEquals( rho, asv.getRho() );
+			assertEquals( gamma, asv.getGamma() );
 		}
 	}
 	
@@ -603,12 +633,12 @@ public class ParseTripleVisitorTest {
 		CuneiformParser parser;
 		CommonTokenStream tokenStream;
 		ParseTree tree;
-		ParseTripleVisitor asv;
+		WorkflowListener asv;
 		String script;
-		ParseTriple ptExpect, ptActual;
 		Alist<Expr> query;
 		Amap<String, Alist<Expr>> rho;
 		Amap<String, Lam> gamma;
+		ParseTreeWalker walker;
 		Lam lam;
 		Sign sign;
 		NatBody body;
@@ -618,20 +648,16 @@ public class ParseTripleVisitorTest {
 		sign = new Sign(
 			new Alist<Param>().add( new Param( new Name( "out", false ), false ) ),
 			new Alist<InParam>() );
-		
 		body = new NatBody(
 			new Amap<String, Alist<Expr>>()
 				.put( "out", new Alist<Expr>().add( new Str( "A" ) ) ) );
-		
 		lam = new Lam( 1, "f", sign, body );
 		
 		query = new Alist<>();
 		rho = new Amap<>();
-		
 		gamma = new Amap<String, Lam>().put( "f", lam );
-		
-		
-		ptExpect = new ParseTriple( query, rho, gamma );
+
+
 		
 		try( StringReader reader = new StringReader( script ) ) {
 			
@@ -639,18 +665,21 @@ public class ParseTripleVisitorTest {
 			lexer = new CuneiformLexer( input );
 			tokenStream = new CommonTokenStream( lexer );
 			parser = new CuneiformParser( tokenStream );
-			asv = new ParseTripleVisitor();
+			asv = new WorkflowListener();
+			walker = new ParseTreeWalker();
 			
 			tree = parser.script();
-
-			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
-
-			ptActual = asv.visit( tree );
 			
-			assertEquals( ptExpect, ptActual );
+			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
+			
+			walker.walk( asv, tree );
+			
+			assertEquals( query, asv.getQuery() );
+			assertEquals( rho, asv.getRho() );
+			assertEquals( gamma, asv.getGamma() );
 		}
 	}
-	
+
 	@SuppressWarnings("static-method")
 	@Test
 	public void foreignDeftaskShouldBeRecognizedTest() throws IOException {
@@ -660,12 +689,12 @@ public class ParseTripleVisitorTest {
 		CuneiformParser parser;
 		CommonTokenStream tokenStream;
 		ParseTree tree;
-		ParseTripleVisitor asv;
+		WorkflowListener asv;
 		String script;
-		ParseTriple ptExpect, ptActual;
 		Alist<Expr> query;
 		Amap<String, Alist<Expr>> rho;
 		Amap<String, Lam> gamma;
+		ParseTreeWalker walker;
 		Lam lam;
 		Sign sign;
 		ForBody body;
@@ -675,17 +704,14 @@ public class ParseTripleVisitorTest {
 		sign = new Sign(
 			new Alist<Param>().add( new Param( new Name( "out", false ), false ) ),
 			new Alist<InParam>() );
-		
 		body = new ForBody( Lang.BASH, "out=\"A\"" );
-		
 		lam = new Lam( 1, "f", sign, body );
 		
 		query = new Alist<>();
 		rho = new Amap<>();
-		
 		gamma = new Amap<String, Lam>().put( "f", lam );
-		
-		ptExpect = new ParseTriple( query, rho, gamma );
+
+
 		
 		try( StringReader reader = new StringReader( script ) ) {
 			
@@ -693,15 +719,20 @@ public class ParseTripleVisitorTest {
 			lexer = new CuneiformLexer( input );
 			tokenStream = new CommonTokenStream( lexer );
 			parser = new CuneiformParser( tokenStream );
-			asv = new ParseTripleVisitor();
+			asv = new WorkflowListener();
+			walker = new ParseTreeWalker();
 			
 			tree = parser.script();
-
-			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
-
-			ptActual = asv.visit( tree );
 			
-			assertEquals( ptExpect, ptActual );
+			assertEquals( 0, parser.getNumberOfSyntaxErrors() );
+			
+			walker.walk( asv, tree );
+			
+			assertEquals( query, asv.getQuery() );
+			assertEquals( rho, asv.getRho() );
+			assertEquals( gamma, asv.getGamma() );
 		}
 	}
 }
+
+
