@@ -1,6 +1,5 @@
 package de.huberlin.wbi.cfjava.example;
 
-import java.io.IOException;
 import java.util.Set;
 
 import de.huberlin.wbi.cfjava.cuneiform.Reply;
@@ -9,16 +8,15 @@ import de.huberlin.wbi.cfjava.cuneiform.Workflow;
 
 public class Main {
 
-	public static void main( String[] args ) throws IOException {
+	public static void main( String[] args ) {
 		
-		String script;
+		String script, summary;
 		Workflow workflow;
 		boolean isFinished;
 		Set<Request> requestSet;
-		String replyStr;
 		Reply reply;
 		
-		// Assume the user provided us the following workflow script:
+		// Assume, the user provided us the following workflow script:
 		script = "deftask greet( out : person )in bash "
 			+"*{\n  out=\"Hello $person\"\n}*\n\ngreet( person: \"Jorgen\" );";
 		
@@ -42,19 +40,30 @@ public class Main {
 		
 		System.out.println( "\nREQUESTS\n"+requestSet );
 		
-		replyStr = "#{arg => #{\"person\" => [{str,\"Jorgen\"}]},"
-			+"  id => 1,"
-			+"  lam => {lam,1,\"greet\","
-			+"    {sign,[{param,{name,\"out\",false},false}],"
-			+"          [{param,{name,\"person\",false},false}]},"
-			+"    {forbody,bash,\"\\n  out=\\\"Hello $person\\\"\\n\"}},"
-			+"  out => [],"
-			+"  ret => #{\"out\" => [{str,\"Hello Jorgen\"}]},"
-			+"  tdur => 5,"
-			+"  tstart => 1457946567909}";
-
+		// Assume, effi produced the following summary:
+		summary = "#{arg => #{\"person\" => [{str,\"Jorgen\"}]},\n"
+				+"  id => 1,\n"
+				+"  lam => {lam,1,\"greet\",\n"
+				+"    {sign,[{param,{name,\"out\",false},false}],\n"
+				+"          [{param,{name,\"person\",false},false}]},\n"
+				+"    {forbody,bash,\"\\n  out=\\\"Hello $person\\\"\\n\"}},\n"
+				+"  out => [],\n"
+				+"  ret => #{\"out\" => [{str,\"Hello Jorgen\"}]},\n"
+				+"  tdur => 5,\n"
+				+"  tstart => 1457946567909}.\n";
 		
-		// reply = new Reply( replyStr );
+		System.out.println( "\nSUMMARY\n"+summary );
+
+		// Create a reply object from the summary.
+		reply = Reply.createReply( summary );
+		
+		// Feed the reply object to the workflow
+		workflow.addReply( reply );
+		
+		// Apply the reduce method once again
+		isFinished = workflow.reduce();
+		
+		System.out.println( "\nREDUCED (finished: "+isFinished+")\n"+workflow );
 
 	}
 

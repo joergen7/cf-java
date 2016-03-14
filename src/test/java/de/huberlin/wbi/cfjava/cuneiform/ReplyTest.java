@@ -2,15 +2,12 @@ package de.huberlin.wbi.cfjava.cuneiform;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.ForBody;
-import de.huberlin.wbi.cfjava.asyntax.InParam;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
-import de.huberlin.wbi.cfjava.asyntax.Lang;
-import de.huberlin.wbi.cfjava.asyntax.Name;
-import de.huberlin.wbi.cfjava.asyntax.Param;
 import de.huberlin.wbi.cfjava.asyntax.Sign;
 import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.data.Alist;
@@ -168,7 +165,7 @@ public class ReplyTest {
 	
 	
 
-	@Test
+	@Ignore @Test
 	public void contructorFromStringTest() {
 		
 		String replyStr;

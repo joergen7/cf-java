@@ -9,6 +9,7 @@ import de.huberlin.wbi.cfjava.data.Amap;
 public class ReplyListener extends EffiBaseListener {
 	
 	private int id;
+	private Alist<String> binLst;
 	private Alist<String> out;
 	private Reply reply;
 	private Amap<String, Alist<Expr>> retMap, map;
@@ -24,12 +25,12 @@ public class ReplyListener extends EffiBaseListener {
 		s = ctx.STRLIT().getText();
 		s = s.substring( 1, s.length()-1 );
 		
-		out = out.add( s );
+		binLst = binLst.add( s );
 	}
 	
 	@Override
 	public void enterBinlst( EffiParser.BinlstContext ctx ) {
-		out = new Alist<>();
+		binLst = new Alist<>();
 	}
 	
 	@Override
@@ -81,7 +82,7 @@ public class ReplyListener extends EffiBaseListener {
 
 	@Override
 	public void exitOutAssoc( EffiParser.OutAssocContext ctx ) {
-		out = out.reverse();
+		out = binLst.reverse();
 	}
 
 	@Override

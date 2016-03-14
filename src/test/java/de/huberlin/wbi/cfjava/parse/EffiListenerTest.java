@@ -18,7 +18,7 @@ import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 import de.huberlin.wbi.cfjava.parse.EffiParser.ScriptContext;
 
-public class EffiVisitorTest {
+public class EffiListenerTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
@@ -44,10 +44,7 @@ public class EffiVisitorTest {
 			+"  ret => #{\"out\" => [{str,\"Hello Jorgen\"}]},\n"
 			+"  tdur => 5,\n"
 			+"  tstart => 1457946567909}.\n";
-		
-		System.out.println( script );
-		
-		
+				
 		try( StringReader reader = new StringReader( script ) ) {
 			
 			input = new ANTLRInputStream( reader );

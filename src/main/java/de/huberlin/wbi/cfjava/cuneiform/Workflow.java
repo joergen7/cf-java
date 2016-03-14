@@ -44,7 +44,7 @@ public class Workflow {
 	private Ctx ctx;
 	private Alist<Expr> query;
 	
-	public Workflow( final String script ) throws IOException {
+	public Workflow( final String script ) {
 		
 		ANTLRInputStream input;
 		CuneiformLexer lexer;
@@ -82,6 +82,9 @@ public class Workflow {
 			query = triple.getQuery();			
 			ctx = new Ctx( rho, requestCollector, gamma, omega );
 		}
+		catch( IOException e ) {
+			throw new RuntimeException( e );
+		}
 	}
 	
 	public boolean reduce() {
@@ -105,5 +108,20 @@ public class Workflow {
 
 	public Set<Request> getRequestSet() {		
 		return ( ( RequestCollector )ctx.getMu() ).getRequestSet();
+	}
+
+	public void addReply( Reply reply ) {
+		
+		Amap<ResultKey, Alist<Expr>> omega;
+		Amap<String, Alist<Expr>> retMap;
+		int id;
+		
+		omega = ctx.getOmega();
+		retMap = reply.getRetMap();
+		id = reply.getId();
+		for( String n : retMap.keys() )
+			omega = omega.put( new ResultKey( n, id ), retMap.get( n ) );
+		
+		ctx = new Ctx( ctx.getRho(), ctx.getMu(), ctx.getGamma(), omega );
 	}
 }
