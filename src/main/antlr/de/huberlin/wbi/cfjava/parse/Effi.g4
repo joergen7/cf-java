@@ -30,7 +30,7 @@ assoc      : ARG RARROW map       # ArgAssoc
            | TDUR RARROW INTLIT   # TdurAssoc
            ;
 
-map        : LHASHBRACE binding* RBRACE ;
+map        : LHASHBRACE( binding( COMMA binding )* )? RBRACE ;
 
 binding    : STRLIT RARROW strlst ;
 
@@ -53,7 +53,7 @@ forbody    : LBRACE FORBODY COMMA lang COMMA STRLIT RBRACE ;
 
 binlst     : LSQUAREBR( bin( COMMA bin )* )? RSQUAREBR ;
 
-bin        : DLTAG STRLIT DRTAG ;
+bin        : DLTAG STRLIT? DRTAG ;
 
 bool       : TRUE | FALSE ;
 

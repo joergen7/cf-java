@@ -49,7 +49,7 @@ public class Main {
 				+"    {sign,[{param,{name,\"out\",false},false}],\n"
 				+"          [{param,{name,\"person\",false},false}]},\n"
 				+"    {forbody,bash,\"\\n  out=\\\"Hello $person\\\"\\n\"}},\n"
-				+"  out => [],\n"
+				+"  out => [<<>>],\n"
 				+"  ret => #{\"out\" => [{str,\"Hello Jorgen\"}]},\n"
 				+"  tdur => 5,\n"
 				+"  tstart => 1457946567909}.\n";

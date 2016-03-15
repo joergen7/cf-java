@@ -24,8 +24,12 @@ public class ReplyListener extends EffiBaseListener {
 		
 		String s;
 		
-		s = ctx.STRLIT().getText();
-		s = s.substring( 1, s.length()-1 );
+		if( ctx.STRLIT() != null ) {
+			s = ctx.STRLIT().getText();
+			s = s.substring( 1, s.length()-1 );
+		}
+		else
+			s = "";
 		
 		binLst = binLst.add( s );
 	}
