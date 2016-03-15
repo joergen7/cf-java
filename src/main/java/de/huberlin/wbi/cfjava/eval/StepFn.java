@@ -21,19 +21,23 @@ import java.util.function.Function;
 
 import de.huberlin.wbi.cfjava.asyntax.App;
 import de.huberlin.wbi.cfjava.asyntax.Body;
+import de.huberlin.wbi.cfjava.asyntax.Cnd;
 import de.huberlin.wbi.cfjava.asyntax.Ctx;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.ForBody;
 import de.huberlin.wbi.cfjava.asyntax.Fut;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
 import de.huberlin.wbi.cfjava.asyntax.LamSurrogate;
+import de.huberlin.wbi.cfjava.asyntax.NatBody;
 import de.huberlin.wbi.cfjava.asyntax.Param;
 import de.huberlin.wbi.cfjava.asyntax.ResultKey;
 import de.huberlin.wbi.cfjava.asyntax.Select;
+import de.huberlin.wbi.cfjava.asyntax.Sign;
 import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.asyntax.Var;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
+import de.huberlin.wbi.cfjava.pred.FinalAlistExprPred;
 import de.huberlin.wbi.cfjava.pred.FinalAmapPred;
 import de.huberlin.wbi.cfjava.pred.SingPred;
 
@@ -58,22 +62,124 @@ public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 		if( x instanceof App )
 			return applyApp( ( App )x );
 		
+		if( x instanceof Cnd )
+			return applyCnd( ( Cnd )x );
+		
 		throw new UnsupportedOperationException(
 			"Evaluation of "+x.getClass()+" expression not supported." );
 	}
 
-	private Alist<Expr> applyVar( Var var ) {
+	private Alist<Expr> applyApp( App app ) {
 			
+		Var var;
 		String label;
-		Amap<String, Alist<Expr>> rho;
+		LamSurrogate lamSurrogate;
+		Amap<String, Lam> gamma;
+		Amap<String, Alist<Expr>> fa, fb;
+		Lam lam, lam1;
+		int line, channel;
+		SingPred singPred;
+		FinalAmapPred finalAmapPred;
+		FinalAlistExprPred finalAlistExprPred;
+		Body body;
+		Fut fut;
+		Param param;
+		Alist<Param> lo;
+		Sign sign;
+		NatBody natBody, natBody1;
+		Alist<Expr> v0, v1;
+		Ctx theta, theta1;
+		Function<App, Fut> mu;
+		Amap<ResultKey, Alist<Expr>> omega;
+		String n;
 
-		rho = getCtx().getRho();
-		label = var.getLabel();
+		singPred = new SingPred();
+		finalAmapPred = new FinalAmapPred();
+		finalAlistExprPred = new FinalAlistExprPred();
+
+		lamSurrogate = app.getLamSurrogate();
+		fa = app.getBindMap();
+		line = app.getLine();
+		channel = app.getChannel();
+		theta = getCtx();
+		gamma = theta.getGamma();
+		mu = theta.getMu();
+		omega = theta.getOmega();
+
+
+		if( lamSurrogate instanceof Var ) {
+			
+			var = ( Var )lamSurrogate;
+			label = var.getLabel();
 		
-		if( !rho.isKey( label ) )
-			throw new UndefinedVariableException( var );
+			if( !gamma.isKey( label ) )
+				throw new UndefinedTaskException( var );
+			
+			lam = gamma.get( label );
+			
+			return new Alist<Expr>().add( new App( line, channel, lam, fa ) );
+		}
+
+		lam = ( Lam )lamSurrogate;
+		sign = lam.getSign();
+		lo = sign.getOutLst();
+
 		
-		return rho.get( label );
+		if( !singPred.test( app ) )
+			throw new UnsupportedOperationException( "Enumeration not yet supported." );
+		
+		
+		if( !finalAmapPred.test( fa ) )
+			throw new UnsupportedOperationException( "Stepping binding map not yet supported." );
+		
+		body = lam.getBody();
+		
+		if( body instanceof ForBody ) {
+
+			fut = getCtx().getMu().apply( app );
+			return new Alist<Expr>().add( new Select( line, channel, fut ) );
+		}
+		
+		natBody = ( NatBody )body;
+		fb = natBody.getBodyMap();
+		param = lo.nth( channel );
+		n = param.getName().getLabel();
+		v0 = fb.get( n );
+		
+		theta1 = new Ctx( fb.merge( fa ), mu, gamma, omega );
+		
+		v1 = v0.flatMap( new StepFn( theta1 ) );
+		
+		if( !finalAlistExprPred.test( v1 ) ) {
+			
+			natBody1 = new NatBody( fb.put( n, v1 ) );
+			lam1 = new Lam( lam.getLine(), lam.getLamName(), sign, natBody1 );
+			
+			return new Alist<Expr>().add( new App( line, channel, lam1, fa ) );
+		}
+		
+		if( !param.isLst() && v1.size() != 1 )
+			throw new OutputSignMismatchException( app );
+		
+		return v1;
+	}
+
+	private Alist<Expr> applyCnd( Cnd x ) {
+		
+		Alist<Expr> xc1;
+		FinalAlistExprPred fpred;
+		
+		if( x.getCondLst().isEmpty() )
+			return x.getElseLst();
+		
+		fpred = new FinalAlistExprPred();
+		
+		if( fpred.test( x.getCondLst() ) )
+			return x.getThenLst();
+		
+		xc1 = x.getCondLst().flatMap( this );
+		
+		return new Alist<Expr>().add( new Cnd( x.getLine(), xc1, x.getThenLst(), x.getElseLst() ) );
 	}
 	
 	private Alist<Expr> applySelect( Select select ) {
@@ -102,61 +208,17 @@ public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 		return omega.get( resultKey );	
 	}
 	
-	private Alist<Expr> applyApp( App app ) {
+	private Alist<Expr> applyVar( Var var ) {
 			
-		Var var;
 		String label;
-		LamSurrogate lamSurrogate;
-		Amap<String, Lam> gamma;
-		Amap<String, Alist<Expr>> fa;
-		Lam lam;
-		int line;
-		int channel;
-		SingPred singPred;
-		FinalAmapPred finalAmapPred;
-		Body body;
-		Fut fut;
+		Amap<String, Alist<Expr>> rho;
 
-		lamSurrogate = app.getLamSurrogate();
-		fa = app.getBindMap();
-		line = app.getLine();
-		channel = app.getChannel();
-
-		if( lamSurrogate instanceof Var ) {
-			
-			var = ( Var )lamSurrogate;
-			gamma = getCtx().getGamma();
-			label = var.getLabel();
+		rho = getCtx().getRho();
+		label = var.getLabel();
 		
-			if( !gamma.isKey( label ) )
-				throw new UndefinedTaskException( var );
-			
-			lam = gamma.get( label );
-			
-			return new Alist<Expr>().add( new App( line, channel, lam, fa ) );
-		}
-
-		lam = ( Lam )lamSurrogate;
-		singPred = new SingPred();
+		if( !rho.isKey( label ) )
+			throw new UndefinedVariableException( var );
 		
-		if( !singPred.test( app ) )
-			throw new UnsupportedOperationException( "Enumeration not yet supported." );
-		
-		finalAmapPred = new FinalAmapPred();
-		
-		if( !finalAmapPred.test( fa ) )
-			throw new UnsupportedOperationException( "Stepping binding map not yet supported." );
-		
-		body = lam.getBody();
-		
-		if( body instanceof ForBody ) {
-
-			fut = getCtx().getMu().apply( app );
-			return new Alist<Expr>().add( new Select( line, channel, fut ) );
-		}
-		
-		throw new UnsupportedOperationException( "Stepping of native body not yet supported." );
-		
-		
+		return rho.get( label );
 	}
 }

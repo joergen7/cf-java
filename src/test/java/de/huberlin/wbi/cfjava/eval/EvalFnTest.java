@@ -26,6 +26,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import de.huberlin.wbi.cfjava.asyntax.App;
+import de.huberlin.wbi.cfjava.asyntax.Cnd;
 import de.huberlin.wbi.cfjava.asyntax.Ctx;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Fut;
@@ -223,7 +224,7 @@ public class EvalFnTest {
 		assertEquals( expected, y );
 	}
 	
-	@Ignore @Test
+	@Test
 	public void noargFnShouldEvalPlainTest() {
 		
 		Alist<Expr> x, y, expected;
@@ -252,5 +253,416 @@ public class EvalFnTest {
 		y = eval0.apply( x );
 		
 		assertEquals( expected, y );
+	}
+	
+	@Test
+	public void noargFnShouldEvalBodyTest() {
+		
+		Alist<Expr> x, y, expected;
+
+		Lam lam;
+		Sign sign;
+		NatBody body;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		
+		expected = new Alist<Expr>().add( new Str( "blub" ) );
+		
+		
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
+		li = new Alist<>();
+		
+		sign = new Sign( lo, li );
+		body = new NatBody(
+			new Amap<String, Alist<Expr>>()
+				.put( "out", new Alist<Expr>().add( new Var( 12, "x" ) ) )
+				.put( "x", expected ) );
+		
+		lam = new Lam( 1, "f", sign, body );
+		
+		x = new Alist<Expr>()
+				.add( new App( 1, 1, lam,
+					new Amap<String, Alist<Expr>>() ) );
+		
+		y = eval0.apply( x );
+		
+		assertEquals( expected, y );
+	}
+	
+	@Test
+	public void fnCallShouldInsertLamTest() {
+		
+		Alist<Expr> x, y, expected;
+
+		Lam lam;
+		Sign sign;
+		NatBody body;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		Amap<String, Lam> gamma;
+		Ctx theta;
+		EvalFn eval;
+		
+		expected = new Alist<Expr>().add( new Str( "blub" ) );
+		
+		
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
+		li = new Alist<>();
+		
+		sign = new Sign( lo, li );
+		body = new NatBody( new Amap<String, Alist<Expr>>().put( "out", expected ) );
+		
+		lam = new Lam( 1, "f", sign, body );
+		gamma = new Amap<String, Lam>().put( "f", lam );
+		theta = new Ctx( new Amap<String, Alist<Expr>>(), mu0, gamma, new Amap<ResultKey, Alist<Expr>>() );
+		eval = new EvalFn( theta );
+		
+		x = new Alist<Expr>()
+				.add( new App( 1, 1, new Var( 1, "f" ),
+					new Amap<String, Alist<Expr>>() ) );
+		
+		y = eval.apply( x );
+		
+		assertEquals( expected, y );
+	}
+	
+	@Test( expected=RuntimeException.class )
+	public void appWithUnboundFnShouldFailTest() {
+		
+		Alist<Expr> x;
+
+		x = new Alist<Expr>()
+				.add( new App( 1, 1, new Var( 1, "f" ),
+					new Amap<String, Alist<Expr>>() ) );
+		
+		eval0.apply( x );
+	}
+	
+	@Test
+	public void identityFnShouldEvalArgTest() {
+		
+		Alist<Expr> x, y, expected;
+
+		Lam lam;
+		Sign sign;
+		NatBody body;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		
+		expected = new Alist<Expr>().add( new Str( "blub" ) );
+		
+		
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
+		li = new Alist<InParam>().add( new Param( new Name( "inp", false ), false ) );
+		
+		sign = new Sign( lo, li );
+		body = new NatBody(
+			new Amap<String, Alist<Expr>>()
+				.put( "out", new Alist<Expr>().add( new Var( 12, "inp" ) ) ) );		
+		lam = new Lam( 1, "f", sign, body );
+		
+		x = new Alist<Expr>()
+				.add( new App( 1, 1, lam,
+					new Amap<String, Alist<Expr>>().put( "inp", expected ) ) );
+		
+		y = eval0.apply( x );
+		
+		assertEquals( expected, y );
+	}
+	
+	@Test
+	public void multipleOutputsShouldBeBindableTest() {
+		
+		Alist<Expr> x1, x2, y1, y2, expected1, expected2;
+
+		Lam lam;
+		Sign sign;
+		NatBody body;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		
+		expected1 = new Alist<Expr>().add( new Str( "bla" ) );
+		expected2 = new Alist<Expr>().add( new Str( "blub" ) );
+		
+		
+		lo = new Alist<Param>()
+			.add( new Param( new Name( "out2", false ), false ) )
+			.add( new Param( new Name( "out1", false ), false ) );
+		li = new Alist<>();
+		
+		sign = new Sign( lo, li );
+		body = new NatBody(
+			new Amap<String, Alist<Expr>>()
+				.put( "out1", expected1 )
+				.put( "out2", expected2 ) );
+		lam = new Lam( 1, "f", sign, body );
+		
+		x1 = new Alist<Expr>()
+				.add( new App( 1, 1, lam,
+					new Amap<String, Alist<Expr>>() ) );
+		
+		x2 = new Alist<Expr>()
+				.add( new App( 1, 2, lam,
+					new Amap<String, Alist<Expr>>() ) );
+
+		y1 = eval0.apply( x1 );
+		y2 = eval0.apply( x2 );
+		
+		assertEquals( expected1, y1 );
+		assertEquals( expected2, y2 );
+	}
+	
+	@Test( expected=UndefinedVariableException.class )
+	public void appShouldIgnoreCallingContextTest() {
+		
+		Alist<Expr> x;
+
+		Lam lam;
+		Sign sign;
+		NatBody body;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		Amap<String, Lam> gamma;
+		Amap<String, Alist<Expr>> rho;
+		Ctx theta;
+		EvalFn eval;
+		
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
+		li = new Alist<>();
+		
+		sign = new Sign( lo, li );
+		body = new NatBody( new Amap<String, Alist<Expr>>().put( "out", new Alist<Expr>().add( new Var( 2, "x" ) ) ) );
+		
+		lam = new Lam( 1, "f", sign, body );
+		gamma = new Amap<>();
+		rho = new Amap<String, Alist<Expr>>().put( "x", new Alist<Expr>().add( new Str( "blub" ) ) );
+		theta = new Ctx( rho, mu0, gamma, new Amap<ResultKey, Alist<Expr>>() );
+		eval = new EvalFn( theta );
+		
+		x = new Alist<Expr>()
+				.add( new App( 1, 1, lam,
+					new Amap<String, Alist<Expr>>() ) );
+		
+		eval.apply( x );
+	}
+	
+	@Test
+	public void appShouldHandDownGammaTest() {
+		
+		Alist<Expr> x, y;
+
+		Alist<Expr> expected;
+		Lam lam;
+		Sign sign;
+		NatBody body;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		Amap<String, Lam> gamma;
+		Amap<String, Alist<Expr>> rho;
+		Ctx theta;
+		EvalFn eval;
+		
+		expected = new Alist<Expr>().add( new Str( "blub" ) );
+		
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
+		li = new Alist<>();
+		
+		sign = new Sign( lo, li );
+		body = new NatBody( new Amap<String, Alist<Expr>>()
+			.put( "out", new Alist<Expr>()
+				.add( new App( 1, 1, new Var( 2, "f" ),
+					new Amap<String, Alist<Expr>>() ) ) ) );
+		
+		lam = new Lam( 1, "g", sign, body );
+		
+		x = new Alist<Expr>()
+				.add( new App( 3, 1, lam,
+					new Amap<String, Alist<Expr>>() ) );
+		
+		gamma = new Amap<String, Lam>()
+			.put( "f", new Lam( 4, "f", sign,
+				new NatBody( new Amap<String, Alist<Expr>>()
+					.put( "out", expected ) ) ) );
+		
+		rho = new Amap<>();
+		theta = new Ctx( rho, mu0, gamma, new Amap<ResultKey, Alist<Expr>>() );
+		eval = new EvalFn( theta );
+		
+		y = eval.apply( x );
+		
+		assertEquals( expected, y );
+	}
+	
+	@Test
+	public void bindingShouldOverrideBodyTest() {
+		
+		Alist<Expr> x, y, expected;
+
+		Lam lam;
+		Sign sign;
+		NatBody body;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		
+		expected = new Alist<Expr>().add( new Str( "blub" ) );
+		
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
+		li = new Alist<InParam>().add( new Param( new Name( "x", false ), false ) );
+		
+		sign = new Sign( lo, li );
+		body = new NatBody( new Amap<String, Alist<Expr>>()
+			.put( "x", new Alist<Expr>().add( new Str( "bla" ) ) )
+			.put( "out", new Alist<Expr>().add( new Var( 2, "x" ) ) ) );
+		
+		lam = new Lam( 1, "f", sign, body );
+		
+		x = new Alist<Expr>()
+				.add( new App( 1, 1, lam,
+					new Amap<String, Alist<Expr>>().put( "x", expected ) ) );
+		
+		y = eval0.apply( x );
+		
+		assertEquals( expected, y );
+	}
+	
+	@Test( expected=OutputSignMismatchException.class )
+	public void returningEmptyListOnNonListOutputChannelShouldFailTest() {
+		
+		Alist<Expr> x;
+
+		Lam lam;
+		Sign sign;
+		NatBody body;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), false ) );
+		li = new Alist<>();
+		
+		sign = new Sign( lo, li );
+		body = new NatBody( new Amap<String, Alist<Expr>>()
+			.put( "out", new Alist<Expr>() ) );
+		
+		lam = new Lam( 1, "f", sign, body );
+		
+		x = new Alist<Expr>()
+				.add( new App( 1, 1, lam,
+					new Amap<String, Alist<Expr>>() ) );
+		
+		eval0.apply( x );
+	}
+	
+	@Ignore @Test
+	public void crossProductShouldBeDerivableTest() {
+		// TODO
+	}
+	
+	@Ignore @Test
+	public void dotProductShouldBeDerivableTest() {
+		// TODO
+	}
+	
+	@Test
+	public void aggregateShouldConsumeWholeListTest() {
+		
+		Sign sign;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		Alist<Expr> e1, e2;
+		NatBody body;
+		Lam lam;
+		Amap<String, Alist<Expr>> fa;
+		Alist<Expr> x, y;
+		
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), true ) );
+		li = new Alist<InParam>().add( new Param( new Name( "inp", false ), true ) );
+		sign = new Sign( lo, li );
+		
+		e1 = new Alist<Expr>().add( new Str( "A" ) );
+		e2 = new Alist<Expr>().add( new Str( "B" ) ).add( new Str( "C" ) );
+
+		body = new NatBody( new Amap<String, Alist<Expr>>()
+			.put( "out", e1.append( new Alist<Expr>().add( new Var( 1, "inp" ) ) ) ) );
+		
+		lam = new Lam( 2, "f", sign, body );
+		fa = new Amap<String, Alist<Expr>>().put( "inp", e2 );
+		
+		x = new Alist<Expr>().add( new App( 3, 1, lam, fa ) );
+		
+		y = eval0.apply( x );
+		
+		assertEquals( e1.append( e2 ), y );
+	}
+	
+	@Test
+	public void cndFalseShouldEvalElseExprTest() {
+		
+		Alist<Expr> x, xc, xt, xe, y;
+		
+		xc = new Alist<>();
+		xt = new Alist<Expr>().add( new Str( "bla" ) );
+		xe = new Alist<Expr>().add( new Str( "blub" ) );
+		
+		x = new Alist<Expr>().add( new Cnd( 1, xc, xt, xe ) );
+		
+		y = eval0.apply( x );
+		
+		assertEquals( xe, y );
+	}
+	
+	@Test
+	public void cndEvaluatesConditionBeforeDecision1Test() {
+		
+		Alist<Expr> x, xc, xt, xe, y;
+		Sign sign;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		Amap<String, Alist<Expr>> fb;
+		Lam lam;
+		
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), true ) );
+		li = new Alist<>();
+		sign = new Sign( lo, li );
+		
+		fb = new Amap<String, Alist<Expr>>().put( "out", new Alist<Expr>() );
+		lam = new Lam( 1, "f", sign, new NatBody( fb ) );
+		
+		xc = new Alist<Expr>().add( new App( 2, 1, lam, new Amap<String, Alist<Expr>>() ) );
+		xt = new Alist<Expr>().add( new Str( "A" ) );
+		xe = new Alist<Expr>().add( new Str( "B" ) );
+		
+		x = new Alist<Expr>().add( new Cnd( 1, xc, xt, xe ) );
+		
+		y = eval0.apply( x );
+		
+		assertEquals( xe, y );
+	}
+	
+	@Test
+	public void cndEvaluatesConditionBeforeDecision2Test() {
+		
+		Alist<Expr> x, xc, xt, xe, y;
+		Sign sign;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		Amap<String, Alist<Expr>> fb;
+		Lam lam;
+		
+		lo = new Alist<Param>().add( new Param( new Name( "out", false ), true ) );
+		li = new Alist<>();
+		sign = new Sign( lo, li );
+		
+		fb = new Amap<String, Alist<Expr>>().put( "out", new Alist<Expr>().add( new Str( "X" ) ) );
+		lam = new Lam( 1, "f", sign, new NatBody( fb ) );
+		
+		xc = new Alist<Expr>().add( new App( 2, 1, lam, new Amap<String, Alist<Expr>>() ) );
+		xt = new Alist<Expr>().add( new Str( "A" ) );
+		xe = new Alist<Expr>().add( new Str( "B" ) );
+		
+		x = new Alist<Expr>().add( new Cnd( 1, xc, xt, xe ) );
+		
+		y = eval0.apply( x );
+		
+		assertEquals( xt, y );
 	}
 }
