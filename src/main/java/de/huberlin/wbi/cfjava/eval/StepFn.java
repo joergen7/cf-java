@@ -92,6 +92,7 @@ public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 		Function<App, Fut> mu;
 		Amap<ResultKey, Alist<Expr>> omega;
 		String n;
+		StepAssocFn stepAssocFn;
 
 		singPred = new SingPred();
 		finalAmapPred = new FinalAmapPred();
@@ -129,8 +130,12 @@ public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 			throw new UnsupportedOperationException( "Enumeration not yet supported." );
 		
 		
-		if( !finalAmapPred.test( fa ) )
-			throw new UnsupportedOperationException( "Stepping binding map not yet supported." );
+		if( !finalAmapPred.test( fa ) ) {
+			
+			stepAssocFn = new StepAssocFn( theta );
+			return new Alist<Expr>()
+				.add( new App( line, channel, lam, stepAssocFn.apply( fa ) ) );
+		}
 		
 		body = lam.getBody();
 		

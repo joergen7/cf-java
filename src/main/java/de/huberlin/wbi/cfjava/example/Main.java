@@ -18,7 +18,7 @@ public class Main {
 		
 		// Assume, the user provided us the following workflow script:
 		script = "deftask greet( out : person )in bash "
-			+"*{\n  out=\"Hello $person\"\n}*\n\ngreet( person: \"Jorgen\" );";
+			+"*{\n  out=\"Hello $person\"\n}*\n\ngreet( person: world ); world = \"Jorgen\";";
 		
 		System.out.println( "SCRIPT\n"+script );
 		
