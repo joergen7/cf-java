@@ -40,7 +40,7 @@ public class ReplyTest {
 		assertSame( id, reply.getId() );
 		assertSame( lo, reply.getOutLst() );
 		assertSame( ret, reply.getRetMap() );
-		assertSame( out, reply.getOut() );
+		assertEquals( "", reply.getOut() );
 		assertEquals( tstart, reply.getTstart() );
 		assertEquals( tdur, reply.getTdur() );
 	}

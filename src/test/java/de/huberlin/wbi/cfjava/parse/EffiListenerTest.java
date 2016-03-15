@@ -12,6 +12,8 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
 import de.huberlin.wbi.cfjava.asyntax.Expr;
+import de.huberlin.wbi.cfjava.asyntax.Name;
+import de.huberlin.wbi.cfjava.asyntax.Param;
 import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
@@ -64,6 +66,7 @@ public class EffiListenerTest {
 				new Amap<String, Alist<Expr>>().put( "out", new Alist<Expr>().add( new Str( "Hello Jorgen" ) ) ),
 				rv.getRetMap() );
 			assertEquals( new Alist<String>(), rv.getOut() );
+			assertEquals( new Alist<Param>().add( new Param( new Name( "out", false ), false ) ), rv.getOutLst() );
 		}
 
 	}

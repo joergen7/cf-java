@@ -98,8 +98,15 @@ public class Reply extends IdHolder {
 		return retMap;
 	}
 
-	public Alist<String> getOut() {
-		return out;
+	public String getOut() {
+		
+		StringBuffer buf;
+		
+		buf = new StringBuffer();
+		for( String s : out )
+			buf.append( s ).append( '\n' );
+		
+		return buf.toString();
 	}
 
 	public long getTstart() {
