@@ -98,7 +98,7 @@ public class Reply extends IdHolder {
 		return retMap;
 	}
 
-	public String getOut() {
+	public String getStdout() {
 		
 		StringBuffer buf;
 		

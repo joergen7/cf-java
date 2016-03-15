@@ -19,6 +19,8 @@ package de.huberlin.wbi.cfjava.cuneiform;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -30,6 +32,7 @@ import de.huberlin.wbi.cfjava.asyntax.Ctx;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
 import de.huberlin.wbi.cfjava.asyntax.ResultKey;
+import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 import de.huberlin.wbi.cfjava.eval.EvalFn;
@@ -142,5 +145,25 @@ public class Workflow {
 
 	public Amap<String, Lam> getGamma() {
 		return ctx.getGamma();
+	}
+
+	public List<String> getResult() {
+		
+		List<String> l;
+		Str s;
+		
+		l = new ArrayList<>();
+		
+		for( Expr e : query ) {
+			
+			if( !( e instanceof Str ) )
+				throw new RuntimeException( "Result not yet available." );
+			
+			s = ( Str )e;
+			
+			l.add( s.getContent() );
+		}
+		
+		return l;
 	}
 }

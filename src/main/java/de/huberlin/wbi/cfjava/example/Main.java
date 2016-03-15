@@ -1,5 +1,6 @@
 package de.huberlin.wbi.cfjava.example;
 
+import java.util.List;
 import java.util.Set;
 
 import de.huberlin.wbi.cfjava.cuneiform.Reply;
@@ -15,6 +16,7 @@ public class Main {
 		boolean isFinished;
 		Set<Request> requestSet;
 		Reply reply;
+		List<String> result;
 		
 		// Assume, the user provided us the following workflow script:
 		script = "deftask greet( out : person )in bash "
@@ -64,6 +66,11 @@ public class Main {
 		isFinished = workflow.reduce();
 		
 		System.out.println( "\nREDUCED (finished: "+isFinished+")\n"+workflow );
+		
+		// Finally, extract the result of the workflow
+		result = workflow.getResult();
+		
+		System.out.println( "\nRESULT\n"+result );
 
 	}
 
