@@ -20,7 +20,7 @@ public class Main {
 		
 		// Assume, the user provided us the following workflow script:
 		script = "deftask greet( out : person )in bash "
-			+"*{\n  out=\"Hello $person\"\n}*\n\ngreet( person: world ); world = \"Jorgen\";";
+			+"*{\n  out=\"Hello $person\" \\\n\n}*\n\ngreet( person: world ); world = \"Jorgen\";";
 		
 		System.out.println( "SCRIPT\n"+script );
 		
@@ -49,7 +49,7 @@ public class Main {
 				+"    {sign,[{param,{name,\"out\",false},false}],\n"
 				+"          [{param,{name,\"person\",false},false}]},\n"
 				+"    {forbody,bash,\"\\n  out=\\\"Hello $person\\\"\\n\"}},\n"
-				+"  out => [<<>>],\n"
+				+"  out => [],\n"
 				+"  ret => #{\"out\" => [{str,\"Hello Jorgen\"}]},\n"
 				+"  tdur => 5,\n"
 				+"  tstart => 1457946567909}.\n";
