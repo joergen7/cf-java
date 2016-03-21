@@ -6,25 +6,12 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>cf-java</name>
 	<description>Java bindings for the Cuneiform workflow language.</description>
-	
-	
-	<!--
-	
-	     To deploy with signature execute:
-	     
-	     mvn clean deploy -DperformRelease=true
-	     
-	     For signing to be sucessful you need the following content in the ~/.m2/settings.xml
-	     
-	     <servers>
-           <server>
-             <id>ossrh</id>
-             <username>joergen7</username>
-             <password>deployment123</password>
-           </server>
-         </servers>
-	     
-	 -->
+
+
+	<!-- To deploy with signature execute: mvn clean deploy -DperformRelease=true 
+		For signing to be sucessful you need the following content in the ~/.m2/settings.xml 
+		<servers> <server> <id>ossrh</id> <username>joergen7</username> <password>deployment123</password> 
+		</server> </servers> -->
 
 	<url>http://www.cuneiform-lang.org</url>
 	<licenses>
@@ -69,7 +56,7 @@
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
-	
+
 	<profiles>
 		<profile>
 			<id>release-sign-artifacts</id>
