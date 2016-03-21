@@ -17,17 +17,21 @@
 
 package de.huberlin.wbi.cfjava.data;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 public class Amap<K,V> {
 
-	private final HashMap<K,V> content;
+	private final Map<K,V> content;
 	
 	public Amap( K key, V value ) {
-		this();
+		
+		Map<K,V> m;
 		
 		if( key == null )
 			throw new IllegalArgumentException( "Key term must not be null." );
@@ -35,7 +39,10 @@ public class Amap<K,V> {
 		if( value == null )
 			throw new IllegalArgumentException( "Value term must not be null." );
 		
-		content.put( key, value );
+		m = new HashMap<>();
+		m.put( key,  value );
+		
+		content = Collections.unmodifiableMap( m );
 	}
 	
 	public Amap() {
@@ -43,7 +50,7 @@ public class Amap<K,V> {
 	}
 	
 	private Amap( HashMap<K,V> content ) {
-		this.content = content;
+		this.content = Collections.unmodifiableMap( content ); 
 	}
 	
 	public Amap<K,V> put( K key, V value ) {
@@ -115,7 +122,13 @@ public class Amap<K,V> {
 	}
 
 	public Set<K> keys() {
-		return content.keySet();
+		
+		HashSet<K> s;
+		
+		s = new HashSet<>();
+		s.addAll( content.keySet() );
+		
+		return s;
 	}
 
 	@Override

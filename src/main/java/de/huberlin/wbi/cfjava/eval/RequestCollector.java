@@ -68,7 +68,7 @@ public class RequestCollector implements Function<App, Fut> {
 		
 		fut = new Fut( lamName, id, lo );
 		cache = cache.put( request, fut );
-		
+				
 		return fut;
 	}
 
