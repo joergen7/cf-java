@@ -28,6 +28,7 @@ assoc      : ARG RARROW map       # ArgAssoc
            | RET RARROW map       # RetAssoc
            | TSTART RARROW INTLIT # TstartAssoc
            | TDUR RARROW INTLIT   # TdurAssoc
+           | STATE RARROW OK      # StateAssoc
            ;
 
 map        : LHASHBRACE( binding( COMMA binding )* )? RBRACE ;
@@ -75,6 +76,7 @@ LBRACE       : '{' ;
 LHASHBRACE   : '#{' ;
 LSQUAREBR    : '[' ;
 NAME         : 'name' ;
+OK           : 'ok' ;
 OUT          : 'out' ;
 PARAM        : 'param' ;
 PYTHON       : 'python' ;
@@ -84,6 +86,7 @@ RBRACE       : '}' ;
 RET          : 'ret' ;
 RSQUAREBR    : ']' ;
 SIGN         : 'sign' ;
+STATE        : 'state' ;
 STR          : 'str' ;
 TDUR         : 'tdur' ;
 TRUE         : 'true' ;

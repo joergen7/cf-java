@@ -52,7 +52,9 @@ public class Main {
 				+"  out => [],\n"
 				+"  ret => #{\"out\" => [{str,\"Hello Jorgen\"}]},\n"
 				+"  tdur => 5,\n"
-				+"  tstart => 1457946567909}.\n";
+				+"  tstart => 1457946567909,\n"
+				+"  state => ok\n"
+				+"}.\n";
 		
 		System.out.println( "\nSUMMARY\n"+summary );
 

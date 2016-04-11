@@ -140,7 +140,7 @@ public class Request extends IdHolder {
 				.append( bindMap.get( n ) );
 		}
 			
-		buf.append( "}," ).append( getId() ).append( "}." );
+		buf.append( "}," ).append( getId() ).append( ",#{}}." );
 		
 		return buf.toString();
 	}
