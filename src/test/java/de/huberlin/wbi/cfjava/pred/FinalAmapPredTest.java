@@ -34,10 +34,10 @@ public class FinalAmapPredTest {
 	public void emptyMapIsFinalTest() {
 		
 		Amap<String, Alist<Expr>> m;
-		FinalAmapPred pred;
+		PfinalAmap pred;
 		
 		m = new Amap<>();
-		pred = new FinalAmapPred();
+		pred = new PfinalAmap();
 		
 		assertTrue( pred.test( m ) );
 	}
@@ -47,12 +47,12 @@ public class FinalAmapPredTest {
 	public void onlyStrMapIsFinalTest() {
 		
 		Amap<String, Alist<Expr>> m;
-		FinalAmapPred pred;
+		PfinalAmap pred;
 		
 		m = new Amap<String, Alist<Expr>>()
 			.put( "x", new Alist<Expr>().add( new Str( "bla" ) ).add( new Str( "blub" ) ) )
 			.put( "y", new Alist<Expr>().add( new Str( "shalala" ) ) );
-		pred = new FinalAmapPred();
+		pred = new PfinalAmap();
 		
 		assertTrue( pred.test( m ) );
 	}
@@ -62,12 +62,12 @@ public class FinalAmapPredTest {
 	public void oneVarMapIsNotFinalTest() {
 		
 		Amap<String, Alist<Expr>> m;
-		FinalAmapPred pred;
+		PfinalAmap pred;
 		
 		m = new Amap<String, Alist<Expr>>()
 			.put( "x", new Alist<Expr>().add( new Str( "bla" ) ).add( new Str( "blub" ) ) )
 			.put( "y", new Alist<Expr>().add( new Str( "shalala" ) ).add( new Var( 10, "x" ) ) );
-		pred = new FinalAmapPred();
+		pred = new PfinalAmap();
 		
 		assertFalse( pred.test( m ) );
 	}
@@ -77,12 +77,12 @@ public class FinalAmapPredTest {
 	public void allVarMapIsNotFinalTest() {
 		
 		Amap<String, Alist<Expr>> m;
-		FinalAmapPred pred;
+		PfinalAmap pred;
 		
 		m = new Amap<String, Alist<Expr>>()
 			.put( "x", new Alist<Expr>().add( new Var( 1, "a" ) ).add( new Var( 2, "b" ) ) )
 			.put( "y", new Alist<Expr>().add( new Var( 3, "shalala" ) ).add( new Var( 4, "x" ) ) );
-		pred = new FinalAmapPred();
+		pred = new PfinalAmap();
 		
 		assertFalse( pred.test( m ) );
 	}

@@ -33,10 +33,10 @@ public class FinalAlistExprPredTest {
 	public void allStrIsFinalTest() {
 		
 		Alist<Expr> x;
-		FinalAlistExprPred pred;
+		PfinalAlist pred;
 		
 		x = new Alist<Expr>().add( new Str( "bla" ) ).add( new Str( "blub" ) );
-		pred = new FinalAlistExprPred();
+		pred = new PfinalAlist();
 		
 		assertTrue( pred.test( x ) );
 	}
@@ -46,10 +46,10 @@ public class FinalAlistExprPredTest {
 	public void EmptyListIsFinalTest() {
 		
 		Alist<Expr> x;
-		FinalAlistExprPred pred;
+		PfinalAlist pred;
 		
 		x = new Alist<>();
-		pred = new FinalAlistExprPred();
+		pred = new PfinalAlist();
 		
 		assertTrue( pred.test( x ) );
 	}
@@ -59,10 +59,10 @@ public class FinalAlistExprPredTest {
 	public void oneVarIsNotFinalTest() {
 		
 		Alist<Expr> x;
-		FinalAlistExprPred pred;
+		PfinalAlist pred;
 		
 		x = new Alist<Expr>().add( new Str( "bla" ) ).add( new Var( 12, "x" ) ).add( new Str( "blub" ) );
-		pred = new FinalAlistExprPred();
+		pred = new PfinalAlist();
 		
 		assertFalse( pred.test( x ) );
 	}
@@ -72,10 +72,10 @@ public class FinalAlistExprPredTest {
 	public void allVarIsNotFinalTest() {
 		
 		Alist<Expr> x;
-		FinalAlistExprPred pred;
+		PfinalAlist pred;
 		
 		x = new Alist<Expr>().add( new Var( 11, "y" ) ).add( new Var( 12, "x" ) );
-		pred = new FinalAlistExprPred();
+		pred = new PfinalAlist();
 		
 		assertFalse( pred.test( x ) );
 	}

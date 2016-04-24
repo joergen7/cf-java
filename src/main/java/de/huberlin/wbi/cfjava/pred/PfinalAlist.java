@@ -22,11 +22,11 @@ import java.util.function.Predicate;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.data.Alist;
 
-public class FinalAlistExprPred implements Predicate<Alist<Expr>> {
+public class PfinalAlist implements Predicate<Alist<Expr>> {
 
 	@Override
 	public boolean test( Alist<Expr> x ) {
-		return x.all( new FinalExprPred() );
+		return x.all( new PfinalExpr() );
 	}
 
 }

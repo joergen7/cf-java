@@ -39,10 +39,10 @@ public class FinalExprPredTest {
 	public void strIsFinalTest() {
 		
 		Expr e;
-		FinalExprPred pred;
+		PfinalExpr pred;
 		
 		e = new Str( "blub" );
-		pred = new FinalExprPred();
+		pred = new PfinalExpr();
 		
 		assertTrue( pred.test( e ) );
 	}
@@ -54,13 +54,13 @@ public class FinalExprPredTest {
 		Expr e;
 		Var var;
 		Amap<String, Alist<Expr>> fa;
-		FinalExprPred pred;
+		PfinalExpr pred;
 		
 		var = new Var( 1, "f" );
 		fa = new Amap<>();
 		
 		e = new App( 12, 1, var, fa );
-		pred = new FinalExprPred();
+		pred = new PfinalExpr();
 		
 		assertFalse( pred.test( e ) );
 	}
@@ -70,7 +70,7 @@ public class FinalExprPredTest {
 	public void cndIsNotFinalTest() {
 		
 		Expr e;
-		FinalExprPred pred;
+		PfinalExpr pred;
 		Alist<Expr> xcond, xthen, xelse;
 		
 		xcond = new Alist<>();
@@ -78,7 +78,7 @@ public class FinalExprPredTest {
 		xelse = new Alist<>();
 		
 		e = new Cnd( 12, xcond, xthen, xelse );
-		pred = new FinalExprPred();
+		pred = new PfinalExpr();
 		
 		assertFalse( pred.test( e ) );
 	}
@@ -88,13 +88,13 @@ public class FinalExprPredTest {
 	public void selectIsNotFinalTest() {
 		
 		Expr e;
-		FinalExprPred pred;
+		PfinalExpr pred;
 		Fut fut;
 		
 		fut = mock( Fut.class );
 		
 		e = new Select( 12, 1, fut );
-		pred = new FinalExprPred();
+		pred = new PfinalExpr();
 		
 		assertFalse( pred.test( e ) );
 	}
@@ -104,10 +104,10 @@ public class FinalExprPredTest {
 	public void varIsNotFinalTest() {
 		
 		Expr e;
-		FinalExprPred pred;
+		PfinalExpr pred;
 		
 		e = new Var( 12, "blub" );
-		pred = new FinalExprPred();
+		pred = new PfinalExpr();
 		
 		assertFalse( pred.test( e ) );
 	}	

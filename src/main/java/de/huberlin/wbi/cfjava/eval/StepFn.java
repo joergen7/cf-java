@@ -20,12 +20,14 @@ package de.huberlin.wbi.cfjava.eval;
 import java.util.function.Function;
 
 import de.huberlin.wbi.cfjava.asyntax.App;
+import de.huberlin.wbi.cfjava.asyntax.ArgPair;
 import de.huberlin.wbi.cfjava.asyntax.Body;
 import de.huberlin.wbi.cfjava.asyntax.Cnd;
 import de.huberlin.wbi.cfjava.asyntax.Ctx;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.ForBody;
 import de.huberlin.wbi.cfjava.asyntax.Fut;
+import de.huberlin.wbi.cfjava.asyntax.InParam;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
 import de.huberlin.wbi.cfjava.asyntax.LamSurrogate;
 import de.huberlin.wbi.cfjava.asyntax.NatBody;
@@ -37,9 +39,8 @@ import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.asyntax.Var;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
-import de.huberlin.wbi.cfjava.pred.FinalAlistExprPred;
-import de.huberlin.wbi.cfjava.pred.FinalAmapPred;
-import de.huberlin.wbi.cfjava.pred.SingPred;
+import de.huberlin.wbi.cfjava.pred.PfinalAlist;
+import de.huberlin.wbi.cfjava.pred.PfinalAmap;
 
 public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 
@@ -78,9 +79,8 @@ public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 		Amap<String, Alist<Expr>> fa, fb;
 		Lam lam, lam1;
 		int line, channel;
-		SingPred singPred;
-		FinalAmapPred finalAmapPred;
-		FinalAlistExprPred finalAlistExprPred;
+		PfinalAmap finalAmapPred;
+		PfinalAlist finalAlistExprPred;
 		Body body;
 		Fut fut;
 		Param param;
@@ -94,9 +94,8 @@ public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 		String n;
 		StepAssocFn stepAssocFn;
 
-		singPred = new SingPred();
-		finalAmapPred = new FinalAmapPred();
-		finalAlistExprPred = new FinalAlistExprPred();
+		finalAmapPred = new PfinalAmap();
+		finalAlistExprPred = new PfinalAlist();
 
 		lamSurrogate = app.getLamSurrogate();
 		fa = app.getBindMap();
@@ -108,7 +107,7 @@ public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 		omega = theta.getOmega();
 
 
-		if( lamSurrogate instanceof Var ) {
+		if( lamSurrogate instanceof Var ) {										// (39)
 			
 			var = ( Var )lamSurrogate;
 			label = var.getLabel();
@@ -124,13 +123,8 @@ public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 		lam = ( Lam )lamSurrogate;
 		sign = lam.getSign();
 		lo = sign.getOutLst();
-
 		
-		if( !singPred.test( app ) )
-			throw new UnsupportedOperationException( "Enumeration not yet supported." );
-		
-		
-		if( !finalAmapPred.test( fa ) ) {
+		if( !finalAmapPred.test( fa ) ) {										// (40)
 			
 			stepAssocFn = new StepAssocFn( theta );
 			return new Alist<Expr>()
@@ -172,12 +166,12 @@ public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 	private Alist<Expr> applyCnd( Cnd x ) {
 		
 		Alist<Expr> xc1;
-		FinalAlistExprPred fpred;
+		PfinalAlist fpred;
 		
 		if( x.getCondLst().isEmpty() )
 			return x.getElseLst();
 		
-		fpred = new FinalAlistExprPred();
+		fpred = new PfinalAlist();
 		
 		if( fpred.test( x.getCondLst() ) )
 			return x.getThenLst();
@@ -226,4 +220,54 @@ public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 		
 		return rho.get( label );
 	}
+	
+	
+	private static Alist<Expr> enumApp( final App a ) {
+		
+		LamSurrogate lamSurrogate;
+		Lam lam;
+		Sign s;
+		Alist<InParam> li;
+		Alist<Param> lo;
+		Amap<String,Alist<Expr>> fa;
+		Alist<ArgPair> argPairLst;
+		EnumFn enumFn;
+		Alist<Expr> res;
+		int appLine, lamLine, channel;
+		String lamName;
+		Body body;
+		
+		lamSurrogate = a.getLamSurrogate();
+		
+		if( !( lamSurrogate instanceof Lam ) )
+			throw new UnsupportedOperationException(
+				"Cannot enumerate application with unresolved lambda expression." );
+		
+		lam = ( Lam )lamSurrogate;
+		s = lam.getSign();
+		lo = s.getOutLst();
+		li = s.getInLst();
+		fa = a.getBindMap();
+		appLine = a.getLine();
+		channel = a.getChannel();
+		lamLine = lam.getLine();
+		lamName = lam.getLamName();
+		body = lam.getBody();
+		
+		enumFn = new EnumFn();
+		
+		argPairLst = enumFn.apply( new ArgPair( li, fa ) );
+		
+		res = new Alist<>();
+		for( ArgPair argPair : argPairLst ) {
+			
+			s = new Sign( lo, argPair.getInParamLst() );
+			lam = new Lam( lamLine, lamName, s, body );
+			res.add( new App( appLine, channel, lam, argPair.getBindMap() ) );
+		}
+		
+		return res;
+	}
+
+
 }

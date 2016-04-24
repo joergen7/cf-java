@@ -21,12 +21,13 @@ import java.util.function.Predicate;
 
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.data.Alist;
+import de.huberlin.wbi.cfjava.data.Amap;
 
-public class EnAlistExprPred implements Predicate<Alist<Expr>> {
+public class PfinalAmap implements Predicate<Amap<String,Alist<Expr>>> {
 
 	@Override
-	public boolean test( Alist<Expr> x ) {
-		return x.all( new EnExprPred() );
+	public boolean test( Amap<String, Alist<Expr>> m ) {
+		return m.values().all( new PfinalAlist() );
 	}
 
 }

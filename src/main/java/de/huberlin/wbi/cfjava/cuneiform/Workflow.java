@@ -40,7 +40,7 @@ import de.huberlin.wbi.cfjava.eval.RequestCollector;
 import de.huberlin.wbi.cfjava.parse.WorkflowListener;
 import de.huberlin.wbi.cfjava.parse.CuneiformLexer;
 import de.huberlin.wbi.cfjava.parse.CuneiformParser;
-import de.huberlin.wbi.cfjava.pred.FinalAlistExprPred;
+import de.huberlin.wbi.cfjava.pred.PfinalAlist;
 
 public class Workflow {
 
@@ -100,9 +100,9 @@ public class Workflow {
 	public boolean reduce() {
 		
 		EvalFn evalFn;
-		FinalAlistExprPred finalPred;
+		PfinalAlist finalPred;
 		
-		finalPred = new FinalAlistExprPred();
+		finalPred = new PfinalAlist();
 		evalFn = new EvalFn( ctx );
 		
 		query = evalFn.apply( query );
