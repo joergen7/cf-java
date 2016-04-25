@@ -17,6 +17,9 @@
 
 package de.huberlin.wbi.cfjava.asyntax;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 
@@ -43,6 +46,31 @@ public class ArgPair {
 
 	public Amap<String, Alist<Expr>> getBindMap() {
 		return bindMap;
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder( 3, 5 )
+			.append( inParamLst )
+			.append( bindMap ).toHashCode();
+	}
+	
+	@Override
+	public boolean equals( Object obj ) {
+		
+		ArgPair rhs;
+		
+		if( !( obj instanceof ArgPair ) )
+			return false;
+		
+		if( obj == this )
+			return true;
+		
+		rhs = ( ArgPair )obj;
+		
+		return new EqualsBuilder()
+			.append( inParamLst, rhs.inParamLst )
+			.append( bindMap, rhs.bindMap ).isEquals();
 	}
 
 }

@@ -42,9 +42,9 @@ import de.huberlin.wbi.cfjava.data.Amap;
 import de.huberlin.wbi.cfjava.pred.PfinalAlist;
 import de.huberlin.wbi.cfjava.pred.PfinalAmap;
 
-public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
+public class StepEvalFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 
-	public StepFn( final Ctx ctx ) {
+	public StepEvalFn( final Ctx ctx ) {
 		super( ctx );
 	}
 
@@ -79,8 +79,8 @@ public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 		Amap<String, Alist<Expr>> fa, fb;
 		Lam lam, lam1;
 		int line, channel;
-		PfinalAmap finalAmapPred;
-		PfinalAlist finalAlistExprPred;
+		PfinalAmap pfinalAmap;
+		PfinalAlist pfinalAlist;
 		Body body;
 		Fut fut;
 		Param param;
@@ -93,9 +93,8 @@ public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 		Amap<ResultKey, Alist<Expr>> omega;
 		String n;
 		StepAssocFn stepAssocFn;
+		Alist<Expr> postEnum;
 
-		finalAmapPred = new PfinalAmap();
-		finalAlistExprPred = new PfinalAlist();
 
 		lamSurrogate = app.getLamSurrogate();
 		fa = app.getBindMap();
@@ -103,8 +102,7 @@ public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 		channel = app.getChannel();
 		theta = getCtx();
 		gamma = theta.getGamma();
-		mu = theta.getMu();
-		omega = theta.getOmega();
+		
 
 
 		if( lamSurrogate instanceof Var ) {										// (39)
@@ -121,35 +119,45 @@ public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 		}
 
 		lam = ( Lam )lamSurrogate;
-		sign = lam.getSign();
-		lo = sign.getOutLst();
 		
-		if( !finalAmapPred.test( fa ) ) {										// (40)
+		pfinalAmap = new PfinalAmap();
+		if( !pfinalAmap.test( fa ) ) {											// (40)
 			
 			stepAssocFn = new StepAssocFn( theta );
 			return new Alist<Expr>()
 				.add( new App( line, channel, lam, stepAssocFn.apply( fa ) ) );
 		}
 		
+		postEnum = enumApp( app );
+		
+		if( postEnum.size() != 1 )												// (41)			
+			return postEnum;
+		
 		body = lam.getBody();
 		
-		if( body instanceof ForBody ) {
+		if( body instanceof ForBody ) {											// /42)
 
 			fut = getCtx().getMu().apply( app );
 			return new Alist<Expr>().add( new Select( line, channel, fut ) );
 		}
 		
+		sign = lam.getSign();
+		lo = sign.getOutLst();
 		natBody = ( NatBody )body;
 		fb = natBody.getBodyMap();
 		param = lo.nth( channel );
 		n = param.getName().getLabel();
 		v0 = fb.get( n );
-		
+		mu = theta.getMu();
+		omega = theta.getOmega();
+
+
 		theta1 = new Ctx( fb.merge( fa ), mu, gamma, omega );
 		
-		v1 = v0.flatMap( new StepFn( theta1 ) );
+		v1 = v0.flatMap( new StepEvalFn( theta1 ) );
 		
-		if( !finalAlistExprPred.test( v1 ) ) {
+		pfinalAlist = new PfinalAlist();
+		if( !pfinalAlist.test( v1 ) ) {											// (43)
 			
 			natBody1 = new NatBody( fb.put( n, v1 ) );
 			lam1 = new Lam( lam.getLine(), lam.getLamName(), sign, natBody1 );
@@ -157,10 +165,10 @@ public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 			return new Alist<Expr>().add( new App( line, channel, lam1, fa ) );
 		}
 		
-		if( !param.isLst() && v1.size() != 1 )
-			throw new OutputSignMismatchException( app );
+		if( param.isLst() || v1.size() == 1 )									// (44)
+			return v1;
 		
-		return v1;
+		throw new OutputSignMismatchException( app );		
 	}
 
 	private Alist<Expr> applyCnd( Cnd x ) {
@@ -254,20 +262,21 @@ public class StepFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 		lamName = lam.getLamName();
 		body = lam.getBody();
 		
-		enumFn = new EnumFn();
-		
-		argPairLst = enumFn.apply( new ArgPair( li, fa ) );
+		enumFn = new EnumFn();		
+		argPairLst = enumFn.apply( new Alist<ArgPair>().add( new ArgPair( li, fa ) ) );
 		
 		res = new Alist<>();
 		for( ArgPair argPair : argPairLst ) {
 			
 			s = new Sign( lo, argPair.getInParamLst() );
 			lam = new Lam( lamLine, lamName, s, body );
-			res.add( new App( appLine, channel, lam, argPair.getBindMap() ) );
+			
+			res = res.add( new App( appLine, channel, lam, argPair.getBindMap() ) );
 		}
 		
-		return res;
+		return res;	
 	}
+	
 
 
 }

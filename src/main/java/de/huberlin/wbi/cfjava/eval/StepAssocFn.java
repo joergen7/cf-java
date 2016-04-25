@@ -21,7 +21,7 @@ public class StepAssocFn extends CtxHolder implements Function<Amap<String, Alis
 		ret = new Amap<>();
 		
 		for( String n : fa.keys() )
-			ret = ret.put( n, fa.get( n ).flatMap( new StepFn( getCtx() ) ) );
+			ret = ret.put( n, fa.get( n ).flatMap( new StepEvalFn( getCtx() ) ) );
 		
 		return ret;
 	}

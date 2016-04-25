@@ -34,7 +34,7 @@ public class EvalFn extends CtxHolder implements Function<Alist<Expr>, Alist<Exp
 		
 		Alist<Expr> x1;
 		
-		x1 = x.flatMap( new StepFn( getCtx() ) );
+		x1 = x.flatMap( new StepEvalFn( getCtx() ) );
 		
 		if( x.equals( x1 ) )
 			return x;

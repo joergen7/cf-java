@@ -30,6 +30,9 @@ public class Correl implements InParam {
 		if( nameLst == null )
 			throw new IllegalArgumentException( "Name list must not be null." );
 		
+		if( nameLst.size() <= 1 )
+			throw new IllegalArgumentException( "Name list must have at least two elements." );
+		
 		this.nameLst = nameLst;
 	}
 

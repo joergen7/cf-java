@@ -33,11 +33,29 @@ public class CorrelTest {
 		Correl c;
 		Alist<Name> lc;
 		
-		lc = new Alist<Name>().add( mock( Name.class ) );
+		lc = new Alist<Name>().add( mock( Name.class ) ).add( mock( Name.class ) );
 		
 		c = new Correl( lc );
 		
 		assertSame( lc, c.getNameLst() );
+	}
+	
+	@SuppressWarnings({ "static-method", "unused" })
+	@Test( expected=IllegalArgumentException.class )
+	public void constructorThrowsIaeOnEmptyNameLstTest() {
+		
+		Correl c;
+		
+		c = new Correl( new Alist<>() );
+	}
+	
+	@SuppressWarnings({ "static-method", "unused" })
+	@Test( expected=IllegalArgumentException.class )
+	public void constructorThrowsIaeOnDegenNameLstTest() {
+		
+		Correl c;
+		
+		c = new Correl( new Alist<Name>().add( mock( Name.class ) ) );
 	}
 	
 	@SuppressWarnings({ "static-method", "unused" })
@@ -49,6 +67,7 @@ public class CorrelTest {
 		c = new Correl( null );
 	}
 	
+	
 	@SuppressWarnings("static-method")
 	@Test
 	public void notEqualsNullTest() {
@@ -56,7 +75,7 @@ public class CorrelTest {
 		Correl c;
 		Alist<Name> lc;
 		
-		lc = new Alist<Name>().add( mock( Name.class ) );
+		lc = new Alist<Name>().add( mock( Name.class ) ).add( mock( Name.class ) );
 		
 		c = new Correl( lc );		
 		
@@ -70,7 +89,7 @@ public class CorrelTest {
 		Correl c;
 		Alist<Name> lc;
 		
-		lc = new Alist<Name>().add( mock( Name.class ) );
+		lc = new Alist<Name>().add( mock( Name.class ) ).add( mock( Name.class ) );
 		
 		c = new Correl( lc );		
 		
@@ -84,7 +103,7 @@ public class CorrelTest {
 		Correl c1, c2;
 		Alist<Name> lc;
 		
-		lc = new Alist<Name>().add( mock( Name.class ) );
+		lc = new Alist<Name>().add( mock( Name.class ) ).add( mock( Name.class ) );
 		
 		c1 = new Correl( lc );		
 		c2 = new Correl( lc );		
@@ -99,8 +118,8 @@ public class CorrelTest {
 		Correl c1, c2;
 		Alist<Name> lc1, lc2;
 		
-		lc1 = new Alist<Name>().add( mock( Name.class ) );
-		lc2 = new Alist<Name>().add( mock( Name.class ) ).add( mock( Name.class ) );
+		lc1 = new Alist<Name>().add( mock( Name.class ) ).add( mock( Name.class ) );
+		lc2 = new Alist<Name>().add( mock( Name.class ) ).add( mock( Name.class ) ).add( mock( Name.class ) );
 		
 		c1 = new Correl( lc1 );
 		c2 = new Correl( lc2 );
