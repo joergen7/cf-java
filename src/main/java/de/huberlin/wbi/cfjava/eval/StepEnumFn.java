@@ -80,8 +80,23 @@ public class StepEnumFn implements Function<ArgPair, Alist<ArgPair>> {
 			"Cannot enumerate parameter of type "+firstInParam.getClass()+"." );
 	}
 
-	private static Alist<ArgPair> augment( Alist<ArgPair> res, Correl firstCorrel ) {
-		throw new UnsupportedOperationException( "NYI" );
+	private static Alist<ArgPair> augment( Alist<ArgPair> argPairLst, Correl correl ) {
+		
+		Alist<ArgPair> res;
+		Alist<InParam> prefix;
+		
+		prefix = new Alist<>();
+		for( Name name : correl.getNameLst() )
+			prefix = prefix.add( new Param( name, false ) );
+		prefix = prefix.reverse();
+		
+		res = new Alist<>();
+		for( ArgPair argPair : argPairLst )
+			res = res.add( new ArgPair(
+				prefix.append( argPair.getInParamLst() ),
+				argPair.getBindMap() ) );
+		
+		return res.reverse();
 	}
 
 	private static Alist<Amap<String, Alist<Expr>>> corr( Alist<Name> lc, Amap<String, Alist<Expr>> f ) {
