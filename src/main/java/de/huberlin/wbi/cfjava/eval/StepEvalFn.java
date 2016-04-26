@@ -274,7 +274,7 @@ public class StepEvalFn extends CtxHolder implements Function<Expr, Alist<Expr>>
 			res = res.add( new App( appLine, channel, lam, argPair.getBindMap() ) );
 		}
 		
-		return res;	
+		return res.reverse();	
 	}
 	
 
