@@ -552,10 +552,66 @@ public class EvalFnTest {
 		eval0.apply( x );
 	}
 	
-	@Ignore @Test
+	@Test
 	public void crossProductShouldBeDerivableTest() {
-		// TODO
-	}
+		
+		Sign sign;
+		Alist<Param> lo;
+		Alist<InParam> li;
+		Alist<Expr> e1, e2, f1, f2;
+		NatBody natBody;
+		Amap<String,Alist<Expr>> fb, fa;
+		Lam lam;
+		Alist<Expr> app1, app2;
+		
+		lo = new Alist<Param>()
+			.add( new Param( new Name( "out2", false ), false ) )
+			.add( new Param( new Name( "out1", false ), false ) );
+		
+		li = new Alist<InParam>()
+			.add( new Param( new Name( "p2", false ), false ) )
+			.add( new Param( new Name( "p1", false ), false ) );
+		
+		sign = new Sign( lo, li );
+		
+		fb = new Amap<String,Alist<Expr>>()
+			.put( "out1", new Alist<Expr>().add( new Var( 10, "p1" ) ) )
+			.put( "out2", new Alist<Expr>().add( new Var( 20, "p2" ) ) );
+		
+		natBody = new NatBody( fb );
+		
+		lam = new Lam( 30, "f", sign, natBody );
+
+		e1 = new Alist<Expr>()
+			.add( new Str( "B" ) )
+			.add( new Str( "A" ) );
+			
+		e2 = new Alist<Expr>()
+			.add( new Str( "2" ) )
+			.add( new Str( "1" ) );
+		
+		fa = new Amap<String,Alist<Expr>>()
+			.put( "p1", e1 )
+			.put( "p2", e2 );
+		
+		app1 = new Alist<Expr>().add( new App( 40, 1, lam, fa ) );
+		app2 = new Alist<Expr>().add( new App( 40, 2, lam, fa ) );
+		
+		f1 = new Alist<Expr>()
+			.add( new Str( "B" ) )
+			.add( new Str( "B" ) )
+			.add( new Str( "A" ) )
+			.add( new Str( "A" ) );
+				
+		f2 = new Alist<Expr>()
+			.add( new Str( "2" ) )
+			.add( new Str( "1" ) )
+			.add( new Str( "2" ) )
+			.add( new Str( "1" ) );
+		
+		assertEquals( f1, eval0.apply( app1 ) );
+		assertEquals( f2, eval0.apply( app2 ) );
+}
 	
 	@Ignore @Test
 	public void dotProductShouldBeDerivableTest() {

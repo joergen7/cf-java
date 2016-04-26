@@ -40,21 +40,6 @@ public class ArgPair {
 		this.bindMap = bindMap;
 	}
 
-	public Alist<InParam> getInParamLst() {
-		return inParamLst;
-	}
-
-	public Amap<String, Alist<Expr>> getBindMap() {
-		return bindMap;
-	}
-	
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder( 3, 5 )
-			.append( inParamLst )
-			.append( bindMap ).toHashCode();
-	}
-	
 	@Override
 	public boolean equals( Object obj ) {
 		
@@ -71,6 +56,30 @@ public class ArgPair {
 		return new EqualsBuilder()
 			.append( inParamLst, rhs.inParamLst )
 			.append( bindMap, rhs.bindMap ).isEquals();
+	}
+
+	public Amap<String, Alist<Expr>> getBindMap() {
+		return bindMap;
+	}
+	
+	public Alist<InParam> getInParamLst() {
+		return inParamLst;
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder( 3, 5 )
+			.append( inParamLst )
+			.append( bindMap ).toHashCode();
+	}
+	
+	public String toString() {
+		return new StringBuffer()
+			.append( '{' )
+			.append( inParamLst )
+			.append( ',' )
+			.append( bindMap )
+			.append( '}').toString();
 	}
 
 }
