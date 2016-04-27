@@ -100,7 +100,49 @@ public class StepEnumFn implements Function<ArgPair, Alist<ArgPair>> {
 	}
 
 	private static Alist<Amap<String, Alist<Expr>>> corr( Alist<Name> lc, Amap<String, Alist<Expr>> f ) {
-		throw new UnsupportedOperationException( "NYI" );
+		
+		String firstLabel;
+		Alist<Expr> firstVal;
+		Alist<Amap<String,Alist<Expr>>> fPair;
+		Amap<String,Alist<Expr>> fStar, fMinus;
+		
+		
+		firstLabel = lc.hd().getLabel();
+		firstVal = f.get( firstLabel );
+		
+		if( firstVal.isEmpty() )
+			return new Alist<>();
+		
+		fPair = corrstep( lc, f, f );
+		
+		fStar = fPair.hd();
+		fMinus = fPair.tl().hd();
+		
+		return corr( lc, fMinus ).add( fStar );
+	}
+
+	private static Alist<Amap<String, Alist<Expr>>> corrstep( Alist<Name> lc, Amap<String, Alist<Expr>> fStar,
+		Amap<String, Alist<Expr>> fMinus) {
+		
+		String firstLabel;
+		Alist<Expr> firstVal;
+		Expr a;
+		Alist<Expr> b;
+		Amap<String,Alist<Expr>> fStar1, fMinus1;
+		
+		if( lc.isEmpty() )
+			return new Alist<Amap<String,Alist<Expr>>>().add( fMinus ).add( fStar );
+		
+		firstLabel = lc.hd().getLabel();
+		firstVal = fMinus.get( firstLabel );
+		
+		a = firstVal.hd();
+		b = firstVal.tl();
+		
+		fStar1 = fStar.put( firstLabel, new Alist<Expr>().add( a ) );
+		fMinus1 = fMinus.put( firstLabel, b );
+		
+		return corrstep( lc.tl(), fStar1, fMinus1 );
 	}
 
 	private static Alist<ArgPair> augment( Alist<ArgPair> argPairLst, Param param ) {
