@@ -59,9 +59,18 @@ public class EvalFnTest {
 			Sign sign;
 			Alist<Param> lo;
 			
+			
+			if( !( app.getLamSurrogate() instanceof Lam ) )
+				throw new IllegalArgumentException( "Application lambda surrogate is not a lambda expression." );
+			
+			lam = ( Lam )app.getLamSurrogate();
+			
+			for( InParam inParam : lam.getSign().getInLst() )
+				if( inParam instanceof Correl )
+					throw new IllegalArgumentException( "Signature must not contain correlated input parameters." );
+			
 			random = new Random();
 			id = random.nextInt( 1000000000 )+1;
-			lam = ( Lam )app.getLamSurrogate();
 			lamName = lam.getLamName();
 			sign = lam.getSign();
 			lo = sign.getOutLst();
