@@ -29,9 +29,11 @@ import de.huberlin.wbi.cfjava.asyntax.Cnd;
 import de.huberlin.wbi.cfjava.asyntax.Correl;
 import de.huberlin.wbi.cfjava.asyntax.Ctx;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
+import de.huberlin.wbi.cfjava.asyntax.ForBody;
 import de.huberlin.wbi.cfjava.asyntax.Fut;
 import de.huberlin.wbi.cfjava.asyntax.InParam;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
+import de.huberlin.wbi.cfjava.asyntax.Lang;
 import de.huberlin.wbi.cfjava.asyntax.Name;
 import de.huberlin.wbi.cfjava.asyntax.NatBody;
 import de.huberlin.wbi.cfjava.asyntax.Param;
@@ -889,5 +891,61 @@ public class EvalFnTest {
 		y = eval0.apply( x );
 		
 		assertEquals( xt, y );
+	}
+	
+	@Test
+	public void marcTest() {
+		
+		Alist<Expr> x, e1, y;
+		Amap<String,Alist<Expr>> rho, fa, bodyMap;
+		Amap<String,Lam> gamma;
+		Lam bowtie2Align, perFastq;
+		Sign sign;
+		Ctx theta;
+		Function<Alist<Expr>, Alist<Expr>> evalFn;
+		
+		
+		x = new Alist<Expr>().add( new Var( 23, "sam" ) );
+		
+		fa = new Amap<String,Alist<Expr>>()
+			.put( "fastq2", new Alist<Expr>().add( new Var( 21, "fastq2" ) ) )
+			.put( "fastq1", new Alist<Expr>().add( new Var( 20, "fastq1" ) ) );
+		
+		e1 = new Alist<Expr>().add( new App( 19, 1, new Var( 19, "per-fastq" ), fa ) );
+		
+		rho = new Amap<String,Alist<Expr>>()
+			.put( "fastq2", new Alist<Expr>().add( new Str( "SRR359188_2.filt.fastq" ) ) )
+			.put( "sam", e1 )
+			.put( "fastq1", new Alist<Expr>().add( new Str( "SRR359188_1.filt.fastq" ) ) );
+		
+		sign = new Sign( 
+			new Alist<Param>().add( new Param( new Name( "sam", true ), false ) ),
+			new Alist<InParam>()
+				.add( new Correl(
+					new Alist<Name>()
+						.add( new Name( "fastq2", true ) )
+						.add( new Name( "fastq1", true ) ) ) ) );
+
+		
+		bowtie2Align = new Lam( 1, "bowtie2-align", sign, new ForBody( Lang.BASH, "\n  sam=bowtie2.sam\n  tar xf $idx\n  bowtie2 -D 5 -R 1 -N 0 -L 22 -i S,0,2.50 \\\n  -p 1 \\\n  --no-unal -x bt2idx -1 $fastq1 -2 $fastq2 -S $sam\n  rm bt2idx.*\n" ) );
+		
+		bodyMap = new Amap<String,Alist<Expr>>()
+			.put( "sam", new Alist<Expr>()
+				.add( new App( 11, 1, new Var( 11, "bowtie2-align" ), fa ) ) );
+		
+		perFastq = new Lam( 10, "per-fastq", sign,
+			new NatBody( bodyMap ) );
+		
+		gamma = new Amap<String,Lam>()
+			.put( "bowtie2-align", bowtie2Align )
+			.put( "per-fastq", perFastq );
+		
+		theta = new Ctx( rho, mu0, gamma, new Amap<ResultKey,Alist<Expr>>() );
+		
+		evalFn = new EvalFn( theta );
+				
+		y = evalFn.apply( x );
+
+		assertTrue( y.hd() instanceof App );
 	}
 }

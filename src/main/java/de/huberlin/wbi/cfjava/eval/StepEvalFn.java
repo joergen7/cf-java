@@ -129,6 +129,7 @@ public class StepEvalFn extends CtxHolder implements Function<Expr, Alist<Expr>>
 		}
 		
 		postEnum = enumApp( app );
+		app = ( App )postEnum.hd();
 		
 		if( postEnum.size() != 1 )												// (41)			
 			return postEnum;

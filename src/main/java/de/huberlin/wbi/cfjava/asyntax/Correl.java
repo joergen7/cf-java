@@ -60,5 +60,18 @@ public class Correl implements InParam {
 	public int hashCode() {
 		return new HashCodeBuilder( 73, 389 ).append( nameLst ).toHashCode();
 	}
+	
+	public String toString() {
+		
+		StringBuffer buf;
+		
+		buf = new StringBuffer();
+		
+		buf.append( "{correl," );
+		buf.append( nameLst.toString() );
+		buf.append( '}' );
+		
+		return buf.toString();
+	}
 
 }

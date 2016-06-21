@@ -49,6 +49,10 @@ public class Request extends IdHolder {
 		if( bindMap == null )
 			throw new IllegalArgumentException( "Binding map must not be null." );
 		
+		for( InParam inParam : lam.getSign().getInLst() )
+			if( !( inParam instanceof Param ) )
+				throw new IllegalArgumentException( "Lambda must not contain correlated input parameters: "+inParam );
+		
 		this.lam = lam;
 		this.bindMap = bindMap;
 	}

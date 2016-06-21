@@ -23,6 +23,7 @@ import java.util.function.Function;
 import de.huberlin.wbi.cfjava.asyntax.App;
 import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Fut;
+import de.huberlin.wbi.cfjava.asyntax.InParam;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
 import de.huberlin.wbi.cfjava.asyntax.Param;
 import de.huberlin.wbi.cfjava.cuneiform.Request;
@@ -55,6 +56,12 @@ public class RequestCollector implements Function<App, Fut> {
 		int id;
 
 		lam = ( Lam )app.getLamSurrogate();
+		
+		for( InParam inParam : lam.getSign().getInLst() )
+			if( !( inParam instanceof Param ) )
+				throw new IllegalArgumentException( "Lambda must not contain correlated input parameters: "+inParam );
+
+		
 		fa = app.getBindMap();
 		id = nextId++;
 		
