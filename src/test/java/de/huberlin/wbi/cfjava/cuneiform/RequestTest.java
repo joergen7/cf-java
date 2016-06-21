@@ -36,6 +36,12 @@ import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
 
 public class RequestTest {
+	
+	private static final Sign sign0 =
+		new Sign(
+			new Alist<Param>().add( new Param( new Name( "out", false ), false ) ),
+			new Alist<InParam>() );
+	
 
 	@SuppressWarnings("static-method")
 	@Test
@@ -44,8 +50,10 @@ public class RequestTest {
 		Request r;
 		Lam lam;
 		Amap<String, Alist<Expr>>bindMap;
-		
+
 		lam = mock( Lam.class );
+		when( lam.getSign() ).thenReturn( sign0 );
+
 		bindMap = new Amap<>();
 		
 		r = new Request( lam, bindMap, 1234 );
@@ -75,6 +83,8 @@ public class RequestTest {
 		Lam lam;
 		
 		lam = mock( Lam.class );
+		when( lam.getSign() ).thenReturn( sign0 );
+
 		
 		r = new Request( lam, null, 1234 );
 	}
@@ -88,6 +98,8 @@ public class RequestTest {
 		Amap<String, Alist<Expr>>bindMap;
 		
 		lam = mock( Lam.class );
+		when( lam.getSign() ).thenReturn( sign0 );
+
 		bindMap = new Amap<>();
 		
 		r = new Request( lam, bindMap, 0 );
@@ -102,6 +114,8 @@ public class RequestTest {
 		Amap<String, Alist<Expr>>bindMap;
 		
 		lam = mock( Lam.class );
+		when( lam.getSign() ).thenReturn( sign0 );
+
 		bindMap = new Amap<>();
 		
 		r = new Request( lam, bindMap, -12 );
@@ -114,8 +128,10 @@ public class RequestTest {
 		Request r;
 		Lam lam;
 		Amap<String, Alist<Expr>>bindMap;
-		
+
 		lam = mock( Lam.class );
+		when( lam.getSign() ).thenReturn( sign0 );
+		
 		bindMap = new Amap<>();
 
 		r = new Request( lam, bindMap, 1234 );
@@ -132,6 +148,8 @@ public class RequestTest {
 		Amap<String, Alist<Expr>>bindMap;
 		
 		lam = mock( Lam.class );
+		when( lam.getSign() ).thenReturn( sign0 );
+
 		bindMap = new Amap<>();
 
 		r = new Request( lam, bindMap, 1234 );
@@ -148,6 +166,8 @@ public class RequestTest {
 		Amap<String, Alist<Expr>>bindMap;
 		
 		lam = mock( Lam.class );
+		when( lam.getSign() ).thenReturn( sign0 );
+
 		bindMap = new Amap<>();
 
 		r = new Request( lam, bindMap, 1234 );
@@ -166,6 +186,8 @@ public class RequestTest {
 		Amap<String, Alist<Expr>>bindMap;
 		
 		lam = mock( Lam.class );
+		when( lam.getSign() ).thenReturn( sign0 );
+
 		bindMap = new Amap<>();
 
 		r1 = new Request( lam, bindMap, 1234 );
@@ -183,6 +205,8 @@ public class RequestTest {
 		Amap<String, Alist<Expr>>bindMap1, bindMap2;
 		
 		lam = mock( Lam.class );
+		when( lam.getSign() ).thenReturn( sign0 );
+
 		bindMap1 = new Amap<>();
 		bindMap2 = new Amap<String, Alist<Expr>>().put( "bla", new Alist<Expr>().add( new Str( "blub" ) ) );
 
@@ -202,6 +226,10 @@ public class RequestTest {
 		
 		lam1 = mock( Lam.class );
 		lam2 = mock( Lam.class );
+		
+		when( lam1.getSign() ).thenReturn( sign0 );
+		when( lam2.getSign() ).thenReturn( sign0 );
+
 		bindMap = new Amap<>();
 
 		r1 = new Request( lam1, bindMap, 1234 );
@@ -219,6 +247,8 @@ public class RequestTest {
 		Amap<String, Alist<Expr>>bindMap;
 		
 		lam = mock( Lam.class );
+		when( lam.getSign() ).thenReturn( sign0 );
+
 		bindMap = new Amap<>();
 
 		r1 = new Request( lam, bindMap, 1234 );
