@@ -44,8 +44,16 @@ import de.huberlin.wbi.cfjava.pred.PfinalAmap;
 
 public class StepEvalFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 
-	public StepEvalFn( final Ctx ctx ) {
+	private final Profiler profiler;
+	
+	public StepEvalFn( final Ctx ctx, Profiler profiler ) {
+		
 		super( ctx );
+		
+		if( profiler == null )
+			throw new IllegalArgumentException( "Profiler must not be null." );
+		
+		this.profiler = profiler;
 	}
 
 	@Override
@@ -123,12 +131,12 @@ public class StepEvalFn extends CtxHolder implements Function<Expr, Alist<Expr>>
 		pfinalAmap = new PfinalAmap();
 		if( !pfinalAmap.test( fa ) ) {											// (40)
 			
-			stepAssocFn = new StepAssocFn( theta );
+			stepAssocFn = new StepAssocFn( theta, profiler );
 			return new Alist<Expr>()
 				.add( new App( line, channel, lam, stepAssocFn.apply( fa ) ) );
 		}
 		
-		postEnum = enumApp( app );
+		postEnum = enumApp( app, profiler );
 		app = ( App )postEnum.hd();
 		
 		if( postEnum.size() != 1 )												// (41)			
@@ -155,7 +163,7 @@ public class StepEvalFn extends CtxHolder implements Function<Expr, Alist<Expr>>
 
 		theta1 = new Ctx( fb.merge( fa ), mu, gamma, omega );
 		
-		v1 = v0.flatMap( new StepEvalFn( theta1 ) );
+		v1 = v0.flatMap( new StepEvalFn( theta1, profiler ) );
 		
 		pfinalAlist = new PfinalAlist();
 		if( !pfinalAlist.test( v1 ) ) {											// (43)
@@ -231,7 +239,7 @@ public class StepEvalFn extends CtxHolder implements Function<Expr, Alist<Expr>>
 	}
 	
 	
-	private static Alist<Expr> enumApp( final App a ) {
+	private static Alist<Expr> enumApp( final App a, Profiler profiler ) {
 		
 		LamSurrogate lamSurrogate;
 		Lam lam;
@@ -263,7 +271,7 @@ public class StepEvalFn extends CtxHolder implements Function<Expr, Alist<Expr>>
 		lamName = lam.getLamName();
 		body = lam.getBody();
 		
-		enumFn = new EnumFn();		
+		enumFn = new EnumFn( profiler );		
 		argPairLst = enumFn.apply( new Alist<ArgPair>().add( new ArgPair( li, fa ) ) );
 		
 		res = new Alist<>();

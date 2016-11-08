@@ -87,7 +87,7 @@ public class EvalFnTest {
 		new Amap<String, Lam>(),
 		new Amap<ResultKey, Alist<Expr>>());
 	
-	private final Function<Alist<Expr>, Alist<Expr>> eval0 = new EvalFn( theta0 );
+	private final Function<Alist<Expr>, Alist<Expr>> eval0 = new EvalFn( theta0, new DefaultProfiler() );
 	
 	@Test
 	public void nilShouldEvalItselfTest() {
@@ -132,7 +132,7 @@ public class EvalFnTest {
 		z = new Alist<Expr>().add( new Str( "blub" ) );
 		rho = new Amap<String, Alist<Expr>>().put( "x", z );
 		theta = new Ctx( rho, mu0, new Amap<String, Lam>(), new Amap<ResultKey, Alist<Expr>>() );
-		eval = new EvalFn( theta );
+		eval = new EvalFn( theta, new DefaultProfiler() );
 		
 		y = eval.apply( x );
 		
@@ -155,7 +155,7 @@ public class EvalFnTest {
 			.put( "h", z );
 		
 		theta = new Ctx( rho, mu0, new Amap<String, Lam>(), new Amap<ResultKey, Alist<Expr>>() );
-		eval = new EvalFn( theta );
+		eval = new EvalFn( theta, new DefaultProfiler() );
 		
 		y = eval.apply( x );
 		
@@ -179,7 +179,7 @@ public class EvalFnTest {
 			.put( "i", z );
 		
 		theta = new Ctx( rho, mu0, new Amap<String, Lam>(), new Amap<ResultKey, Alist<Expr>>() );
-		eval = new EvalFn( theta );
+		eval = new EvalFn( theta, new DefaultProfiler() );
 		
 		y = eval.apply( x );
 		
@@ -228,7 +228,7 @@ public class EvalFnTest {
 		gamma = new Amap<>();
 		omega = new Amap<ResultKey, Alist<Expr>>().put( resultKey, expected );
 
-		eval = new EvalFn( new Ctx( rho, mu0, gamma, omega ) );
+		eval = new EvalFn( new Ctx( rho, mu0, gamma, omega ), new DefaultProfiler() );
 
 		y = eval.apply( x );
 		
@@ -326,7 +326,7 @@ public class EvalFnTest {
 		lam = new Lam( 1, "f", sign, body );
 		gamma = new Amap<String, Lam>().put( "f", lam );
 		theta = new Ctx( new Amap<String, Alist<Expr>>(), mu0, gamma, new Amap<ResultKey, Alist<Expr>>() );
-		eval = new EvalFn( theta );
+		eval = new EvalFn( theta, new DefaultProfiler() );
 		
 		x = new Alist<Expr>()
 				.add( new App( 1, 1, new Var( 1, "f" ),
@@ -448,7 +448,7 @@ public class EvalFnTest {
 		gamma = new Amap<>();
 		rho = new Amap<String, Alist<Expr>>().put( "x", new Alist<Expr>().add( new Str( "blub" ) ) );
 		theta = new Ctx( rho, mu0, gamma, new Amap<ResultKey, Alist<Expr>>() );
-		eval = new EvalFn( theta );
+		eval = new EvalFn( theta, new DefaultProfiler() );
 		
 		x = new Alist<Expr>()
 				.add( new App( 1, 1, lam,
@@ -497,7 +497,7 @@ public class EvalFnTest {
 		
 		rho = new Amap<>();
 		theta = new Ctx( rho, mu0, gamma, new Amap<ResultKey, Alist<Expr>>() );
-		eval = new EvalFn( theta );
+		eval = new EvalFn( theta, new DefaultProfiler() );
 		
 		y = eval.apply( x );
 		
@@ -951,7 +951,7 @@ public class EvalFnTest {
 		
 		theta = new Ctx( rho, mu0, gamma, new Amap<ResultKey,Alist<Expr>>() );
 		
-		evalFn = new EvalFn( theta );
+		evalFn = new EvalFn( theta, new DefaultProfiler() );
 				
 		y = evalFn.apply( x );
 
