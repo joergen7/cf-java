@@ -35,9 +35,7 @@ import de.huberlin.wbi.cfjava.asyntax.ResultKey;
 import de.huberlin.wbi.cfjava.asyntax.Str;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
-import de.huberlin.wbi.cfjava.eval.DefaultProfiler;
 import de.huberlin.wbi.cfjava.eval.EvalFn;
-import de.huberlin.wbi.cfjava.eval.Profiler;
 import de.huberlin.wbi.cfjava.eval.RequestCollector;
 import de.huberlin.wbi.cfjava.parse.WorkflowListener;
 import de.huberlin.wbi.cfjava.parse.CuneiformLexer;
@@ -48,14 +46,8 @@ public class Workflow {
 
 	private Ctx ctx;
 	private Alist<Expr> query;
-	private final Profiler profiler;
 	
-
 	public static Workflow createWorkflow( final String script ) {
-		return createWorkflow( script, new DefaultProfiler() );
-	}
-
-	public static Workflow createWorkflow( final String script, final Profiler profiler ) {
 		
 		ANTLRInputStream input;
 		CuneiformLexer lexer;
@@ -83,14 +75,14 @@ public class Workflow {
 			
 			walker.walk( asv, tree );
 			
-			return new Workflow( asv.getQuery(), asv.getRho(), asv.getGamma(), profiler );			
+			return new Workflow( asv.getQuery(), asv.getRho(), asv.getGamma() );			
 		}
 		catch( IOException e ) {
 			throw new RuntimeException( e );
 		}
 	}
 	
-	public Workflow( Alist<Expr> query, Amap<String, Alist<Expr>> rho, Amap<String, Lam> gamma, Profiler profiler ) {
+	public Workflow( Alist<Expr> query, Amap<String, Alist<Expr>> rho, Amap<String, Lam> gamma ) {
 		
 		if( query == null )
 			throw new IllegalArgumentException( "Query must not be null." );
@@ -101,10 +93,6 @@ public class Workflow {
 		if( gamma == null )
 			throw new IllegalArgumentException( "Gamma must not be null." );
 		
-		if( profiler == null )
-			throw new IllegalArgumentException( "Profiler must not be null." );
-		
-		this.profiler = profiler;
 		this.query = query;
 		this.ctx = new Ctx( rho, new RequestCollector(), gamma, new Amap<ResultKey, Alist<Expr>>() );
 	}
@@ -113,15 +101,11 @@ public class Workflow {
 		
 		EvalFn evalFn;
 		PfinalAlist finalPred;
-		Long tic, toc;
 		
 		finalPred = new PfinalAlist();
-		evalFn = new EvalFn( ctx, profiler );
+		evalFn = new EvalFn( ctx );
 		
-		tic = System.currentTimeMillis();
 		query = evalFn.apply( query );
-		toc = System.currentTimeMillis();
-		profiler.reportTime( "eval", tic, toc-tic );
 		
 		return finalPred.test( query );
 	}

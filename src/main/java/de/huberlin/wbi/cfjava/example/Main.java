@@ -6,7 +6,6 @@ import java.util.Set;
 import de.huberlin.wbi.cfjava.cuneiform.Reply;
 import de.huberlin.wbi.cfjava.cuneiform.Request;
 import de.huberlin.wbi.cfjava.cuneiform.Workflow;
-import de.huberlin.wbi.cfjava.eval.DefaultProfiler;
 
 public class Main {
 
@@ -26,7 +25,7 @@ public class Main {
 		System.out.println( "SCRIPT\n"+script );
 		
 		// Create a workflow object from that script.
-		workflow = Workflow.createWorkflow( script, new DefaultProfiler() );
+		workflow = Workflow.createWorkflow( script );
 
 		System.out.println( "\nORIGINAL\n"+workflow );
 		

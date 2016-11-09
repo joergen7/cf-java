@@ -9,15 +9,8 @@ import de.huberlin.wbi.cfjava.data.Amap;
 
 public class StepAssocFn extends CtxHolder implements Function<Amap<String, Alist<Expr>>, Amap<String, Alist<Expr>>> {
 
-	private final Profiler profiler;
-	
-	public StepAssocFn( Ctx ctx, Profiler profiler ) {
+	public StepAssocFn( Ctx ctx ) {
 		super( ctx );
-		
-		if( profiler == null )
-			throw new IllegalArgumentException( "Profiler must not be null." );
-		
-		this.profiler = profiler;
 	}
 
 	@Override
@@ -28,7 +21,7 @@ public class StepAssocFn extends CtxHolder implements Function<Amap<String, Alis
 		ret = new Amap<>();
 		
 		for( String n : fa.keys() )
-			ret = ret.put( n, fa.get( n ).flatMap( new StepEvalFn( getCtx(), profiler ) ) );
+			ret = ret.put( n, fa.get( n ).flatMap( new StepEvalFn( getCtx() ) ) );
 		
 		return ret;
 	}

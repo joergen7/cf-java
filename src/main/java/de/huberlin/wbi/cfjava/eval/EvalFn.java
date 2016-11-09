@@ -25,27 +25,16 @@ import de.huberlin.wbi.cfjava.data.Alist;
 
 public class EvalFn extends CtxHolder implements Function<Alist<Expr>, Alist<Expr>> {
 	
-	private final Profiler profiler;
-	
-	public EvalFn( final Ctx ctx, final Profiler profiler ) {
+	public EvalFn( final Ctx ctx ) {
 		super( ctx );
-		
-		if( profiler == null )
-			throw new IllegalArgumentException( "Profiler must not be null." );
-		
-		this.profiler = profiler;
 	}
 
 	@Override
 	public Alist<Expr> apply( Alist<Expr> x ) {
 		
 		Alist<Expr> x1;
-		Long tic, toc;
 		
-		tic = System.currentTimeMillis();
-		x1 = x.flatMap( new StepEvalFn( getCtx(), profiler ) );
-		toc = System.currentTimeMillis();
-		profiler.reportTime( "step_eval", tic, toc-tic );
+		x1 = x.flatMap( new StepEvalFn( getCtx() ) );
 		
 		if( x.equals( x1 ) )
 			return x;

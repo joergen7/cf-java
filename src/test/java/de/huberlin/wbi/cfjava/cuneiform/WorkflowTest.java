@@ -8,7 +8,6 @@ import de.huberlin.wbi.cfjava.asyntax.Expr;
 import de.huberlin.wbi.cfjava.asyntax.Lam;
 import de.huberlin.wbi.cfjava.data.Alist;
 import de.huberlin.wbi.cfjava.data.Amap;
-import de.huberlin.wbi.cfjava.eval.DefaultProfiler;
 
 public class WorkflowTest {
 
@@ -25,7 +24,7 @@ public class WorkflowTest {
 		rho = new Amap<>();
 		gamma = new Amap<>();
 		
-		workflow = new Workflow( query, rho, gamma, new DefaultProfiler() );
+		workflow = new Workflow( query, rho, gamma );
 		
 		assertSame( query, workflow.getQuery() );
 		assertSame( rho, workflow.getRho() );
@@ -43,7 +42,7 @@ public class WorkflowTest {
 		rho = new Amap<>();
 		gamma = new Amap<>();
 		
-		workflow = new Workflow( null, rho, gamma, new DefaultProfiler() );		
+		workflow = new Workflow( null, rho, gamma );		
 	}
 	
 	@SuppressWarnings({ "static-method", "unused" })
@@ -57,7 +56,7 @@ public class WorkflowTest {
 		query = new Alist<>();
 		gamma = new Amap<>();
 		
-		workflow = new Workflow( query, null, gamma, new DefaultProfiler() );
+		workflow = new Workflow( query, null, gamma );
 	}
 	
 	@SuppressWarnings({ "static-method", "unused" })
@@ -71,6 +70,6 @@ public class WorkflowTest {
 		query = new Alist<>();
 		rho = new Amap<>();
 		
-		workflow = new Workflow( query, rho, null, new DefaultProfiler() );
+		workflow = new Workflow( query, rho, null );
 	}
 }
