@@ -23,9 +23,16 @@ public class LazyWorkflow extends Workflow {
 
 	public boolean reduce() {
 		
-		int nPendingFut;
+		int nPendingFut, nRequest;
 		
-		nPendingFut = getRequestSet().size()-nFinishedReply;
+		nRequest = getRequestSet().size();
+		
+		if( nRequest == 0 ) {
+			lastRet = super.reduce();
+			return lastRet;
+		}
+		
+		nPendingFut = nRequest-nFinishedReply;
 		
 		if( nPendingFut == 0 )
 			return lastRet;
