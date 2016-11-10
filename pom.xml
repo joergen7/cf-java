@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.hu-berlin.wbi</groupId>
 	<artifactId>cf-java</artifactId>
-	<version>0.0.2-RELEASE</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>cf-java</name>
 	<description>Java bindings for the Cuneiform workflow language.</description>
 
