@@ -75,7 +75,7 @@ public class Workflow {
 			
 			walker.walk( asv, tree );
 			
-			return new Workflow( asv.getQuery(), asv.getRho(), asv.getGamma() );			
+			return new LazyWorkflow( asv.getQuery(), asv.getRho(), asv.getGamma() );			
 		}
 		catch( IOException e ) {
 			throw new RuntimeException( e );
