@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.json.JSONArray;
 
-public class Result {
+public class HaltMsg {
 	
 	private final List<String> result;
 	
-	public Result( JSONArray r ) {
+	public HaltMsg( JSONArray r ) {
 		
 		int i;
 		

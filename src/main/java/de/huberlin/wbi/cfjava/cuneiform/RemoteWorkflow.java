@@ -9,8 +9,6 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,17 +27,18 @@ public class RemoteWorkflow {
 	private static final String LABEL_VSN      = "vsn";
 	private static final String LABEL_TAG      = "tag";
 	private static final String LABEL_DATA     = "data";
+	private static final String LABEL_RESULT   = "result";
 	
 	private static final String MSGTYPE_HALTOK = "halt_ok";
 	private static final String MSGTYPE_WORKFLOW = "workflow";
-	private static final String MSGTYPE_HALTERRORWORKFLOW = "halt_error_workflow";
+	private static final String MSGTYPE_HALTEWORKFLOW = "halt_eworkflow";
 	
 	private final String tag;
 	private final DataOutputStream os;
 	private final DataInputStream is;
 	private final Socket socket;
 	private final List<JSONObject> requestQueue;
-	private Result result;
+	private HaltMsg haltMsg;
 
 	public RemoteWorkflow( String host, String tag, String content ) throws IOException {
 		
@@ -55,7 +54,7 @@ public class RemoteWorkflow {
 			throw new IllegalArgumentException( "Content must not be null." );
 		
 		requestQueue = new LinkedList<>();
-		result = null;
+		haltMsg = null;
 
 		this.tag = tag;
 
@@ -72,7 +71,7 @@ public class RemoteWorkflow {
 	}
 	
 	public boolean hasResult() {
-		return result != null;
+		return haltMsg != null;
 	}
 	
 	public boolean hasNextRequest() {
@@ -106,15 +105,26 @@ public class RemoteWorkflow {
 	public void update() throws IOException {
 		
 		JSONObject msg;
+		JSONArray result;
 		
 		while( ( msg = nextMsg() ) != null ) {
 			
 			switch( msg.getString( LABEL_MSGTYPE ) ) {
 			
-				case MSGTYPE_HALTOK				: result = new Result( msg.getJSONArray( LABEL_DATA ) ); break;
-				case MSGTYPE_HALTERRORWORKFLOW	: // ??; break;
-				default							: throw new UnsupportedOperationException(
-										"Message type not recognized: "+msg.getString( LABEL_MSGTYPE ) );
+				case MSGTYPE_HALTOK :
+					
+					result = msg.getJSONObject( LABEL_DATA ).getJSONArray( LABEL_RESULT );
+					haltMsg = new HaltMsg( result );
+					break;
+					
+				case MSGTYPE_HALTEWORKFLOW :
+
+					// result = new Result( )
+					// ??; break;
+
+				default:
+					throw new UnsupportedOperationException(
+						"Message type not recognized: "+msg.getString( LABEL_MSGTYPE ) );
 			}
 		}
 	}
