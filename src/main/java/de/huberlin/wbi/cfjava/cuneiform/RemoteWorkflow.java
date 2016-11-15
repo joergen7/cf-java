@@ -1,19 +1,13 @@
 package de.huberlin.wbi.cfjava.cuneiform;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
+import org.json.JSONObject;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class RemoteWorkflow {
 	
@@ -123,7 +117,7 @@ public class RemoteWorkflow {
 
 		int len;
 		byte[] buf;
-		StringBuffer target;
+		String target;
 				
 		if( is.available() == 0 )
 			return null;
@@ -135,15 +129,9 @@ public class RemoteWorkflow {
 		buf = new byte[ len ];
 		
 		is.readFully( buf );
-		
-		try( BufferedReader reader = new BufferedReader( new InputStreamReader( new ByteArrayInputStream( buf ) ) ) ) {
-		
-			target = new StringBuffer();
-			while( reader.ready() )
-				target.append( ( char )reader.read() );
-			System.out.println( "Received data: "+target );
-			return new JSONObject( String.valueOf( target ) );
-			
-		}
+
+        target = new String(buf);
+        System.out.println( "Received data: "+ target );
+        return new JSONObject( String.valueOf( target ) );
 	}
 }
