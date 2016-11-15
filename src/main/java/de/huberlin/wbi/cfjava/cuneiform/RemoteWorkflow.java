@@ -111,7 +111,7 @@ public class RemoteWorkflow {
 			
 			switch( msg.getString( LABEL_MSGTYPE ) ) {
 			
-				case MSGTYPE_HALTOK				: result = new Result( ( JSONArray ) msg.get( LABEL_DATA ) ); break;
+				case MSGTYPE_HALTOK				: result = new Result( msg.getJSONArray( LABEL_DATA ) ); break;
 				case MSGTYPE_HALTERRORWORKFLOW	: // ??; break;
 				default							: throw new UnsupportedOperationException(
 										"Message type not recognized: "+msg.getString( LABEL_MSGTYPE ) );
