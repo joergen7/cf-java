@@ -7,15 +7,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.LinkedList;
-import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class RemoteWorkflow {
 	
 	private static final int CF_PORT           = 17489;
-	private static final String CF_PROTOCOL    = "cf_lang";
+	private static final String CF_PROTOCOL    = "cf_protcl";
 	private static final String CF_VSN         = "0.1.0";
 	private static final String CF_LANG        = "cuneiform";
 	
@@ -27,16 +25,19 @@ public class RemoteWorkflow {
 	private static final String LABEL_TAG      = "tag";
 	private static final String LABEL_DATA     = "data";
 	private static final String LABEL_RESULT   = "result";
+	private static final String LABEL_LINE     = "line";
+	private static final String LABEL_MODULE   = "module";
+	private static final String LABEL_REASON   = "reason";
 	
 	private static final String MSGTYPE_HALTOK = "halt_ok";
 	private static final String MSGTYPE_WORKFLOW = "workflow";
 	private static final String MSGTYPE_HALTEWORKFLOW = "halt_eworkflow";
+	private static final String MSGTYPE_SUBMIT = "submit";
 	
-	private final String tag;
 	private final DataOutputStream os;
 	private final DataInputStream is;
 	private final Socket socket;
-	private final List<JSONObject> requestQueue;
+	private final LinkedList<JSONObject> requestQueue;
 	private HaltMsg haltMsg;
 
 	public RemoteWorkflow( String host, String tag, String content ) throws IOException {
@@ -55,7 +56,6 @@ public class RemoteWorkflow {
 		requestQueue = new LinkedList<>();
 		haltMsg = null;
 
-		this.tag = tag;
 
 		// Open TCP connection
 		socket = new Socket( host, CF_PORT );
@@ -69,18 +69,32 @@ public class RemoteWorkflow {
 		os.flush();
 	}
 	
-	public boolean hasResult() {
-		return haltMsg != null;
+	public void addReply( JSONObject reply ) throws IOException {
+		
+		byte[] msg;
+		
+		msg = reply.toString().getBytes();
+		
+		os.writeInt( msg.length );
+		os.write( msg );
+		os.flush();
+	}
+	
+	public boolean isRunning() {
+		return haltMsg == null;
 	}
 	
 	public boolean hasNextRequest() {
 		return !requestQueue.isEmpty();
 	}
 	
-	/*public JSONObject getNextRequest() throws IOException {
+	public JSONObject nextRequest() {
 		
-
-	}*/
+		if( requestQueue.isEmpty() )
+			return null;
+		
+		return requestQueue.pop();
+	}
 
 	private static JSONObject createWorkflowMsg( String tag, String content ) {
 		
@@ -103,23 +117,36 @@ public class RemoteWorkflow {
 	
 	public void update() throws IOException {
 		
-		JSONObject msg;
+		JSONObject msg, data;
 		JSONArray result;
+		int line;
+		String module, reason;
+		
 		
 		while( ( msg = nextMsg() ) != null ) {
+			
+			data = msg.getJSONObject( LABEL_DATA );
 			
 			switch( msg.getString( LABEL_MSGTYPE ) ) {
 			
 				case MSGTYPE_HALTOK :
 					
-					result = msg.getJSONObject( LABEL_DATA ).getJSONArray( LABEL_RESULT );
+					result = data.getJSONArray( LABEL_RESULT );
 					haltMsg = new HaltMsg( result );
 					break;
 					
 				case MSGTYPE_HALTEWORKFLOW :
 
-					// result = new Result( )
-					// ??; break;
+					line = data.getInt( LABEL_LINE );
+					module = data.getString( LABEL_MODULE );
+					reason = data.getString( LABEL_REASON );
+					haltMsg = new HaltMsg( line, module, reason );
+					break;
+					
+				case MSGTYPE_SUBMIT :
+					
+					requestQueue.add( msg );
+					break;
 
 				default:
 					throw new UnsupportedOperationException(
