@@ -11,6 +11,11 @@ public class HaltMsg {
 	private final Integer line;
 	private final String module;
 	private final String reason;
+	private final String id;
+	private final Integer appLine;
+	private final String lamName;
+	private final String script;
+	private final String output;
 	
 	public HaltMsg( JSONArray r ) {
 		
@@ -22,6 +27,11 @@ public class HaltMsg {
 		line = null;
 		module = null;
 		reason = null;
+		id = null;
+		appLine = null;
+		lamName = null;
+		script = null;
+		output = null;
 		
 		result = new LinkedList<>();
 		
@@ -43,10 +53,50 @@ public class HaltMsg {
 			throw new IllegalArgumentException( "Reason must not be null." );
 		
 		result = null;
+		id = null;
+		appLine = null;
+		lamName = null;
+		script = null;
+		output = null;
 		
 		this.line = line;
 		this.module = module;
 		this.reason = reason;
+	}
+	
+	public HaltMsg( String id, int appLine, String lamName, String script, String output ) {
+		
+		if( id == null )
+			throw new IllegalArgumentException( "Id must not be null." );
+		
+		if( id.isEmpty() )
+			throw new IllegalArgumentException( "Id must not be empty." );
+		
+		if( appLine <= 0 )
+			throw new IllegalArgumentException( "Application line must be positive." );
+		
+		if( lamName == null )
+			throw new IllegalArgumentException( "Lambda name must not be null." );
+		
+		if( lamName.isEmpty() )
+			throw new IllegalArgumentException( "Lambda name must not be empty." );
+		
+		if( script == null )
+			throw new IllegalArgumentException( "Script must not be null." );
+		
+		if( output == null )
+			throw new IllegalArgumentException( "Output must not be null." );
+		
+		result = null;
+		line = null;
+		module = null;
+		reason = null;
+		
+		this.id = id;
+		this.appLine = appLine;
+		this.lamName = lamName;
+		this.script = script;
+		this.output = output;
 	}
 
 	public Integer getLine() {
@@ -61,13 +111,36 @@ public class HaltMsg {
 		return reason;
 	}
 	
+	public String getId() {
+		return id;
+	}
+	
+	public Integer getAppLine() {
+		return appLine;
+	}
+	
+	public String getLamName() {
+		return lamName;
+	}
+	
+	public String getScript() {
+		return script;
+	}
+	
+	public String getOutput() {
+		return output;
+	}
+	
 	public boolean isOk() {
 		return result != null;
 	}
 	
-	public boolean isLevelWorkflow() {
+	public boolean isErrorWorkflow() {
 		return module != null;
 	}
 	
-	
+
+	public boolean isErrorTask() {
+		return id != null;
+	}
 }

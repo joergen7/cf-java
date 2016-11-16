@@ -22,17 +22,23 @@ public class RemoteWorkflow {
 	private static final String LABEL_CONTENT  = "content";
 	private static final String LABEL_PROTOCOL = "protocol";
 	private static final String LABEL_VSN      = "vsn";
-	private static final String LABEL_TAG      = "tag";
 	private static final String LABEL_DATA     = "data";
 	private static final String LABEL_RESULT   = "result";
 	private static final String LABEL_LINE     = "line";
 	private static final String LABEL_MODULE   = "module";
 	private static final String LABEL_REASON   = "reason";
+	private static final String LABEL_SUPPL    = "suppl";
+	private static final String LABEL_APPLINE  = "app_line";
+	private static final String LABEL_ID       = "id";
+	private static final String LABEL_LAMNAME  = "lam_name";
+	private static final String LABEL_SCRIPT   = "script";
+	private static final String LABEL_OUTPUT   = "output";
 	
 	private static final String MSGTYPE_HALTOK = "halt_ok";
 	private static final String MSGTYPE_WORKFLOW = "workflow";
 	private static final String MSGTYPE_HALTEWORKFLOW = "halt_eworkflow";
 	private static final String MSGTYPE_SUBMIT = "submit";
+	private static final String MSGTYPE_HALTETASK = "halt_etask";
 	
 	private final DataOutputStream os;
 	private final DataInputStream is;
@@ -40,14 +46,14 @@ public class RemoteWorkflow {
 	private final LinkedList<JSONObject> requestQueue;
 	private HaltMsg haltMsg;
 
-	public RemoteWorkflow( String host, String tag, String content ) throws IOException {
+	public RemoteWorkflow( String host, JSONObject suppl, String content ) throws IOException {
 		
 		byte[] wfMsg;
 
 		if( host == null )
 			throw new IllegalArgumentException( "Host must not be null." );
 
-		if( tag == null )
+		if( suppl == null )
 			throw new IllegalArgumentException( "Tag must not be null." );
 
 		if( content == null )
@@ -63,7 +69,7 @@ public class RemoteWorkflow {
 		is = new DataInputStream( socket.getInputStream() ) ;
 		
 		// send workflow message
-		wfMsg = createWorkflowMsg( tag, content ).toString().getBytes();
+		wfMsg = createWorkflowMsg( suppl, content ).toString().getBytes();
 		os.writeInt( wfMsg.length );
 		os.write( wfMsg );
 		os.flush();
@@ -96,18 +102,18 @@ public class RemoteWorkflow {
 		return requestQueue.pop();
 	}
 
-	private static JSONObject createWorkflowMsg( String tag, String content ) {
+	private static JSONObject createWorkflowMsg( JSONObject suppl, String content ) {
 		
 		JSONObject wfMsg, data;
 		
 		data = new JSONObject();
 		data.put( LABEL_LANG, CF_LANG );
 		data.put( LABEL_CONTENT, content );
+		data.put( LABEL_SUPPL, suppl );
 
 		wfMsg = new JSONObject();
 		wfMsg.put( LABEL_PROTOCOL, CF_PROTOCOL );
 		wfMsg.put( LABEL_VSN, CF_VSN );
-		wfMsg.put( LABEL_TAG, tag );
 		wfMsg.put( LABEL_MSGTYPE, MSGTYPE_WORKFLOW );
 		wfMsg.put( LABEL_DATA, data );
 		
@@ -115,12 +121,16 @@ public class RemoteWorkflow {
 		return wfMsg;
 	}
 	
+	public HaltMsg getHaltMsg() {
+		return haltMsg;
+	}
+	
 	public void update() throws IOException {
 		
 		JSONObject msg, data;
 		JSONArray result;
-		int line;
-		String module, reason;
+		int line, appLine;
+		String module, reason, id, lamName, script, output;
 		
 		
 		while( ( msg = nextMsg() ) != null ) {
@@ -147,6 +157,16 @@ public class RemoteWorkflow {
 					
 					requestQueue.add( msg );
 					break;
+					
+				case MSGTYPE_HALTETASK :
+					
+					appLine = data.getInt( LABEL_APPLINE );
+					id = data.getString( LABEL_ID );
+					lamName = data.getString( LABEL_LAMNAME );
+					script = data.getString( LABEL_SCRIPT );
+					output = data.getString( LABEL_OUTPUT );
+					haltMsg = new HaltMsg( id, appLine, lamName, script, output );
+					break;
 
 				default:
 					throw new UnsupportedOperationException(
@@ -172,7 +192,7 @@ public class RemoteWorkflow {
 		
 		is.readFully( buf );
 
-        target = new String(buf);
+        target = new String( buf );
         System.out.println( "Received data: "+ target );
         return new JSONObject( String.valueOf( target ) );
 	}
