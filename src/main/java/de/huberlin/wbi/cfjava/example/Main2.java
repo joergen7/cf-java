@@ -21,7 +21,7 @@ public class Main2 {
 		suppl = new JSONObject();
 		suppl.put( "bla", "blub" );
 		
-		workflow = new RemoteWorkflow( "localhost", suppl, "deftask test( out : )in bash *{ out=blub }* test();" );
+		workflow = new RemoteWorkflow( "deftask test( out : )in bash *{ out=blub }* test();", "localhost", suppl );
 
 		System.out.println( "Waiting 1 second ..." );
 		Thread.sleep( 1000 );

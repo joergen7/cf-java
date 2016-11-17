@@ -45,8 +45,17 @@ public class RemoteWorkflow {
 	private final Socket socket;
 	private final LinkedList<JSONObject> requestQueue;
 	private HaltMsg haltMsg;
+	
+	
+	public RemoteWorkflow( String content ) throws IOException {
+		this( content, "localhost" );
+	}
+	
+	public RemoteWorkflow( String content, String host ) throws IOException {
+		this( content, host, new JSONObject() );
+	}
 
-	public RemoteWorkflow( String host, JSONObject suppl, String content ) throws IOException {
+	public RemoteWorkflow( String content, String host, JSONObject suppl ) throws IOException {
 		
 		byte[] wfMsg;
 
@@ -131,8 +140,7 @@ public class RemoteWorkflow {
 		JSONArray result;
 		int line, appLine;
 		String module, reason, id, lamName, script, output;
-		
-		
+				
 		while( ( msg = nextMsg() ) != null ) {
 			
 			data = msg.getJSONObject( LABEL_DATA );
@@ -180,7 +188,7 @@ public class RemoteWorkflow {
 		int len;
 		byte[] buf;
 		String target;
-				
+		
 		if( is.available() == 0 )
 			return null;
 
