@@ -13,15 +13,12 @@ public class Main2 {
 	public static void main( String[] args ) throws IOException, InterruptedException {
 		
 		RemoteWorkflow workflow;
-		JSONObject reply, data, suppl, result_map;
+		JSONObject reply, data, result_map;
 		JSONArray exprLst;
 		
 		System.out.println( "Sending workflow up." );
 
-		suppl = new JSONObject();
-		suppl.put( "bla", "blub" );
-		
-		workflow = new RemoteWorkflow( "deftask test( out : )in bash *{ out=blub }* test();", "localhost", suppl );
+		workflow = new RemoteWorkflow( "deftask test( out : )in bash *{ out=blub }* test();", "localhost" );
 
 		System.out.println( "Waiting 1 second ..." );
 		Thread.sleep( 1000 );

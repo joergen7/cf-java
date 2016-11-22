@@ -31,7 +31,7 @@ public class RemoteWorkflow {
 	private static final String LABEL_APPLINE  = "app_line";
 	private static final String LABEL_ID       = "id";
 	private static final String LABEL_LAMNAME  = "lam_name";
-	private static final String LABEL_SCRIPT   = "script";
+	private static final String LABEL_ACTSCRIPT = "act_script";
 	private static final String LABEL_OUTPUT   = "output";
 	
 	private static final String MSGTYPE_HALTOK = "halt_ok";
@@ -171,7 +171,7 @@ public class RemoteWorkflow {
 					appLine = data.getInt( LABEL_APPLINE );
 					id = data.getString( LABEL_ID );
 					lamName = data.getString( LABEL_LAMNAME );
-					script = data.getString( LABEL_SCRIPT );
+					script = data.getString( LABEL_ACTSCRIPT );
 					output = data.getString( LABEL_OUTPUT );
 					haltMsg = new HaltMsg( id, appLine, lamName, script, output );
 					break;

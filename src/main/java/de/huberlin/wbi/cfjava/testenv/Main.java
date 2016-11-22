@@ -40,7 +40,14 @@ public class Main {
 		create = StandardOpenOption.CREATE;
 		
 		// define workflow
-		content = "deftask greet( out : person ) in bash *{ out=\"Hello $person\" }* greet( person: \"Marc\" );";
+		// content = "deftask greet( out : person ) in bash *{ exit -1 }* greet( person: \"Marc\" );";
+		String fname = args[ 0 ];
+		buf = new StringBuffer();
+		try( BufferedReader r = Files.newBufferedReader( Paths.get( fname ) ) ) {
+			while( ( line = r.readLine() ) != null )
+				buf.append( line ).append( '\n' );
+		}
+		content = buf.toString();
 		
 		// create new workflow instance
 		wf = new RemoteWorkflow( content );
