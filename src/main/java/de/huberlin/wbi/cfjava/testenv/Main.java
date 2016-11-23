@@ -50,7 +50,7 @@ public class Main {
 		content = buf.toString();
 		
 		// create new workflow instance
-		wf = new RemoteWorkflow( content );
+		wf = new RemoteWorkflow( content, "192.168.24.134" );
 		
 		// main loop
 		while( true ) {

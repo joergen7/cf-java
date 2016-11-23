@@ -6,7 +6,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
 import org.json.JSONArray;
 
@@ -33,6 +35,12 @@ public class RemoteWorkflow {
 	private static final String LABEL_LAMNAME  = "lam_name";
 	private static final String LABEL_ACTSCRIPT = "act_script";
 	private static final String LABEL_OUTPUT   = "output";
+	private static final String LABEL_INVARS   = "in_vars";
+	private static final String LABEL_NAME     = "name";
+	private static final String LABEL_ISFILE   = "is_file";
+	private static final String LABEL_ARGMAP   = "arg_map";
+	private static final String LABEL_OUTVARS  = "out_vars";
+	private static final String LABEL_RESULTMAP = "result_map";
 	
 	private static final String MSGTYPE_HALTOK = "halt_ok";
 	private static final String MSGTYPE_WORKFLOW = "workflow";
@@ -203,5 +211,73 @@ public class RemoteWorkflow {
         target = new String( buf );
         System.out.println( "Received data: "+ target );
         return new JSONObject( String.valueOf( target ) );
+	}
+	
+	public static String getLamName( JSONObject request ) {
+		return request.getJSONObject( LABEL_DATA ).getString( LABEL_LAMNAME );
+	}
+	
+	public static Set<String> getInputSet( JSONObject request ) {
+		
+		HashSet<String> set;
+		JSONArray invars, values;
+		JSONObject var, argMap, data;
+		String varName;
+		boolean isFile;
+		int i, j;
+		
+		set = new HashSet<>();
+		data = request.getJSONObject( LABEL_DATA );
+		invars = data.getJSONArray( LABEL_INVARS );
+		
+		for( i = 0; i < invars.length(); i++ ) {
+			
+			var = invars.getJSONObject( i );
+			varName = var.getString( LABEL_NAME );
+			isFile = var.getBoolean( LABEL_ISFILE );
+			
+			if( !isFile )
+				continue;
+			
+			argMap = data.getJSONObject( LABEL_ARGMAP );
+			values = argMap.getJSONArray( varName );
+			
+			for( j = 0; j < values.length(); j++ )
+				set.add( values.getString( j ) );
+		}
+		
+		return set;
+	}
+	
+	public static Set<String> getOutputSet( JSONObject request, JSONObject reply ) {
+		
+		HashSet<String> set;
+		JSONArray outvars, values;
+		JSONObject var, resultMap, data;
+		String varName;
+		boolean isFile;
+		int i, j;
+		
+		set = new HashSet<>();
+		data = request.getJSONObject( LABEL_DATA );
+		outvars = data.getJSONArray( LABEL_OUTVARS );
+		
+		for( i = 0; i < outvars.length(); i++ ) {
+			
+			var = outvars.getJSONObject( i );
+			varName = var.getString( LABEL_NAME );
+			isFile = var.getBoolean( LABEL_ISFILE );
+			
+			if( !isFile )
+				continue;
+			
+			resultMap = data.getJSONObject( LABEL_RESULTMAP );
+			values = resultMap.getJSONArray( varName );
+			
+			for( j = 0; j < values.length(); j++ )
+				set.add( values.getString( j ) );
+		}
+		
+		return set;
 	}
 }
