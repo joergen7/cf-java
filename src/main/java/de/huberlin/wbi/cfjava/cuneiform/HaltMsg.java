@@ -143,4 +143,8 @@ public class HaltMsg {
 	public boolean isErrorTask() {
 		return id != null;
 	}
+	
+	public List<String> getResult() {
+		return result;
+	}
 }

@@ -254,14 +254,15 @@ public class RemoteWorkflow {
 		
 		HashSet<String> set;
 		JSONArray outvars, values;
-		JSONObject var, resultMap, data;
+		JSONObject var, resultMap, requestData, replyData;
 		String varName;
 		boolean isFile;
 		int i, j;
 		
 		set = new HashSet<>();
-		data = request.getJSONObject( LABEL_DATA );
-		outvars = data.getJSONArray( LABEL_OUTVARS );
+		requestData = request.getJSONObject( LABEL_DATA );
+		replyData = reply.getJSONObject( LABEL_DATA );
+		outvars = requestData.getJSONArray( LABEL_OUTVARS );
 		
 		for( i = 0; i < outvars.length(); i++ ) {
 			
@@ -272,7 +273,7 @@ public class RemoteWorkflow {
 			if( !isFile )
 				continue;
 			
-			resultMap = data.getJSONObject( LABEL_RESULTMAP );
+			resultMap = replyData.getJSONObject( LABEL_RESULTMAP );
 			values = resultMap.getJSONArray( varName );
 			
 			for( j = 0; j < values.length(); j++ )
@@ -282,19 +283,5 @@ public class RemoteWorkflow {
 		return set;
 	}
 	
-	public static List<String> getResultLst( JSONObject haltMsg ) {
-		
-		JSONArray result;
-		int i;
-		List<String> list;
-		
-		list = new LinkedList<>();
-		
-		result = haltMsg.getJSONObject( LABEL_DATA ).getJSONArray( LABEL_RESULT );
-		
-		for( i = 0; i < result.length(); i++ )
-			list.add( result.getString( i ) );
-		
-		return list;
-	}
+
 }
