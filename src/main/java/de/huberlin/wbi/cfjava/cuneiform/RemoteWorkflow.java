@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -279,5 +280,21 @@ public class RemoteWorkflow {
 		}
 		
 		return set;
+	}
+	
+	public static List<String> getResultLst( JSONObject haltMsg ) {
+		
+		JSONArray result;
+		int i;
+		List<String> list;
+		
+		list = new LinkedList<>();
+		
+		result = haltMsg.getJSONObject( LABEL_DATA ).getJSONArray( LABEL_RESULT );
+		
+		for( i = 0; i < result.length(); i++ )
+			list.add( result.getString( i ) );
+		
+		return list;
 	}
 }
