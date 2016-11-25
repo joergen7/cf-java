@@ -203,14 +203,12 @@ public class RemoteWorkflow {
 
 		len = is.readInt();
 		
-		System.out.println( "Length: "+len );
-		
 		buf = new byte[ len ];
 		
 		is.readFully( buf );
 
         target = new String( buf );
-        System.out.println( "Received data: "+ target );
+
         return new JSONObject( String.valueOf( target ) );
 	}
 	
