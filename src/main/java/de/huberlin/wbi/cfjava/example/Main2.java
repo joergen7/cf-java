@@ -36,7 +36,10 @@ public class Main2 {
 		}
 			
 		
-		exprLst = new JSONArray( new LinkedList<String>() {{ add( "blub" ); }} );
+		exprLst = new JSONArray( new LinkedList<String>() {
+			private static final long serialVersionUID = 4389023396625020099L;
+			{ add( "blub" ); }
+		} );
 		
 		result_map = new JSONObject();
 		result_map.put( "out", exprLst );

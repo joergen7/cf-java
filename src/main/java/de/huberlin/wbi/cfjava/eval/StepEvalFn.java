@@ -94,6 +94,7 @@ public class StepEvalFn extends CtxHolder implements Function<Expr, Alist<Expr>>
 		String n;
 		StepAssocFn stepAssocFn;
 		Alist<Expr> postEnum;
+		App app1;
 
 
 		lamSurrogate = app.getLamSurrogate();
@@ -129,7 +130,7 @@ public class StepEvalFn extends CtxHolder implements Function<Expr, Alist<Expr>>
 		}
 		
 		postEnum = enumApp( app );
-		app = ( App )postEnum.hd();
+		app1 = ( App )postEnum.hd();
 		
 		if( postEnum.size() != 1 )												// (41)			
 			return postEnum;
@@ -138,7 +139,7 @@ public class StepEvalFn extends CtxHolder implements Function<Expr, Alist<Expr>>
 		
 		if( body instanceof ForBody ) {											// /42)
 
-			fut = getCtx().getMu().apply( app );
+			fut = getCtx().getMu().apply( app1 );
 			return new Alist<Expr>().add( new Select( line, channel, fut ) );
 		}
 		
@@ -169,7 +170,7 @@ public class StepEvalFn extends CtxHolder implements Function<Expr, Alist<Expr>>
 		if( param.isLst() || v1.size() == 1 )									// (44)
 			return v1;
 		
-		throw new OutputSignMismatchException( app );		
+		throw new OutputSignMismatchException( app1 );		
 	}
 
 	private Alist<Expr> applyCnd( Cnd x ) {

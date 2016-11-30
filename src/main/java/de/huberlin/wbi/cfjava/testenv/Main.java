@@ -113,12 +113,14 @@ public class Main {
 					}
 				} while( suc == false && trial++ <= 4 );
 				
-				if( process == null )
+				if( process == null ) {
+
 					if( ex != null )
 						throw ex;
-					else
-						throw new RuntimeException(
-							"Could not instantiate process but exception is null nevertheless." );
+					
+					throw new RuntimeException(
+						"Could not instantiate process but exception is null nevertheless." );
+				}
 				
 				
 				exitValue = process.waitFor();
