@@ -35,7 +35,7 @@ public class Main {
 		HaltMsg haltMsg;
 		
 		
-		buildDir = Paths.get( "/tmp" );
+		buildDir = Paths.get( "/dev/shm" );
 		utf8 = Charset.forName( "UTF-8" );
 		create = StandardOpenOption.CREATE;
 		
@@ -59,7 +59,6 @@ public class Main {
 			System.out.println( "new round ..." );
 			
 			// update workflow information
-			System.out.println( "  fetching data" );
 			wf.update();
 			
 			// checking if we're done
@@ -69,12 +68,10 @@ public class Main {
 			
 			// iterate over ready tasks
 			while( wf.hasNextRequest() ) {
-				
-				
+								
 				request = wf.nextRequest();
 				
 				id = request.getJSONObject( "data" ).getString( "id" );
-				System.out.println( "  starting request "+id );
 				
 				location = buildDir.resolve( id );
 				requestFile = location.resolve( "request.json" );
@@ -103,12 +100,10 @@ public class Main {
 				ex = null;
 				process = null;
 				
-				System.out.println( "  starting process." );
 				
 				do {
 					try {
 						process = processBuilder.start();
-						System.out.println( process );
 
 						suc = true;
 					}
@@ -125,11 +120,9 @@ public class Main {
 						throw new RuntimeException(
 							"Could not instantiate process but exception is null nevertheless." );
 				
-				System.out.println( "  waiting for process." );
 				
 				exitValue = process.waitFor();
 				
-				System.out.println( "  process returned "+exitValue );
 				if( exitValue != 0 ) {
 					
 					try( BufferedReader reader = Files.newBufferedReader( stdoutFile, utf8 ) ) {						
@@ -153,6 +146,9 @@ public class Main {
 					reply = new JSONObject( buf.toString() );
 					wf.addReply( reply );
 				}
+				
+				wf.update();
+
 			}
 		}
 		
