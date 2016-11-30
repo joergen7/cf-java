@@ -26,7 +26,7 @@ import de.huberlin.wbi.cfjava.data.Alist;
 public class EvalFn extends CtxHolder implements Function<Alist<Expr>, Alist<Expr>> {
 	
 	public EvalFn( final Ctx ctx ) {
-		super( ctx );
+		super( ctx );		
 	}
 
 	@Override

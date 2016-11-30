@@ -21,6 +21,7 @@ public class LazyWorkflow extends Workflow {
 		lastRet = false;
 	}
 
+	@Override
 	public boolean reduce() {
 		
 		int nPendingFut, nRequest;
@@ -47,6 +48,7 @@ public class LazyWorkflow extends Workflow {
 		return lastRet;
 	}
 	
+	@Override
 	public void addReply( Reply reply ) {
 		super.addReply( reply );
 		nPendingReply++;

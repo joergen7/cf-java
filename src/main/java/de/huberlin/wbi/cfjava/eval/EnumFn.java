@@ -7,6 +7,7 @@ import de.huberlin.wbi.cfjava.data.Alist;
 
 public class EnumFn implements Function<Alist<ArgPair>,Alist<ArgPair>> {
 
+	
 	@Override
 	public Alist<ArgPair> apply( Alist<ArgPair> argPairLst ) {
 		

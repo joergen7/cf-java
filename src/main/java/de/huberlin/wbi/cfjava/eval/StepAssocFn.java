@@ -10,7 +10,7 @@ import de.huberlin.wbi.cfjava.data.Amap;
 public class StepAssocFn extends CtxHolder implements Function<Amap<String, Alist<Expr>>, Amap<String, Alist<Expr>>> {
 
 	public StepAssocFn( Ctx ctx ) {
-		super( ctx );
+		super( ctx );		
 	}
 
 	@Override

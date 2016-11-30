@@ -45,7 +45,7 @@ import de.huberlin.wbi.cfjava.pred.PfinalAmap;
 public class StepEvalFn extends CtxHolder implements Function<Expr, Alist<Expr>> {
 
 	public StepEvalFn( final Ctx ctx ) {
-		super( ctx );
+		super( ctx );		
 	}
 
 	@Override
@@ -73,6 +73,7 @@ public class StepEvalFn extends CtxHolder implements Function<Expr, Alist<Expr>>
 	private Alist<Expr> applyApp( App app ) {
 			
 		Var var;
+		App app1;
 		String label;
 		LamSurrogate lamSurrogate;
 		Amap<String, Lam> gamma;
@@ -129,7 +130,7 @@ public class StepEvalFn extends CtxHolder implements Function<Expr, Alist<Expr>>
 		}
 		
 		postEnum = enumApp( app );
-		app = ( App )postEnum.hd();
+		app1 = ( App )postEnum.hd();
 		
 		if( postEnum.size() != 1 )												// (41)			
 			return postEnum;
@@ -138,7 +139,7 @@ public class StepEvalFn extends CtxHolder implements Function<Expr, Alist<Expr>>
 		
 		if( body instanceof ForBody ) {											// /42)
 
-			fut = getCtx().getMu().apply( app );
+			fut = getCtx().getMu().apply( app1 );
 			return new Alist<Expr>().add( new Select( line, channel, fut ) );
 		}
 		
