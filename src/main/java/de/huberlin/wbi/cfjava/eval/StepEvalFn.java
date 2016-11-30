@@ -95,7 +95,6 @@ public class StepEvalFn extends CtxHolder implements Function<Expr, Alist<Expr>>
 		String n;
 		StepAssocFn stepAssocFn;
 		Alist<Expr> postEnum;
-		App app1;
 
 
 		lamSurrogate = app.getLamSurrogate();
