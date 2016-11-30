@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.hu-berlin.wbi</groupId>
 	<artifactId>cf-java</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.3-RELEASE</version>
 	<name>cf-java</name>
 	<description>Java bindings for the Cuneiform workflow language.</description>
 
@@ -92,6 +92,12 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20160810</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr4</artifactId>
