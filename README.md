@@ -47,6 +47,21 @@ This is achieved by interacting with an instance of the `RemoteWorkflow` class w
 
 #### Creating a Remote Workflow Object
 
+Say we are about to run a workflow that returns the string `"Hello world"`. The corresponding Cuneiform program would be:
+
+    "Hello world";
+
+To establish a connection to an instance of a Cuneiform interpreter service running at `localhost`, a `RemoteWorkflow` instance is generated as follows:
+
+    import de.huberlin.wbi.cfjava.cuneiform.RemoteWorkflow;
+
+    ...
+
+    RemoteWorkflow wf = new RemoteWorkflow( "\"Hello world.\";\n\n" );
+
+This command also sends the workflow source in the form of a string to the workflow interpreter, which starts to evaluate the workflow independently upon reception. We can also pass the constructor a second string identifying the host where the interpreter service is running. If the interpreter runs, e.g., at the IP address `192.127.12.345` we can create a connection by entering
+
+    RemoteWorkflow wf = new RemoteWorkflow( "\"Hello world.\";\n\n", "192.127.12.345" );
 
 ## Resources
 
