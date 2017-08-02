@@ -63,6 +63,12 @@ This command also sends the workflow source in the form of a string to the workf
 
     RemoteWorkflow wf = new RemoteWorkflow( "\"Hello world.\";\n\n", "192.127.12.345" );
 
+If the interpreter service is not running or unreachable under the given IP address, the constructor throws a `ConnectException`.
+
+#### Querying the Workflow Object
+
+
+
 ## Resources
 
 - [cf_lang](https://github.com/joergen7/cf_lang). An Erlang-based web service implementing a Cuneiform interpreter.
